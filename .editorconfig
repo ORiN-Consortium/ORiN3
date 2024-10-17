@@ -1,0 +1,89 @@
+root = true
+
+[*.cs]
+# [*.{cs,vb}]
+
+################################################################################
+# Add readonly where possible
+################################################################################
+dotnet_style_readonly_field = true:error
+
+################################################################################
+# Private or protected variables should start with an underscore
+################################################################################
+# Symbol group name
+dotnet_naming_rule.public_or_protected_field_must_underbarstart.symbols = public_or_protected_symbols
+# Symbol type - field
+dotnet_naming_symbols.public_or_protected_symbols.applicable_kinds = field
+# Symbol accessibility level - private, protected
+dotnet_naming_symbols.public_or_protected_symbols.applicable_accessibilities =  private,protected
+# Style name
+dotnet_naming_rule.prefix_is_underbar.style = pre_under_bar
+# Capitalization - camel_case
+dotnet_naming_style.pre_under_bar.capitalization = camel_case
+# Prefix - '_'
+dotnet_naming_style.pre_under_bar.required_prefix = _
+# Style
+dotnet_naming_rule.public_or_protected_field_must_underbarstart.style = pre_under_bar
+# Severity - Error
+dotnet_naming_rule.public_or_protected_field_must_underbarstart.severity = error
+
+################################################################################
+# Constants should be in PascalCase
+################################################################################
+# Symbol group name
+dotnet_naming_rule.const_field_must_be_pascal_case.symbols = const_fields
+# Symbol type - field
+dotnet_naming_symbols.const_fields.applicable_kinds = field
+# Symbol accessibility level - *
+dotnet_naming_symbols.const_fields.applicable_accessibilities = *
+# Symbol modifier - const
+dotnet_naming_symbols.const_fields.required_modifiers = const
+# Style name
+dotnet_naming_rule.first_word_must_be_upper.style = upper_start
+# Capitalization - pascal_case
+dotnet_naming_style.upper_start.capitalization = pascal_case
+# Style
+dotnet_naming_rule.const_field_must_be_pascal_case.style = upper_start
+# Severity - Error
+dotnet_naming_rule.const_field_must_be_pascal_case.severity = error
+
+################################################################################
+# Use 'this' keyword only when absolutely necessary
+################################################################################
+# Field access - Do not prefer 'this', Error
+dotnet_style_qualification_for_field = false:error
+# Property access - Do not prefer 'this', Error
+dotnet_style_qualification_for_property = false:error
+# Method access - Do not prefer 'this', Error
+dotnet_style_qualification_for_method = false:error
+# Event access - Do not prefer 'this', Error
+dotnet_style_qualification_for_event = false:error
+
+################################################################################
+# Arguments and local variables should be in camelCase
+################################################################################
+# Symbol group name
+dotnet_naming_rule.parameter_or_local_must_be_camel_case.symbols = parameter_or_local_symbols
+# Symbol type - parameter, local
+dotnet_naming_symbols.parameter_or_local_symbols.applicable_kinds = parameter,local
+# Symbol accessibility level - *
+#dotnet_naming_symbols.parameter_or_local_symbols.applicable_accessibilities = *
+# Style name
+dotnet_naming_rule.first_word_must_be_lower.style = lower_start
+# Capitalization - camel_case
+dotnet_naming_style.lower_start.capitalization = camel_case
+# Style
+dotnet_naming_rule.parameter_or_local_must_be_camel_case.style = lower_start
+# Severity - Error
+dotnet_naming_rule.parameter_or_local_must_be_camel_case.severity = error
+
+################################################################################
+# Use var for variables that can be inferred
+################################################################################
+# For built-in types
+csharp_style_var_for_built_in_types = true:error
+# When the variable type is apparent
+csharp_style_var_when_type_is_apparent = true:error
+# In other places
+csharp_style_var_elsewhere = true:error

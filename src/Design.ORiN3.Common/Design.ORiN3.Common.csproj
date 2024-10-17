@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="./../../SolutionDefines.targets" />
+  <Import Project="./../../SolutionDefines.ProjectVersion.targets" />
+  <PropertyGroup>
+    <TargetFramework>$(DotNetStandardVersion)</TargetFramework>
+    <LangVersion>$(DotNetLangVersion)</LangVersion>
+    <Company>$(CompanyName)</Company>
+    <Authors>$(AuthorsName)</Authors>
+    <Product>$(ProductName)</Product>
+    <Copyright>$(CopyrightValue)</Copyright>
+    <Version>$(ProjectVersion)</Version>
+    <PackageVersion>$(NugetPackageVersion)</PackageVersion>
+    <PackageTags>$(NugetPackageTags)</PackageTags>
+    <Description>$(NugetPackageDescription)</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
+    <PackageIcon>$(PackageIconName)</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>NU1603</NoWarn>
+    <IncludeSymbols>True</IncludeSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>$(XmlDocumentPath)</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(PackageIconPath)" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

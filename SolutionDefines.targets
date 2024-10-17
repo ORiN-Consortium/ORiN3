@@ -1,0 +1,27 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.Microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CompanyName>ORiN Consortium</CompanyName>
+    <AuthorsName>ORiN Consortium</AuthorsName>
+    <ProductName>ORiN3</ProductName>
+    <NugetPackageTags>ORiN3</NugetPackageTags>
+    <NugetPackageDescription>C# implementation of ORiN3.</NugetPackageDescription>
+    <PackageIconName>orin_package_256x256.png</PackageIconName>
+    <PackageIconPath>..\..\$(PackageIconName)</PackageIconPath>
+    <XmlDocumentPath>bin\$(Configuration)/$(TargetFramework)/$(MSBuildProjectName).xml</XmlDocumentPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DotNetStandardVersion>netstandard2.1</DotNetStandardVersion>
+    <DotNetTestVersion>net8.0</DotNetTestVersion>
+    <DotNetLangVersion>12.0</DotNetLangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProtobufVersion>[3.25.*,3.26.0)</ProtobufVersion>
+    <GrpcVersion>[2.46.*,2.47.0)</GrpcVersion>
+    <GrpcToolsVersion>[2.59.*,2.60.0)</GrpcToolsVersion>
+    <MicrosoftNETTestSdkVersion>[17.8.*,17.9.0)</MicrosoftNETTestSdkVersion>
+    <XUnitVersion>[2.6.*,2.7.0)</XUnitVersion>
+    <XUnitRunnerVersion>[2.5.*,2.6.0)</XUnitRunnerVersion>
+    <XunitSkippableFactVersion>1.4.13</XunitSkippableFactVersion>
+    <CoverletCollectorVersion>[6.0.*,6.1.0)</CoverletCollectorVersion>
+  </PropertyGroup>
+</Project>

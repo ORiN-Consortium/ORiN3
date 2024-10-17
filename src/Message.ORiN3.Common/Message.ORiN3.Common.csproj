@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="./../../SolutionDefines.targets" />
+  <Import Project="./../../SolutionDefines.ProjectVersion.targets" />
+  <PropertyGroup>
+    <TargetFramework>$(DotNetStandardVersion)</TargetFramework>
+    <LangVersion>$(DotNetLangVersion)</LangVersion>
+    <Company>$(CompanyName)</Company>
+    <Authors>$(AuthorsName)</Authors>
+    <Product>$(ProductName)</Product>
+    <Copyright>$(CopyrightValue)</Copyright>
+    <Version>$(ProjectVersion)</Version>
+    <PackageVersion>$(NugetPackageVersion)</PackageVersion>
+    <PackageTags>$(NugetPackageTags)</PackageTags>
+    <Description>$(NugetPackageDescription)</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
+    <PackageIcon>$(PackageIconName)</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>NU1603</NoWarn>
+    <IncludeSymbols>True</IncludeSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="$(ProtobufVersion)" />
+    <PackageReference Include="Grpc" Version="$(GrpcVersion)" />
+    <PackageReference Include="Grpc.Tools" Version="$(GrpcToolsVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <Protobuf Include="**/*.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="orin3common.proto" />
+    <None Remove="_License\Google.Protobuf\LICENSE" />
+    <None Remove="_License\Grpc\LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="_License\Google.Protobuf\LICENSE">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="_License\Grpc\LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="V1/*.proto" PackagePath="proto/Message.ORiN3.Common/V1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Design.ORiN3.Common\Design.ORiN3.Common.csproj" />
+    <ProjectReference Include="..\Design.ORiN3.Provider\Design.ORiN3.Provider.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(PackageIconPath)" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>
