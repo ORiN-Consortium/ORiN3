@@ -8,6 +8,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule:
+    - cron: '0 16 * * *'  # 毎日 UTC 16:00 (JST 1:00)
 
 jobs:
   build:
