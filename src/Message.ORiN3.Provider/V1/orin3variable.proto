@@ -16,13 +16,13 @@ message GetValueRequest {
 
 message GetValueResponse {
     ORiN3.Common.CommonResponse common = 1;
-    ORiN3.Common.ORiN3Value value = 4;
+    ORiN3.Common.ORiN3Value value = 2;
 }
 
 message SetValueRequest {
     ORiN3.Common.CommonRequest common = 1;
     bytes id = 2;
-    ORiN3.Common.ORiN3Value value = 5;
+    ORiN3.Common.ORiN3Value value = 3;
 }
 
 message SetValueResponse {
