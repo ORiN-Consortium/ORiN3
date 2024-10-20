@@ -2,6 +2,8 @@
 
 ORiN3 is the next generation of the Open Robot/Resource interface for the Network (ORiN) standard. This repository contains the specification details for ORiN3.
 
+[![.NET CI/CD Pipeline](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml/badge.svg)](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml)
+
 ## Contents
 
 This repository includes:
@@ -35,33 +37,35 @@ For more information about ORiN, please visit [official ORiN website](https://ww
 
 # ORiN3
 
-ORiN3�́AOpen Robot/Resource interface for the Network�iORiN�j�W���̎�����łł��B���̃��|�W�g���ɂ́AORiN3�̎d�l�̏ڍׂ��܂܂�Ă��܂��B
+ORiN3は、Open Robot/Resource interface for the Network（ORiN）標準の次世代版です。このリポジトリには、ORiN3の仕様の詳細が含まれています。
 
-## ���e
+[![.NET CI/CD Pipeline](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml/badge.svg)](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml)
 
-���̃��|�W�g���ɂ͈ȉ����܂܂�Ă��܂��F
+## 内容
 
-1. ORiN3�d�l���`�����v���g�R���o�b�t�@�iproto�j�t�@�C��
-2. ORiN3�W���Ɋ֘A����C#�C���^�[�t�F�[�X
+このリポジトリには以下が含まれています：
 
-## ORiN�ɂ���
+1. ORiN3仕様を定義したプロトコルバッファ（proto）ファイル
+2. ORiN3標準に関連するC#インターフェース
 
-ORiN�iOpen Robot/Resource interface for the Network�j�́A���܂��܂ȋ@��⃊�\�[�X�ɃA�N�Z�X���邽�߂̓��ꂳ�ꂽ�ʐM�C���^�[�t�F�[�X�W���ł��B�قȂ郁�[�J�[��@��ԂŃV�[�����X�ȒʐM���\�ɂ��邱�Ƃ�ړI�Ƃ��Ă���A�H�Ɗ��Ɍ��肳��܂���B
+## ORiNについて
 
-## ORiN3��ORiN2�̈Ⴂ
+ORiN（Open Robot/Resource interface for the Network）は、さまざまな機器やリソースにアクセスするための統一された通信インターフェース標準です。異なるメーカーや機種間でシームレスな通信を可能にすることを目的としており、工業環境に限定されません。
 
-ORiN3��ORiN2�̌�p�ł���A�ڑ����Ƒ��݉^�p��������Ɍ��コ���邽�߂̉��P�_��V�@�\��񋟂��܂��BORiN2�ł��l�X�ȕ���ł̓K�p���\�ł������AORiN3�ł͂��̓K�p�͈͂����L���A���l�ȎY�Ƃ�A�v���P�[�V�����̈�ł̗��p�𑣐i���܂��BORiN3�́A�W�������ꂽ�ʐM�C���^�[�t�F�[�X���L�v�Ȃ��܂��܂ȕ���ɂ��ȒP�ɓK�p�ł���悤�݌v����Ă��܂��B
+## ORiN3とORiN2の違い
 
-## ORiN3�̎�ȓ���
+ORiN3はORiN2の後継であり、接続性と相互運用性をさらに向上させるための改善点や新機能を提供します。ORiN2でも様々な分野での適用が可能でしたが、ORiN3ではその適用範囲をより広げ、多様な産業やアプリケーション領域での利用を促進します。ORiN3は、標準化された通信インターフェースが有益なさまざまな分野により簡単に適用できるよう設計されています。
 
-- �}���`�v���b�g�t�H�[��
-  - Windows�ɉ����ALinux�ɂ��Ή�
-  - CPU��x64�ɉ����AArm�A�[�L�e�N�`�����T�|�[�g
-- �}�C�N���T�[�r�X�A�[�L�e�N�`��
-  - �C���^�[�t�F�[�X�Ƃ���gRPC���̗p���A�}�C�N���T�[�r�X�x�[�X�̃A�v���[�`���\��
+## ORiN3の主な特徴
 
-## ���C�Z���X
+- マルチプラットフォーム
+  - Windowsに加え、Linuxにも対応
+  - CPUはx64に加え、Armアーキテクチャもサポート
+- マイクロサービスアーキテクチャ
+  - インターフェースとしてgRPCを採用し、マイクロサービスベースのアプローチを可能に
 
-���̃v���W�F�N�g��MIT���C�Z���X�̉��Ń��C�Z���X����Ă��܂��B�ڍׂ�[LICENSE](LICENSE)�t�@�C�����������������B
+## ライセンス
 
-ORiN�Ɋւ���ڍ׏��́A[ORiN�����E�F�u�T�C�g](https://www.orin.jp/)���������������B
+このプロジェクトはMITライセンスの下でライセンスされています。詳細は[LICENSE](LICENSE)ファイルをご覧ください。
+
+ORiNに関する詳細情報は、[ORiN公式ウェブサイト](https://www.orin.jp/)をご覧ください。
