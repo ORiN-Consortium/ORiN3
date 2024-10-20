@@ -1,703 +1,273 @@
 ﻿using Message.ORiN3.Common.V1;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Xunit;
 
 namespace Message.ORiN3.Common.Test.TestByDeveloper
 {
     public class ORiN3BinaryConverterTest
     {
+        private static void ExecuteTest<T>(T target, ORiN3BinaryConverter.DataType expectedDataType)
+        {
+            var converted = ORiN3BinaryConverter.ToBinary(target);
+            Assert.Equal((byte)expectedDataType, converted[0]);
+            var actual1 = ORiN3BinaryConverter.ToObject(converted);
+            Assert.Equal(target, actual1);
+        }
+
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "bool")]
         public void Test001()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(true);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(true, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(false);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(false, actual2);
-
-            bool? value3 = null;
-            var converted3 = ORiN3BinaryConverter.ToBinary(value3);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Null(actual3);
-
-            bool? value4 = true;
-            var converted4 = ORiN3BinaryConverter.ToBinary(value4);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal(true, actual4);
-
-            bool? value5 = false;
-            var converted5 = ORiN3BinaryConverter.ToBinary(value5);
-            var actual5 = ORiN3BinaryConverter.ToObject(converted5);
-            Assert.Equal(false, actual5);
-
-            var value6 = new[] { true, false };
-            var converted6 = ORiN3BinaryConverter.ToBinary(value6);
-            var actual6 = ORiN3BinaryConverter.ToObject(converted6);
-            Assert.Equal(new[] { true, false }, actual6);
-
-            var value7 = Array.Empty<bool>();
-            var converted7 = ORiN3BinaryConverter.ToBinary(value7);
-            var actual7 = ORiN3BinaryConverter.ToObject(converted7);
-            Assert.Equal(Array.Empty<bool>(), actual7);
-
-            var value8 = new bool?[] { false, null, true };
-            var converted8 = ORiN3BinaryConverter.ToBinary(value8);
-            var actual8 = ORiN3BinaryConverter.ToObject(converted8);
-            Assert.Equal(new bool?[] { false, null, true }, actual8);
+            ExecuteTest(true, ORiN3BinaryConverter.DataType.Bool);
+            ExecuteTest(false, ORiN3BinaryConverter.DataType.Bool);
+            ExecuteTest<bool?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<bool?>(true, ORiN3BinaryConverter.DataType.Bool);
+            ExecuteTest<bool?>(false, ORiN3BinaryConverter.DataType.Bool);
+            ExecuteTest<bool[]>([true, false], ORiN3BinaryConverter.DataType.BoolArray);
+            ExecuteTest<bool[]>([], ORiN3BinaryConverter.DataType.BoolArray);
+            ExecuteTest<bool?[]>([false, null, true], ORiN3BinaryConverter.DataType.NullableBoolArray);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "byte")]
         public void Test002()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(byte.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(byte.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(byte.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(byte.MaxValue, actual2);
-
-            byte? value3 = null;
-            var converted3 = ORiN3BinaryConverter.ToBinary(value3);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Null(actual3);
-
-            byte? value4 = byte.MinValue;
-            var converted4 = ORiN3BinaryConverter.ToBinary(value4);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal(byte.MinValue, actual4);
-
-            byte? value5 = byte.MaxValue;
-            var converted5 = ORiN3BinaryConverter.ToBinary(value5);
-            var actual5 = ORiN3BinaryConverter.ToObject(converted5);
-            Assert.Equal(byte.MaxValue, actual5);
-
-            var value6 = new[] { byte.MinValue, 2, byte.MaxValue };
-            var converted6 = ORiN3BinaryConverter.ToBinary(value6);
-            var actual6 = ORiN3BinaryConverter.ToObject(converted6);
-            Assert.Equal(new[] { byte.MinValue, 2, byte.MaxValue }, actual6);
-
-            var value7 = Array.Empty<byte>();
-            var converted7 = ORiN3BinaryConverter.ToBinary(value7);
-            var actual7 = ORiN3BinaryConverter.ToObject(converted7);
-            Assert.Equal(Array.Empty<byte>(), actual7);
-
-            var value8 = new byte?[] { byte.MaxValue, null, 2, byte.MinValue };
-            var converted8 = ORiN3BinaryConverter.ToBinary(value8);
-            var actual8 = ORiN3BinaryConverter.ToObject(converted8);
-            Assert.Equal(new byte?[] { byte.MaxValue, null, 2, byte.MinValue }, actual8);
+            ExecuteTest(byte.MinValue, ORiN3BinaryConverter.DataType.UInt8);
+            ExecuteTest(byte.MaxValue, ORiN3BinaryConverter.DataType.UInt8);
+            ExecuteTest<byte?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<byte?>(byte.MinValue, ORiN3BinaryConverter.DataType.UInt8);
+            ExecuteTest<byte?>(byte.MaxValue, ORiN3BinaryConverter.DataType.UInt8);
+            ExecuteTest<byte[]>([byte.MinValue, 2, byte.MaxValue], ORiN3BinaryConverter.DataType.UInt8Array);
+            ExecuteTest<byte[]>([], ORiN3BinaryConverter.DataType.UInt8Array);
+            ExecuteTest<byte?[]>([byte.MaxValue, null, 2, byte.MinValue, null], ORiN3BinaryConverter.DataType.NullableUInt8Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "sbyte")]
         public void Test003()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(sbyte.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(sbyte.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(sbyte.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(sbyte.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((sbyte)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((sbyte)1, actual3);
-
-            sbyte? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            sbyte? value11 = sbyte.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(sbyte.MinValue, actual11);
-
-            sbyte? value12 = sbyte.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(sbyte.MaxValue, actual12);
-
-            var value20 = new sbyte[] { sbyte.MinValue, 2, sbyte.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new sbyte[] { sbyte.MinValue, 2, sbyte.MaxValue }, actual20);
-
-            var value21 = Array.Empty<sbyte>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<sbyte>(), actual21);
-
-            var value30 = new sbyte?[] { sbyte.MaxValue, null, 2, sbyte.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new sbyte?[] { sbyte.MaxValue, null, 2, sbyte.MinValue }, actual30);
+            ExecuteTest(sbyte.MinValue, ORiN3BinaryConverter.DataType.Int8);
+            ExecuteTest(sbyte.MaxValue, ORiN3BinaryConverter.DataType.Int8);
+            ExecuteTest<sbyte>(1, ORiN3BinaryConverter.DataType.Int8);
+            ExecuteTest<sbyte?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<sbyte?>(sbyte.MinValue, ORiN3BinaryConverter.DataType.Int8);
+            ExecuteTest<sbyte?>(sbyte.MaxValue, ORiN3BinaryConverter.DataType.Int8);
+            ExecuteTest<sbyte[]>([sbyte.MinValue, 2, sbyte.MaxValue], ORiN3BinaryConverter.DataType.Int8Array);
+            ExecuteTest<sbyte[]>([], ORiN3BinaryConverter.DataType.Int8Array);
+            ExecuteTest<sbyte?[]>([sbyte.MinValue, null, 2, sbyte.MaxValue, null], ORiN3BinaryConverter.DataType.NullableInt8Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "ushort")]
         public void Test004()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(ushort.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(ushort.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(ushort.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(ushort.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((ushort)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((ushort)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((ushort)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((ushort)256, actual4);
-
-            ushort? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            ushort? value11 = ushort.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(ushort.MinValue, actual11);
-
-            ushort? value12 = ushort.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(ushort.MaxValue, actual12);
-
-            var value20 = new ushort[] { ushort.MinValue, 2, 257, ushort.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new ushort[] { ushort.MinValue, 2, 257, ushort.MaxValue }, actual20);
-
-            var value21 = Array.Empty<ushort>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<ushort>(), actual21);
-
-            var value30 = new ushort?[] { ushort.MaxValue, null, 2, 257, ushort.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new ushort?[] { ushort.MaxValue, null, 2, 257, ushort.MinValue }, actual30);
+            ExecuteTest(ushort.MinValue, ORiN3BinaryConverter.DataType.UInt16);
+            ExecuteTest(ushort.MaxValue, ORiN3BinaryConverter.DataType.UInt16);
+            ExecuteTest<ushort>(2, ORiN3BinaryConverter.DataType.UInt16);
+            ExecuteTest<ushort>(256, ORiN3BinaryConverter.DataType.UInt16);
+            ExecuteTest<ushort?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<ushort?>(ushort.MinValue, ORiN3BinaryConverter.DataType.UInt16);
+            ExecuteTest<ushort?>(ushort.MaxValue, ORiN3BinaryConverter.DataType.UInt16);
+            ExecuteTest<ushort[]>([ushort.MinValue, 2, 257, ushort.MaxValue], ORiN3BinaryConverter.DataType.UInt16Array);
+            ExecuteTest<ushort[]>([], ORiN3BinaryConverter.DataType.UInt16Array);
+            ExecuteTest<ushort?[]>([ushort.MinValue, 2, 257, ushort.MaxValue, null], ORiN3BinaryConverter.DataType.NullableUInt16Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "short")]
         public void Test005()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(short.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(short.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(short.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(short.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((short)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((short)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((short)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((short)256, actual4);
-
-            short? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            short? value11 = short.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(short.MinValue, actual11);
-
-            short? value12 = short.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(short.MaxValue, actual12);
-
-            var value20 = new short[] { short.MinValue, 2, 257, short.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new short[] { short.MinValue, 2, 257, short.MaxValue }, actual20);
-
-            var value21 = Array.Empty<short>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<short>(), actual21);
-
-            var value30 = new short?[] { short.MaxValue, null, 2, 257, short.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new short?[] { short.MaxValue, null, 2, 257, short.MinValue }, actual30);
+            ExecuteTest(short.MinValue, ORiN3BinaryConverter.DataType.Int16);
+            ExecuteTest(short.MaxValue, ORiN3BinaryConverter.DataType.Int16);
+            ExecuteTest<short>(1, ORiN3BinaryConverter.DataType.Int16);
+            ExecuteTest<short>(256, ORiN3BinaryConverter.DataType.Int16);
+            ExecuteTest<short?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<short?>(short.MinValue, ORiN3BinaryConverter.DataType.Int16);
+            ExecuteTest<short?>(short.MaxValue, ORiN3BinaryConverter.DataType.Int16);
+            ExecuteTest<short[]>([short.MinValue, 2, 257, short.MaxValue], ORiN3BinaryConverter.DataType.Int16Array);
+            ExecuteTest<short[]>([], ORiN3BinaryConverter.DataType.Int16Array);
+            ExecuteTest<short?[]>([short.MinValue, 2, 257, short.MaxValue, null], ORiN3BinaryConverter.DataType.NullableInt16Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "uint")]
         public void Test006()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(uint.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(uint.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(uint.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(uint.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((uint)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((uint)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((uint)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((uint)256, actual4);
-
-            uint? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            uint? value11 = uint.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(uint.MinValue, actual11);
-
-            uint? value12 = uint.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(uint.MaxValue, actual12);
-
-            var value20 = new uint[] { uint.MinValue, 2, 257, uint.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new uint[] { uint.MinValue, 2, 257, uint.MaxValue }, actual20);
-
-            var value21 = Array.Empty<uint>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<uint>(), actual21);
-
-            var value30 = new uint?[] { uint.MaxValue, null, 2, 257, uint.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new uint?[] { uint.MaxValue, null, 2, 257, uint.MinValue }, actual30);
+            ExecuteTest(uint.MinValue, ORiN3BinaryConverter.DataType.UInt32);
+            ExecuteTest(uint.MaxValue, ORiN3BinaryConverter.DataType.UInt32);
+            ExecuteTest<uint>(1, ORiN3BinaryConverter.DataType.UInt32);
+            ExecuteTest<uint>(256, ORiN3BinaryConverter.DataType.UInt32);
+            ExecuteTest<uint?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<uint?>(uint.MinValue, ORiN3BinaryConverter.DataType.UInt32);
+            ExecuteTest<uint?>(uint.MaxValue, ORiN3BinaryConverter.DataType.UInt32);
+            ExecuteTest<uint[]>([uint.MinValue, 2, 257, uint.MaxValue], ORiN3BinaryConverter.DataType.UInt32Array);
+            ExecuteTest<uint[]>([], ORiN3BinaryConverter.DataType.UInt32Array);
+            ExecuteTest<uint?[]>([uint.MinValue, 2, 257, uint.MaxValue, null], ORiN3BinaryConverter.DataType.NullableUInt32Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "int")]
         public void Test007()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(int.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(int.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(int.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(int.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary(1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal(1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary(256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal(256, actual4);
-
-            int? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            int? value11 = int.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(int.MinValue, actual11);
-
-            int? value12 = int.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(int.MaxValue, actual12);
-
-            var value20 = new int[] { int.MinValue, 2, 257, int.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new int[] { int.MinValue, 2, 257, int.MaxValue }, actual20);
-
-            var value21 = Array.Empty<int>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<int>(), actual21);
-
-            var value30 = new int?[] { int.MaxValue, null, 2, 257, int.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new int?[] { int.MaxValue, null, 2, 257, int.MinValue }, actual30);
+            ExecuteTest(int.MinValue, ORiN3BinaryConverter.DataType.Int32);
+            ExecuteTest(int.MaxValue, ORiN3BinaryConverter.DataType.Int32);
+            ExecuteTest(1, ORiN3BinaryConverter.DataType.Int32);
+            ExecuteTest(256, ORiN3BinaryConverter.DataType.Int32);
+            ExecuteTest<int?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<int?>(int.MinValue, ORiN3BinaryConverter.DataType.Int32);
+            ExecuteTest<int?>(int.MaxValue, ORiN3BinaryConverter.DataType.Int32);
+            ExecuteTest<int[]>([int.MinValue, 2, 257, int.MaxValue], ORiN3BinaryConverter.DataType.Int32Array);
+            ExecuteTest<int[]>([], ORiN3BinaryConverter.DataType.Int32Array);
+            ExecuteTest<int?[]>([int.MinValue, 2, 257, int.MaxValue, null], ORiN3BinaryConverter.DataType.NullableInt32Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "ulong")]
         public void Test008()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(ulong.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(ulong.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(ulong.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(ulong.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((ulong)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((ulong)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((ulong)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((ulong)256, actual4);
-
-            ulong? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            ulong? value11 = ulong.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(ulong.MinValue, actual11);
-
-            ulong? value12 = ulong.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(ulong.MaxValue, actual12);
-
-            var value20 = new ulong[] { ulong.MinValue, 2, 257, ulong.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new ulong[] { ulong.MinValue, 2, 257, ulong.MaxValue }, actual20);
-
-            var value21 = Array.Empty<ulong>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<ulong>(), actual21);
-
-            var value30 = new ulong?[] { ulong.MaxValue, null, 2, 257, ulong.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new ulong?[] { ulong.MaxValue, null, 2, 257, ulong.MinValue }, actual30);
+            ExecuteTest(ulong.MinValue, ORiN3BinaryConverter.DataType.UInt64);
+            ExecuteTest(ulong.MaxValue, ORiN3BinaryConverter.DataType.UInt64);
+            ExecuteTest<ulong>(1, ORiN3BinaryConverter.DataType.UInt64);
+            ExecuteTest<ulong>(256, ORiN3BinaryConverter.DataType.UInt64);
+            ExecuteTest<ulong?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<ulong?>(ulong.MinValue, ORiN3BinaryConverter.DataType.UInt64);
+            ExecuteTest<ulong?>(ulong.MaxValue, ORiN3BinaryConverter.DataType.UInt64);
+            ExecuteTest<ulong[]>([ulong.MinValue, 2, 257, ulong.MaxValue], ORiN3BinaryConverter.DataType.UInt64Array);
+            ExecuteTest<ulong[]>([], ORiN3BinaryConverter.DataType.UInt64Array);
+            ExecuteTest<ulong?[]>([ulong.MinValue, 2, 257, ulong.MaxValue, null], ORiN3BinaryConverter.DataType.NullableUInt64Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "long")]
         public void Test009()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(long.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(long.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(long.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(long.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((long)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((long)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((long)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((long)256, actual4);
-
-            long? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            long? value11 = long.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(long.MinValue, actual11);
-
-            long? value12 = long.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(long.MaxValue, actual12);
-
-            var value20 = new long[] { long.MinValue, 2, 257, long.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new long[] { long.MinValue, 2, 257, long.MaxValue }, actual20);
-
-            var value21 = Array.Empty<long>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<long>(), actual21);
-
-            var value30 = new long?[] { long.MaxValue, null, 2, 257, long.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new long?[] { long.MaxValue, null, 2, 257, long.MinValue }, actual30);
+            ExecuteTest(long.MinValue, ORiN3BinaryConverter.DataType.Int64);
+            ExecuteTest(long.MaxValue, ORiN3BinaryConverter.DataType.Int64);
+            ExecuteTest<long>(1, ORiN3BinaryConverter.DataType.Int64);
+            ExecuteTest<long>(256, ORiN3BinaryConverter.DataType.Int64);
+            ExecuteTest<long?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<long?>(long.MinValue, ORiN3BinaryConverter.DataType.Int64);
+            ExecuteTest<long?>(long.MaxValue, ORiN3BinaryConverter.DataType.Int64);
+            ExecuteTest<long[]>([long.MinValue, 2, 257, long.MaxValue], ORiN3BinaryConverter.DataType.Int64Array);
+            ExecuteTest<long[]>([], ORiN3BinaryConverter.DataType.Int64Array);
+            ExecuteTest<long?[]>([long.MinValue, 2, 257, long.MaxValue, null], ORiN3BinaryConverter.DataType.NullableInt64Array);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "float")]
         public void Test010()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(float.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(float.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(float.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(float.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((float)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((float)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((float)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((float)256, actual4);
-
-            var converted5 = ORiN3BinaryConverter.ToBinary(float.PositiveInfinity);
-            var actual5 = ORiN3BinaryConverter.ToObject(converted5);
-            Assert.Equal(float.PositiveInfinity, actual5);
-
-            var converted6 = ORiN3BinaryConverter.ToBinary(float.NegativeInfinity);
-            var actual6 = ORiN3BinaryConverter.ToObject(converted6);
-            Assert.Equal(float.NegativeInfinity, actual6);
-
-            var converted7 = ORiN3BinaryConverter.ToBinary(float.NaN);
-            var actual7 = ORiN3BinaryConverter.ToObject(converted7);
-            Assert.Equal(float.NaN, actual7);
-
-            float? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            float? value11 = float.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(float.MinValue, actual11);
-
-            float? value12 = float.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(float.MaxValue, actual12);
-
-            var value20 = new float[] { float.MinValue, 2, 257, float.PositiveInfinity, float.NegativeInfinity, float.NaN, float.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new float[] { float.MinValue, 2, 257, float.PositiveInfinity, float.NegativeInfinity, float.NaN, float.MaxValue }, actual20);
-
-            var value21 = Array.Empty<float>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<float>(), actual21);
-
-            var value30 = new float?[] { float.MaxValue, null, 2, 257, float.PositiveInfinity, float.NegativeInfinity, float.NaN, float.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new float?[] { float.MaxValue, null, 2, 257, float.PositiveInfinity, float.NegativeInfinity, float.NaN, float.MinValue }, actual30);
+            ExecuteTest(float.MinValue, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest(float.MaxValue, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest<float>(1, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest<float>(256, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest(float.PositiveInfinity, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest(float.NegativeInfinity, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest(float.NaN, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest<float?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<float?>(float.MinValue, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest<float?>(float.MaxValue, ORiN3BinaryConverter.DataType.Float);
+            ExecuteTest<float[]>([float.MinValue, 2, 257, float.MaxValue], ORiN3BinaryConverter.DataType.FloatArray);
+            ExecuteTest<float[]>([], ORiN3BinaryConverter.DataType.FloatArray);
+            ExecuteTest<float?[]>([float.MinValue, 2, 257, float.MaxValue, null], ORiN3BinaryConverter.DataType.NullableFloatArray);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "double")]
         public void Test011()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(double.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(double.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(double.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(double.MaxValue, actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary((double)1);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal((double)1, actual3);
-
-            var converted4 = ORiN3BinaryConverter.ToBinary((double)256);
-            var actual4 = ORiN3BinaryConverter.ToObject(converted4);
-            Assert.Equal((double)256, actual4);
-
-            var converted5 = ORiN3BinaryConverter.ToBinary(double.PositiveInfinity);
-            var actual5 = ORiN3BinaryConverter.ToObject(converted5);
-            Assert.Equal(double.PositiveInfinity, actual5);
-
-            var converted6 = ORiN3BinaryConverter.ToBinary(double.NegativeInfinity);
-            var actual6 = ORiN3BinaryConverter.ToObject(converted6);
-            Assert.Equal(double.NegativeInfinity, actual6);
-
-            var converted7 = ORiN3BinaryConverter.ToBinary(double.NaN);
-            var actual7 = ORiN3BinaryConverter.ToObject(converted7);
-            Assert.Equal(double.NaN, actual7);
-
-            double? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            double? value11 = double.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(double.MinValue, actual11);
-
-            double? value12 = double.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(double.MaxValue, actual12);
-
-            var value20 = new double[] { double.MinValue, 2, 257, double.PositiveInfinity, double.NegativeInfinity, double.NaN, double.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new double[] { double.MinValue, 2, 257, double.PositiveInfinity, double.NegativeInfinity, double.NaN, double.MaxValue }, actual20);
-
-            var value21 = Array.Empty<double>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<double>(), actual21);
-
-            var value30 = new double?[] { double.MaxValue, null, 2, 257, double.PositiveInfinity, double.NegativeInfinity, double.NaN, double.MinValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new double?[] { double.MaxValue, null, 2, 257, double.PositiveInfinity, double.NegativeInfinity, double.NaN, double.MinValue }, actual30);
+            ExecuteTest(double.MinValue, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest(double.MaxValue, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest<double>(1, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest<double>(256, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest(double.PositiveInfinity, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest(double.NegativeInfinity, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest(double.NaN, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest<double?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<double?>(double.MinValue, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest<double?>(double.MaxValue, ORiN3BinaryConverter.DataType.Double);
+            ExecuteTest<double[]>([double.MinValue, 2, 257, double.MaxValue], ORiN3BinaryConverter.DataType.DoubleArray);
+            ExecuteTest<double[]>([], ORiN3BinaryConverter.DataType.DoubleArray);
+            ExecuteTest<double?[]>([double.MinValue, 2, 257, double.MaxValue, null], ORiN3BinaryConverter.DataType.NullableDoubleArray);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "DateTime")]
         public void Test012()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(DateTime.MinValue);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(DateTime.MinValue, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary(DateTime.MaxValue);
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal(DateTime.MaxValue, actual2);
-
-            var now = DateTime.Now;
-            var converted3 = ORiN3BinaryConverter.ToBinary(now);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Equal(now, actual3);
-
-            DateTime? value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            DateTime? value11 = DateTime.MinValue;
-            var converted11 = ORiN3BinaryConverter.ToBinary(value11);
-            var actual11 = ORiN3BinaryConverter.ToObject(converted11);
-            Assert.Equal(DateTime.MinValue, actual11);
-
-            DateTime? value12 = DateTime.MaxValue;
-            var converted12 = ORiN3BinaryConverter.ToBinary(value12);
-            var actual12 = ORiN3BinaryConverter.ToObject(converted12);
-            Assert.Equal(DateTime.MaxValue, actual12);
-
-            var value20 = new DateTime[] { DateTime.MinValue, now, DateTime.MaxValue };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new DateTime[] { DateTime.MinValue, now, DateTime.MaxValue }, actual20);
-
-            var value21 = Array.Empty<DateTime>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<DateTime>(), actual21);
-
-            var value30 = new DateTime?[] { DateTime.MinValue, now, DateTime.MaxValue };
-            var converted30 = ORiN3BinaryConverter.ToBinary(value30);
-            var actual30 = ORiN3BinaryConverter.ToObject(converted30);
-            Assert.Equal(new DateTime?[] { DateTime.MinValue, now, DateTime.MaxValue }, actual30);
+            ExecuteTest(DateTime.MinValue, ORiN3BinaryConverter.DataType.DateTime);
+            ExecuteTest(DateTime.MaxValue, ORiN3BinaryConverter.DataType.DateTime);
+            ExecuteTest(DateTime.Now, ORiN3BinaryConverter.DataType.DateTime);
+            ExecuteTest<DateTime?>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<DateTime?>(DateTime.MinValue, ORiN3BinaryConverter.DataType.DateTime);
+            ExecuteTest<DateTime?>(DateTime.MaxValue, ORiN3BinaryConverter.DataType.DateTime);
+            ExecuteTest<DateTime[]>([DateTime.MinValue, DateTime.Now, DateTime.MaxValue], ORiN3BinaryConverter.DataType.DateTimeArray);
+            ExecuteTest<DateTime[]>([], ORiN3BinaryConverter.DataType.DateTimeArray);
+            ExecuteTest<DateTime?[]>([DateTime.MinValue, DateTime.Now, DateTime.MaxValue, null], ORiN3BinaryConverter.DataType.NullableDateTimeArray);
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "string")]
         public void Test013()
         {
-            var converted1 = ORiN3BinaryConverter.ToBinary(string.Empty);
-            var actual1 = ORiN3BinaryConverter.ToObject(converted1);
-            Assert.Equal(string.Empty, actual1);
-
-            var converted2 = ORiN3BinaryConverter.ToBinary("abcあいう");
-            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
-            Assert.Equal("abcあいう", actual2);
-
-            var converted3 = ORiN3BinaryConverter.ToBinary(null);
-            var actual3 = ORiN3BinaryConverter.ToObject(converted3);
-            Assert.Null(actual3);
-
-            string value10 = null;
-            var converted10 = ORiN3BinaryConverter.ToBinary(value10);
-            var actual10 = ORiN3BinaryConverter.ToObject(converted10);
-            Assert.Null(actual10);
-
-            var value20 = new string[] { string.Empty, "abcあいう", null, "" };
-            var converted20 = ORiN3BinaryConverter.ToBinary(value20);
-            var actual20 = ORiN3BinaryConverter.ToObject(converted20);
-            Assert.Equal(new string[] { string.Empty, "abcあいう", null, "" }, actual20);
-
-            var value21 = Array.Empty<string>();
-            var converted21 = ORiN3BinaryConverter.ToBinary(value21);
-            var actual21 = ORiN3BinaryConverter.ToObject(converted21);
-            Assert.Equal(Array.Empty<string>(), actual21);
+            ExecuteTest(string.Empty, ORiN3BinaryConverter.DataType.String);
+            ExecuteTest("abcあいう𩸽", ORiN3BinaryConverter.DataType.String);
+            ExecuteTest<string>(null, ORiN3BinaryConverter.DataType.Null);
+            ExecuteTest<string[]>([string.Empty, "abcあいう𩸽", null, ""], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>([], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>([null], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>([string.Empty], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>(["a"], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>(["\u304C", "\u304B\u3099", "e\u0301", "u\u0308", "\u0E01\u0E34", "\u0646\u064E", "\U0001F468\u200D\U0001F469\u200D\U0001F467\u200D\U0001F466"], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>(["あ", null], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>([null, "あ"], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>(["あ", string.Empty], ORiN3BinaryConverter.DataType.StringArray);
+            ExecuteTest<string[]>([string.Empty, "あ"], ORiN3BinaryConverter.DataType.StringArray);
         }
 
-        public static IEnumerable<object[]> TestData
-        {
-            get
-            {
-                {
-                    yield return new object[] { new object[] { true, new bool[] { false, true } } };
-                    yield return new object[] { new object[] { new bool[] { false, true }, new bool?[] { true, null, false } } };
-                    yield return new object[] { new object[] { new bool?[] { true, null, false }, (byte)123 } };
-                    yield return new object[] { new object[] { (byte)123, new byte[] { byte.MinValue, byte.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new byte[] { byte.MinValue, byte.MaxValue, 123 }, new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new byte?[] { byte.MinValue, byte.MaxValue, null, 123 }, (sbyte)12 } };
-                    yield return new object[] { new object[] { (sbyte)12, new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 }, new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 }, (ushort)12345 } };
-                    yield return new object[] { new object[] { (ushort)12345, new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new ushort[] { ushort.MinValue, ushort.MaxValue, 123 }, new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 }, (short)111 } };
-                    yield return new object[] { new object[] { (short)111, new short[] { short.MinValue, short.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new short[] { short.MinValue, short.MaxValue, 123 }, new short?[] { short.MinValue, short.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new short?[] { short.MinValue, short.MaxValue, null, 123 }, (uint)123456 } };
-                    yield return new object[] { new object[] { (uint)123456, new uint[] { uint.MinValue, uint.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new uint[] { uint.MinValue, uint.MaxValue, 123 }, new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new uint?[] { uint.MinValue, uint.MaxValue, null, 123 }, 654321 } };
-                    yield return new object[] { new object[] { 654321, new int[] { int.MinValue, int.MaxValue, 123 }, } };
-                    yield return new object[] { new object[] { new int[] { int.MinValue, int.MaxValue, 123 }, new int?[] { int.MinValue, int.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new int?[] { int.MinValue, int.MaxValue, null, 123 }, (ulong)5555455 } };
-                    yield return new object[] { new object[] { (ulong)5555455, new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new ulong[] { ulong.MinValue, ulong.MaxValue, 123 }, new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 }, (long)3333321 } };
-                    yield return new object[] { new object[] { (long)3333321, new long[] { long.MinValue, long.MaxValue, 123 } } };
-                    yield return new object[] { new object[] { new long[] { long.MinValue, long.MaxValue, 123 }, new long?[] { long.MinValue, long.MaxValue, null, 123 } } };
-                    yield return new object[] { new object[] { new long?[] { long.MinValue, long.MaxValue, null, 123 }, 0.1F } };
-                    yield return new object[] { new object[] { 0.1F, new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, } };
-                    yield return new object[] { new object[] { new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, } };
-                    yield return new object[] { new object[] { new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, 1.1D } };
-                    yield return new object[] { new object[] { 1.1D, new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } };
-                    yield return new object[] { new object[] { new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F }, new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } };
-                    yield return new object[] { new object[] { new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F }, DateTime.Now } };
-                    yield return new object[] { new object[] { DateTime.Now, new DateTime[] { DateTime.MinValue, DateTime.MinValue } } };
-                    yield return new object[] { new object[] { new DateTime[] { DateTime.MinValue, DateTime.MinValue }, new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } };
-                    yield return new object[] { new object[] { new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue }, "aaaaabbbbbcccc" } };
-                    yield return new object[] { new object[] { "aaaaabbbbbcccc", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } };
-                    yield return new object[] { new object[] { new string[] { "12345", string.Empty, null, "AAAABBBBCCC" }, true } };
-                }
-            }
-        }
+        public static TheoryData<object> TestData =>
+        [
+            new object[] { true, new bool[] { false, true } },
+            new object[] { new bool[] { false, true }, new bool?[] { true, null, false } },
+            new object[] { new bool?[] { true, null, false }, (byte)123 } ,
+            new object[] { (byte)123, new byte[] { byte.MinValue, byte.MaxValue, 123 } } ,
+            new object[] { new byte[] { byte.MinValue, byte.MaxValue, 123 }, new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } ,
+            new object[] { new byte?[] { byte.MinValue, byte.MaxValue, null, 123 }, (sbyte)12 } ,
+            new object[] { (sbyte)12, new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } ,
+            new object[] { new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 }, new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } ,
+            new object[] { new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 }, (ushort)12345 } ,
+            new object[] { (ushort)12345, new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } ,
+            new object[] { new ushort[] { ushort.MinValue, ushort.MaxValue, 123 }, new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } ,
+            new object[] { new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 }, (short)111 } ,
+            new object[] { (short)111, new short[] { short.MinValue, short.MaxValue, 123 } } ,
+            new object[] { new short[] { short.MinValue, short.MaxValue, 123 }, new short?[] { short.MinValue, short.MaxValue, null, 123 } } ,
+            new object[] { new short?[] { short.MinValue, short.MaxValue, null, 123 }, (uint)123456 } ,
+            new object[] { (uint)123456, new uint[] { uint.MinValue, uint.MaxValue, 123 } } ,
+            new object[] { new uint[] { uint.MinValue, uint.MaxValue, 123 }, new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } ,
+            new object[] { new uint?[] { uint.MinValue, uint.MaxValue, null, 123 }, 654321 } ,
+            new object[] { 654321, new int[] { int.MinValue, int.MaxValue, 123 }, } ,
+            new object[] { new int[] { int.MinValue, int.MaxValue, 123 }, new int?[] { int.MinValue, int.MaxValue, null, 123 } } ,
+            new object[] { new int?[] { int.MinValue, int.MaxValue, null, 123 }, (ulong)5555455 } ,
+            new object[] { (ulong)5555455, new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } ,
+            new object[] { new ulong[] { ulong.MinValue, ulong.MaxValue, 123 }, new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } ,
+            new object[] { new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 }, (long)3333321 } ,
+            new object[] { (long)3333321, new long[] { long.MinValue, long.MaxValue, 123 } } ,
+            new object[] { new long[] { long.MinValue, long.MaxValue, 123 }, new long?[] { long.MinValue, long.MaxValue, null, 123 } } ,
+            new object[] { new long?[] { long.MinValue, long.MaxValue, null, 123 }, 0.1F } ,
+            new object[] { 0.1F, new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, } ,
+            new object[] { new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, } ,
+            new object[] { new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, 1.1D } ,
+            new object[] { 1.1D, new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } ,
+            new object[] { new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F }, new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } ,
+            new object[] { new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F }, DateTime.Now } ,
+            new object[] { DateTime.Now, new DateTime[] { DateTime.MinValue, DateTime.MinValue } } ,
+            new object[] { new DateTime[] { DateTime.MinValue, DateTime.MinValue }, new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } ,
+            new object[] { new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue }, "aaaaabbbbbcccc" } ,
+            new object[] { "aaaaabbbbbcccc", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } ,
+            new object[] { new string[] { "12345", string.Empty, null, "AAAABBBBCCC" }, true } ,
+        ];
 
         [Theory]
         [Trait(nameof(ORiN3BinaryConverter), "object")]
@@ -705,8 +275,26 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
         public void Test100(object data)
         {
             var converted = ORiN3BinaryConverter.ToBinary(data);
+            Assert.Equal((byte)ORiN3BinaryConverter.DataType.ObjectArray, converted[0]);
             var actual = ORiN3BinaryConverter.ToObject(converted);
             Assert.Equal(data, actual);
+        }
+
+        private static void ExecuteDictionaryTest(ORiN3BinaryConverter.DataType expectedDataType, Dictionary<string, object> target)
+        {
+            var converted = ORiN3BinaryConverter.FromDictionaryToBinary(target);
+            var actual = ORiN3BinaryConverter.ToDictionary(converted);
+            Assert.Equal(target, actual);
+
+            var converted2 = ORiN3BinaryConverter.ToBinary(target).AsSpan();
+            Assert.Equal((byte)ORiN3BinaryConverter.DataType.Dictionary, converted2[0]);
+            var valueCount = ORiN3BitConverter.ToInt32(converted2[5..]);
+            Assert.Equal(1, valueCount);
+            Assert.Equal((byte)ORiN3BinaryConverter.DataType.String, converted2[9]);
+            var keyLength = ORiN3BitConverter.ToInt32(converted2[10..]);
+            Assert.Equal((byte)expectedDataType, converted2[14 + keyLength]);
+            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
+            Assert.Equal(target, actual2);
         }
 
         [Fact]
@@ -724,819 +312,303 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - bool")]
         public void Test201()
         {
-            var data1 = new Dictionary<string, object>() { { "key", true } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", false } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            bool? value3 = null;
-            var data3 = new Dictionary<string, object>() { { "key", value3 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            bool? value4 = true;
-            var data4 = new Dictionary<string, object>() { { "key", value4 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            bool? value5 = false;
-            var data5 = new Dictionary<string, object>() { { "key", value5 } };
-            var converted5 = ORiN3BinaryConverter.FromDictionaryToBinary(data5);
-            var actual5 = ORiN3BinaryConverter.ToDictionary(converted5);
-            Assert.Equal(data5, actual5);
-
-            var value6 = new[] { true, false };
-            var data6 = new Dictionary<string, object>() { { "key", value6 } };
-            var converted6 = ORiN3BinaryConverter.FromDictionaryToBinary(data6);
-            var actual6 = ORiN3BinaryConverter.ToDictionary(converted6);
-            Assert.Equal(data6, actual6);
-
-            var value7 = Array.Empty<bool>();
-            var data7 = new Dictionary<string, object>() { { "key", value7 } };
-            var converted7 = ORiN3BinaryConverter.FromDictionaryToBinary(data7);
-            var actual7 = ORiN3BinaryConverter.ToDictionary(converted7);
-            Assert.Equal(data7, actual7);
-
-            var value8 = new bool?[] { false, null, true };
-            var data8 = new Dictionary<string, object>() { { "key", value8 } };
-            var converted8 = ORiN3BinaryConverter.FromDictionaryToBinary(data8);
-            var actual8 = ORiN3BinaryConverter.ToDictionary(converted8);
-            Assert.Equal(data8, actual8);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Bool, new Dictionary<string, object>() { { "key", true } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Bool, new Dictionary<string, object>() { { "key", false } });
+            bool? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            bool? value2 = true;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Bool, new Dictionary<string, object>() { { "key", value2 } });
+            bool? value3 = false;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Bool, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.BoolArray, new Dictionary<string, object>() { { "key", new bool[] { true, false } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.BoolArray, new Dictionary<string, object>() { { "key", Array.Empty<bool>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableBoolArray, new Dictionary<string, object>() { { "key", new bool?[] { true, null, false } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - byte")]
         public void Test202()
         {
-            var data1 = new Dictionary<string, object>() { { "key", byte.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", byte.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            byte? value3 = null;
-            var data3 = new Dictionary<string, object>() { { "key", value3 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            byte? value4 = byte.MinValue;
-            var data4 = new Dictionary<string, object>() { { "key", value4 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            byte? value5 = byte.MaxValue;
-            var data5 = new Dictionary<string, object>() { { "key", value5 } };
-            var converted5 = ORiN3BinaryConverter.FromDictionaryToBinary(data5);
-            var actual5 = ORiN3BinaryConverter.ToDictionary(converted5);
-            Assert.Equal(data5, actual5);
-
-            var value6 = new[] { byte.MinValue, 2, byte.MaxValue };
-            var data6 = new Dictionary<string, object>() { { "key", value6 } };
-            var converted6 = ORiN3BinaryConverter.FromDictionaryToBinary(data6);
-            var actual6 = ORiN3BinaryConverter.ToDictionary(converted6);
-            Assert.Equal(data6, actual6);
-
-            var value7 = Array.Empty<byte>();
-            var data7 = new Dictionary<string, object>() { { "key", value7 } };
-            var converted7 = ORiN3BinaryConverter.FromDictionaryToBinary(data7);
-            var actual7 = ORiN3BinaryConverter.ToDictionary(converted7);
-            Assert.Equal(data7, actual7);
-
-            var value8 = new byte?[] { byte.MaxValue, null, 2, byte.MinValue };
-            var data8 = new Dictionary<string, object>() { { "key", value8 } };
-            var converted8 = ORiN3BinaryConverter.FromDictionaryToBinary(data8);
-            var actual8 = ORiN3BinaryConverter.ToDictionary(converted8);
-            Assert.Equal(data8, actual8);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt8, new Dictionary<string, object>() { { "key", byte.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt8, new Dictionary<string, object>() { { "key", byte.MaxValue } });
+            byte? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            byte? value2 = byte.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt8, new Dictionary<string, object>() { { "key", value2 } });
+            byte? value3 = byte.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt8, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt8Array, new Dictionary<string, object>() { { "key", new byte[] { byte.MinValue, 2, byte.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt8Array, new Dictionary<string, object>() { { "key", Array.Empty<byte>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableUInt8Array, new Dictionary<string, object>() { { "key", new byte?[] { byte.MaxValue, null, 2, byte.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - sbyte")]
         public void Test203()
         {
-            var data1 = new Dictionary<string, object>() { { "key", sbyte.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", sbyte.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (sbyte)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            sbyte? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            sbyte? value11 = sbyte.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            sbyte? value12 = sbyte.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new sbyte[] { sbyte.MinValue, 2, sbyte.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<sbyte>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new sbyte?[] { sbyte.MaxValue, null, 2, sbyte.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int8, new Dictionary<string, object>() { { "key", sbyte.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int8, new Dictionary<string, object>() { { "key", sbyte.MaxValue } });
+            sbyte? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            sbyte? value2 = sbyte.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int8, new Dictionary<string, object>() { { "key", value2 } });
+            sbyte? value3 = sbyte.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int8, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int8Array, new Dictionary<string, object>() { { "key", new sbyte[] { sbyte.MinValue, 2, sbyte.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int8Array, new Dictionary<string, object>() { { "key", Array.Empty<sbyte>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableInt8Array, new Dictionary<string, object>() { { "key", new sbyte?[] { sbyte.MaxValue, null, 2, sbyte.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - ushort")]
         public void Test204()
         {
-            var data1 = new Dictionary<string, object>() { { "key", ushort.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", ushort.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (ushort)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (ushort)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            ushort? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            ushort? value11 = ushort.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            ushort? value12 = ushort.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new ushort[] { ushort.MinValue, 2, 257, ushort.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<ushort>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new ushort?[] { ushort.MaxValue, null, 2, 257, ushort.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16, new Dictionary<string, object>() { { "key", ushort.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16, new Dictionary<string, object>() { { "key", ushort.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16, new Dictionary<string, object>() { { "key", (ushort)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16, new Dictionary<string, object>() { { "key", (ushort)256 } });
+            ushort? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            ushort? value2 = ushort.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16, new Dictionary<string, object>() { { "key", value2 } });
+            ushort? value3 = ushort.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16Array, new Dictionary<string, object>() { { "key", new ushort[] { ushort.MinValue, 2, 257, ushort.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt16Array, new Dictionary<string, object>() { { "key", Array.Empty<ushort>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableUInt16Array, new Dictionary<string, object>() { { "key", new ushort?[] { ushort.MaxValue, null, 2, 257, ushort.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - short")]
         public void Test205()
         {
-            var data1 = new Dictionary<string, object>() { { "key", short.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", short.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (short)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (short)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            short? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            short? value11 = short.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            short? value12 = short.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new short[] { short.MinValue, 2, 257, short.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<short>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new short?[] { short.MaxValue, null, 2, 257, short.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16, new Dictionary<string, object>() { { "key", short.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16, new Dictionary<string, object>() { { "key", short.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16, new Dictionary<string, object>() { { "key", (short)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16, new Dictionary<string, object>() { { "key", (short)256 } });
+            short? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            short? value2 = short.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16, new Dictionary<string, object>() { { "key", value2 } });
+            short? value3 = short.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16Array, new Dictionary<string, object>() { { "key", new short[] { short.MinValue, 2, 257, short.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int16Array, new Dictionary<string, object>() { { "key", Array.Empty<short>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableInt16Array, new Dictionary<string, object>() { { "key", new short?[] { short.MaxValue, null, 2, 257, short.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - uint")]
         public void Test206()
         {
-            var data1 = new Dictionary<string, object>() { { "key", uint.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", uint.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (uint)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (uint)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            uint? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            uint? value11 = uint.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            uint? value12 = uint.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new uint[] { uint.MinValue, 2, 257, uint.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<uint>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new uint?[] { uint.MaxValue, null, 2, 257, uint.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", uint.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", uint.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", (uint)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", (uint)256 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", (uint)65536 } });
+            uint? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            uint? value2 = uint.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", value2 } });
+            uint? value3 = uint.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32Array, new Dictionary<string, object>() { { "key", new uint[] { uint.MinValue, 2, 257, 65537, uint.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt32Array, new Dictionary<string, object>() { { "key", Array.Empty<uint>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableUInt32Array, new Dictionary<string, object>() { { "key", new uint?[] { uint.MaxValue, null, 2, 257, 65537, uint.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - int")]
         public void Test207()
         {
-            var data1 = new Dictionary<string, object>() { { "key", int.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", int.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", 1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", 256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            int? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            int? value11 = int.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            int? value12 = int.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new int[] { int.MinValue, 2, 257, int.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<int>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new int?[] { int.MaxValue, null, 2, 257, int.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", int.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", int.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", 1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", 256 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", 65536 } });
+            int? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            int? value2 = int.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", value2 } });
+            int? value3 = int.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32Array, new Dictionary<string, object>() { { "key", new int[] { int.MinValue, 2, 257, 65537, int.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int32Array, new Dictionary<string, object>() { { "key", Array.Empty<int>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableInt32Array, new Dictionary<string, object>() { { "key", new int?[] { int.MaxValue, null, 2, 257, 65537, int.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - ulong")]
         public void Test208()
         {
-            var data1 = new Dictionary<string, object>() { { "key", ulong.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", ulong.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (ulong)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (ulong)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            ulong? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            ulong? value11 = ulong.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            ulong? value12 = ulong.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new ulong[] { ulong.MinValue, 2, 257, ulong.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<ulong>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new ulong?[] { ulong.MaxValue, null, 2, 257, ulong.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", ulong.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", ulong.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", (ulong)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", (ulong)256 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", (ulong)65536 } }); 
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", (ulong)4294967296 } });
+            ulong? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            ulong? value2 = ulong.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", value2 } });
+            ulong? value3 = ulong.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64Array, new Dictionary<string, object>() { { "key", new ulong[] { ulong.MinValue, 2, 257, 65537, 4294967297, ulong.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.UInt64Array, new Dictionary<string, object>() { { "key", Array.Empty<ulong>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableUInt64Array, new Dictionary<string, object>() { { "key", new ulong?[] { ulong.MaxValue, null, 2, 257, 65537, 4294967297, ulong.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - long")]
         public void Test209()
         {
-            var data1 = new Dictionary<string, object>() { { "key", long.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", long.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (long)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (long)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            long? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            long? value11 = long.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            long? value12 = long.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new long[] { long.MinValue, 2, 257, long.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<long>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new long?[] { long.MaxValue, null, 2, 257, long.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", long.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", long.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", (long)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", (long)256 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", (long)65536 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", 4294967296 } });
+            long? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            long? value2 = long.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", value2 } });
+            long? value3 = long.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64Array, new Dictionary<string, object>() { { "key", new long[] { long.MinValue, 2, 257, 65537, 4294967297, long.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Int64Array, new Dictionary<string, object>() { { "key", Array.Empty<long>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableInt64Array, new Dictionary<string, object>() { { "key", new long?[] { long.MaxValue, null, 2, 257, 65537, 4294967297, long.MinValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - float")]
         public void Test210()
         {
-            var data1 = new Dictionary<string, object>() { { "key", float.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", float.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (float)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (float)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            var data5 = new Dictionary<string, object>() { { "key", float.PositiveInfinity } };
-            var converted5 = ORiN3BinaryConverter.FromDictionaryToBinary(data5);
-            var actual5 = ORiN3BinaryConverter.ToDictionary(converted5);
-            Assert.Equal(data5, actual5);
-
-            var data6 = new Dictionary<string, object>() { { "key", float.NegativeInfinity } };
-            var converted6 = ORiN3BinaryConverter.FromDictionaryToBinary(data6);
-            var actual6 = ORiN3BinaryConverter.ToDictionary(converted6);
-            Assert.Equal(data6, actual6);
-
-            var data7 = new Dictionary<string, object>() { { "key", float.NaN } };
-            var converted7 = ORiN3BinaryConverter.FromDictionaryToBinary(data7);
-            var actual7 = ORiN3BinaryConverter.ToDictionary(converted7);
-            Assert.Equal(data7, actual7);
-
-            float? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            float? value11 = float.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            float? value12 = float.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new float[] { float.MinValue, 2, 257, float.PositiveInfinity, float.NegativeInfinity, float.NaN, float.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<float>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new float?[] { float.MaxValue, null, 2, 257, float.PositiveInfinity, float.NegativeInfinity, float.NaN, float.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.PositiveInfinity } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.NegativeInfinity } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.NaN } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", float.Epsilon } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", (float)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", (float)256 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", (float)65536 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", (float)16777216 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", (float)-16777216 } });
+            float? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            float? value2 = float.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", value2 } });
+            float? value3 = float.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Float, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.FloatArray, new Dictionary<string, object>() { { "key", new float[] { float.MinValue, 2, 257, 65537, 16777216, -16777216, float.MaxValue, float.MinValue, float.MaxValue, float.NaN, float.Epsilon } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.FloatArray, new Dictionary<string, object>() { { "key", Array.Empty<float>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableFloatArray, new Dictionary<string, object>() { { "key", new float?[] { float.MaxValue, null, 2, 257, 65537, 16777216, -16777216, float.MinValue, float.MinValue, float.MaxValue, float.NaN, float.Epsilon } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - double")]
         public void Test211()
         {
-            var data1 = new Dictionary<string, object>() { { "key", double.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", double.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", (double)1 } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            var data4 = new Dictionary<string, object>() { { "key", (double)256 } };
-            var converted4 = ORiN3BinaryConverter.FromDictionaryToBinary(data4);
-            var actual4 = ORiN3BinaryConverter.ToDictionary(converted4);
-            Assert.Equal(data4, actual4);
-
-            var data5 = new Dictionary<string, object>() { { "key", double.PositiveInfinity } };
-            var converted5 = ORiN3BinaryConverter.FromDictionaryToBinary(data5);
-            var actual5 = ORiN3BinaryConverter.ToDictionary(converted5);
-            Assert.Equal(data5, actual5);
-
-            var data6 = new Dictionary<string, object>() { { "key", double.NegativeInfinity } };
-            var converted6 = ORiN3BinaryConverter.FromDictionaryToBinary(data6);
-            var actual6 = ORiN3BinaryConverter.ToDictionary(converted6);
-            Assert.Equal(data6, actual6);
-
-            var data7 = new Dictionary<string, object>() { { "key", double.NaN } };
-            var converted7 = ORiN3BinaryConverter.FromDictionaryToBinary(data7);
-            var actual7 = ORiN3BinaryConverter.ToDictionary(converted7);
-            Assert.Equal(data7, actual7);
-
-            double? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            double? value11 = double.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            double? value12 = double.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new double[] { double.MinValue, 2, 257, double.PositiveInfinity, double.NegativeInfinity, double.NaN, double.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<double>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new double?[] { double.MaxValue, null, 2, 257, double.PositiveInfinity, double.NegativeInfinity, double.NaN, double.MinValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.PositiveInfinity } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.NegativeInfinity } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.NaN } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", double.Epsilon } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)1 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)256 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)65536 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)16777216 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)-16777216 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)9007199254740991 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", (double)-9007199254740991 } });
+            double? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            double? value2 = double.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", value2 } });
+            double? value3 = double.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Double, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DoubleArray, new Dictionary<string, object>() { { "key", new double[] { double.MinValue, 2, 257, 65537, 16777216, -16777216, 9007199254740991, -9007199254740991, double.MaxValue, double.MinValue, double.MaxValue, double.NaN, double.Epsilon } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DoubleArray, new Dictionary<string, object>() { { "key", Array.Empty<double>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableDoubleArray, new Dictionary<string, object>() { { "key", new double?[] { double.MaxValue, null, 2, 257, 65537, 16777216, -16777216, 9007199254740991, -9007199254740991, double.MinValue, double.MinValue, double.MaxValue, double.NaN, double.Epsilon } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - DateTime")]
         public void Test212()
         {
-            var data1 = new Dictionary<string, object>() { { "key", DateTime.MinValue } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", DateTime.MaxValue } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var now = DateTime.Now;
-            var data3 = new Dictionary<string, object>() { { "key", now } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            DateTime? value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            DateTime? value11 = DateTime.MinValue;
-            var data11 = new Dictionary<string, object>() { { "key", value11 } };
-            var converted11 = ORiN3BinaryConverter.FromDictionaryToBinary(data11);
-            var actual11 = ORiN3BinaryConverter.ToDictionary(converted11);
-            Assert.Equal(data11, actual11);
-
-            DateTime? value12 = DateTime.MaxValue;
-            var data12 = new Dictionary<string, object>() { { "key", value12 } };
-            var converted12 = ORiN3BinaryConverter.FromDictionaryToBinary(data12);
-            var actual12 = ORiN3BinaryConverter.ToDictionary(converted12);
-            Assert.Equal(data12, actual12);
-
-            var value20 = new DateTime[] { DateTime.MinValue, now, DateTime.MaxValue };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<DateTime>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
-
-            var value30 = new DateTime?[] { DateTime.MinValue, now, DateTime.MaxValue };
-            var data30 = new Dictionary<string, object>() { { "key", value30 } };
-            var converted30 = ORiN3BinaryConverter.FromDictionaryToBinary(data30);
-            var actual30 = ORiN3BinaryConverter.ToDictionary(converted30);
-            Assert.Equal(data30, actual30);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTime, new Dictionary<string, object>() { { "key", DateTime.MinValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTime, new Dictionary<string, object>() { { "key", DateTime.MaxValue } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTime, new Dictionary<string, object>() { { "key", DateTime.Now } });
+            DateTime? value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            DateTime? value2 = DateTime.MinValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTime, new Dictionary<string, object>() { { "key", value2 } });
+            DateTime? value3 = DateTime.MaxValue;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTime, new Dictionary<string, object>() { { "key", value3 } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTimeArray, new Dictionary<string, object>() { { "key", new DateTime[] { DateTime.MinValue, DateTime.Now, DateTime.MaxValue } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.DateTimeArray, new Dictionary<string, object>() { { "key", Array.Empty<DateTime>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.NullableDateTimeArray, new Dictionary<string, object>() { { "key", new DateTime?[] { DateTime.MaxValue, DateTime.Now, DateTime.MaxValue } } });
         }
 
         [Fact]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - string")]
         public void Test213()
         {
-            var data1 = new Dictionary<string, object>() { { "key", string.Empty } };
-            var converted1 = ORiN3BinaryConverter.FromDictionaryToBinary(data1);
-            var actual1 = ORiN3BinaryConverter.ToDictionary(converted1);
-            Assert.Equal(data1, actual1);
-
-            var data2 = new Dictionary<string, object>() { { "key", "abcあいう" } };
-            var converted2 = ORiN3BinaryConverter.FromDictionaryToBinary(data2);
-            var actual2 = ORiN3BinaryConverter.ToDictionary(converted2);
-            Assert.Equal(data2, actual2);
-
-            var data3 = new Dictionary<string, object>() { { "key", null } };
-            var converted3 = ORiN3BinaryConverter.FromDictionaryToBinary(data3);
-            var actual3 = ORiN3BinaryConverter.ToDictionary(converted3);
-            Assert.Equal(data3, actual3);
-
-            string value10 = null;
-            var data10 = new Dictionary<string, object>() { { "key", value10 } };
-            var converted10 = ORiN3BinaryConverter.FromDictionaryToBinary(data10);
-            var actual10 = ORiN3BinaryConverter.ToDictionary(converted10);
-            Assert.Equal(data10, actual10);
-
-            var value20 = new string[] { string.Empty, "abcあいう", null, "" };
-            var data20 = new Dictionary<string, object>() { { "key", value20 } };
-            var converted20 = ORiN3BinaryConverter.FromDictionaryToBinary(data20);
-            var actual20 = ORiN3BinaryConverter.ToDictionary(converted20);
-            Assert.Equal(data20, actual20);
-
-            var value21 = Array.Empty<string>();
-            var data21 = new Dictionary<string, object>() { { "key", value21 } };
-            var converted21 = ORiN3BinaryConverter.FromDictionaryToBinary(data21);
-            var actual21 = ORiN3BinaryConverter.ToDictionary(converted21);
-            Assert.Equal(data21, actual21);
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.String, new Dictionary<string, object>() { { "key", string.Empty } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.String, new Dictionary<string, object>() { { "key", "abcあいう𩸽" } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", null } });
+            string value = null;
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.Null, new Dictionary<string, object>() { { "key", value } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.StringArray, new Dictionary<string, object>() { { "key", new string[] { string.Empty, "abcあいう", null, "" } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.StringArray, new Dictionary<string, object>() { { "key", new string[] { "\u304C", "\u304B\u3099", "e\u0301", "u\u0308", "\u0E01\u0E34", "\u0646\u064E", "\U0001F468\u200D\U0001F469\u200D\U0001F467\u200D\U0001F466" } } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.StringArray, new Dictionary<string, object>() { { "key", Array.Empty<string>() } });
+            ExecuteDictionaryTest(ORiN3BinaryConverter.DataType.StringArray, new Dictionary<string, object>() { { "key", new string[] { null } } });
         }
 
-        public static IEnumerable<object[]> DicTestData
+        public static TheoryData<Dictionary<string, object>> DicTestData => new()
         {
-            get
-            {
-                {
-                    yield return new[] { new Dictionary<string, object>() { { "key1", true }, { "key2", new bool[] { false, true } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new bool[] { false, true } }, { "key2", new bool?[] { true, null, false } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new bool?[] { true, null, false } }, { "key2", (byte)123 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (byte)123 }, { "key2", new byte[] { byte.MinValue, byte.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new byte[] { byte.MinValue, byte.MaxValue, 123 } }, { "key2", new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } }, { "key2", (sbyte)12 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (sbyte)12 }, { "key2", new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } }, { "key2", new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } }, { "key2", (ushort)12345 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (ushort)12345 }, { "key2", new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } }, { "key2", new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } }, { "key2", (short)111 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (short)111 }, { "key2", new short[] { short.MinValue, short.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new short[] { short.MinValue, short.MaxValue, 123 } }, { "key2", new short?[] { short.MinValue, short.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new short?[] { short.MinValue, short.MaxValue, null, 123 } }, { "key2", (uint)123456 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (uint)123456 }, { "key2", new uint[] { uint.MinValue, uint.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new uint[] { uint.MinValue, uint.MaxValue, 123 } }, { "key2", new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } }, { "key2", 654321 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", 654321 }, { "key2", new int[] { int.MinValue, int.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new int[] { int.MinValue, int.MaxValue, 123 } }, { "key2", new int?[] { int.MinValue, int.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new int?[] { int.MinValue, int.MaxValue, null, 123 } }, { "key2", (ulong)5555455 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (ulong)5555455 }, { "key2", new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } }, { "key2", new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } }, { "key2", (long)3333321 } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", (long)3333321 }, { "key2", new long[] { long.MinValue, long.MaxValue, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new long[] { long.MinValue, long.MaxValue, 123 } }, { "key2", new long?[] { long.MinValue, long.MaxValue, null, 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new long?[] { long.MinValue, long.MaxValue, null, 123 } }, { "key2", 0.1F } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", 0.1F }, { "key2", new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F } }, { "key2", new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F } }, { "key2", 1.1D } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", 1.1D }, { "key2", new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } }, { "key2", new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } }, { "key2", DateTime.Now } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", DateTime.Now }, { "key2", new DateTime[] { DateTime.MinValue, DateTime.MinValue } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new DateTime[] { DateTime.MinValue, DateTime.MinValue } }, { "key2", new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } }, { "key2", "aaaaabbbbbcccc" } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", "aaaaabbbbbcccc" }, { "key2", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } }, { "key2", true } } };
-                }
-            }
-        }
+            new Dictionary<string, object>() { { "key1", true }, { "key2", new bool[] { false, true } } },
+            new Dictionary<string, object>() { { "key1", new bool[] { false, true } }, { "key2", new bool?[] { true, null, false } } },
+            new Dictionary<string, object>() { { "key1", new bool?[] { true, null, false } }, { "key2", (byte)123 } },
+            new Dictionary<string, object>() { { "key1", (byte)123 }, { "key2", new byte[] { byte.MinValue, byte.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new byte[] { byte.MinValue, byte.MaxValue, 123 } }, { "key2", new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } }, { "key2", (sbyte)12 } },
+            new Dictionary<string, object>() { { "key1", (sbyte)12 }, { "key2", new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } }, { "key2", new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } }, { "key2", (ushort)12345 } },
+            new Dictionary<string, object>() { { "key1", (ushort)12345 }, { "key2", new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } }, { "key2", new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } }, { "key2", (short)111 } },
+            new Dictionary<string, object>() { { "key1", (short)111 }, { "key2", new short[] { short.MinValue, short.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new short[] { short.MinValue, short.MaxValue, 123 } }, { "key2", new short?[] { short.MinValue, short.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new short?[] { short.MinValue, short.MaxValue, null, 123 } }, { "key2", (uint)123456 } },
+            new Dictionary<string, object>() { { "key1", (uint)123456 }, { "key2", new uint[] { uint.MinValue, uint.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new uint[] { uint.MinValue, uint.MaxValue, 123 } }, { "key2", new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } }, { "key2", 654321 } },
+            new Dictionary<string, object>() { { "key1", 654321 }, { "key2", new int[] { int.MinValue, int.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new int[] { int.MinValue, int.MaxValue, 123 } }, { "key2", new int?[] { int.MinValue, int.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new int?[] { int.MinValue, int.MaxValue, null, 123 } }, { "key2", (ulong)5555455 } },
+            new Dictionary<string, object>() { { "key1", (ulong)5555455 }, { "key2", new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } }, { "key2", new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } }, { "key2", (long)3333321 } },
+            new Dictionary<string, object>() { { "key1", (long)3333321 }, { "key2", new long[] { long.MinValue, long.MaxValue, 123 } } },
+            new Dictionary<string, object>() { { "key1", new long[] { long.MinValue, long.MaxValue, 123 } }, { "key2", new long?[] { long.MinValue, long.MaxValue, null, 123 } } },
+            new Dictionary<string, object>() { { "key1", new long?[] { long.MinValue, long.MaxValue, null, 123 } }, { "key2", 0.1F } },
+            new Dictionary<string, object>() { { "key1", 0.1F }, { "key2", new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F } } },
+            new Dictionary<string, object>() { { "key1", new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F } }, { "key2", new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F } } },
+            new Dictionary<string, object>() { { "key1", new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F } }, { "key2", 1.1D } },
+            new Dictionary<string, object>() { { "key1", 1.1D }, { "key2", new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } },
+            new Dictionary<string, object>() { { "key1", new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } }, { "key2", new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } },
+            new Dictionary<string, object>() { { "key1", new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } }, { "key2", DateTime.Now } },
+            new Dictionary<string, object>() { { "key1", DateTime.Now }, { "key2", new DateTime[] { DateTime.MinValue, DateTime.MinValue } } },
+            new Dictionary<string, object>() { { "key1", new DateTime[] { DateTime.MinValue, DateTime.MinValue } }, { "key2", new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } },
+            new Dictionary<string, object>() { { "key1", new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } }, { "key2", "aaaaabbbbbcccc" } },
+            new Dictionary<string, object>() { { "key1", "aaaaabbbbbcccc" }, { "key2", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } },
+            new Dictionary<string, object>() { { "key1", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } }, { "key2", true } },
+        };
 
         [Theory]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary")]
@@ -1546,54 +618,53 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
             var converted = ORiN3BinaryConverter.FromDictionaryToBinary(data);
             var actual = ORiN3BinaryConverter.ToDictionary(converted);
             Assert.Equal(data, actual);
+
+            var converted2 = ORiN3BinaryConverter.ToBinary(data);
+            var actual2 = ORiN3BinaryConverter.ToObject(converted2);
+            Assert.Equal(data, actual2);
         }
 
-        public static IEnumerable<object[]> UnsupportedDicTestData
+        public static TheoryData<Dictionary<string, object>> UnsupportedDicTestData => new()
         {
-            get
-            {
-                {
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<bool> { false, true } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<bool[]> { new bool[] { false, true } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<bool?[]> { new bool?[] { true, null, false } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<byte> { 123 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<byte[]> { new byte[] { byte.MinValue, byte.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<byte?[]> { new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<sbyte> { 12 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<sbyte[]> { new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<sbyte?[]> { new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<ushort> { 12345 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<ushort[]> { new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<ushort?[]> { new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<short> { 111 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<short[]> { new short[] { short.MinValue, short.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<short?[]> { new short?[] { short.MinValue, short.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<uint> { 123456 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<uint[]> { new uint[] { uint.MinValue, uint.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<uint?[]> { new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<int> { 654321 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<int[]> { new int[] { int.MinValue, int.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<int?[]> { new int?[] { int.MinValue, int.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<ulong> { 5555455 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<ulong[]> { new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<ulong?[]> { new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<long> { 3333321 } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<long[]> { new long[] { long.MinValue, long.MaxValue, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<long?[]> { new long?[] { long.MinValue, long.MaxValue, null, 123 } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<float> { 0.1F } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<float[]> { new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<float?[]> { new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<double> { 1.1D } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<double[]> { new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<double?[]> { new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<DateTime> { DateTime.Now } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<DateTime[]> { new DateTime[] { DateTime.MinValue, DateTime.MinValue } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<DateTime?[]> { new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<string> { "aaaaabbbbbcccc" } } } };
-                    yield return new[] { new Dictionary<string, object>() { { "key1", new List<string[]> { new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } } } };
-                }
-            }
-        }
+            new Dictionary<string, object>() { { "key1", new List<bool> { false, true } } },
+            new Dictionary<string, object>() { { "key1", new List<bool[]> { new bool[] { false, true } } } },
+            new Dictionary<string, object>() { { "key1", new List<bool?[]> { new bool?[] { true, null, false } } } },
+            new Dictionary<string, object>() { { "key1", new List<byte> { 123 } } },
+            new Dictionary<string, object>() { { "key1", new List<byte[]> { new byte[] { byte.MinValue, byte.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<byte?[]> { new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<sbyte> { 12 } } },
+            new Dictionary<string, object>() { { "key1", new List<sbyte[]> { new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<sbyte?[]> { new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<ushort> { 12345 } } },
+            new Dictionary<string, object>() { { "key1", new List<ushort[]> { new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<ushort?[]> { new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<short> { 111 } } },
+            new Dictionary<string, object>() { { "key1", new List<short[]> { new short[] { short.MinValue, short.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<short?[]> { new short?[] { short.MinValue, short.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<uint> { 123456 } } },
+            new Dictionary<string, object>() { { "key1", new List<uint[]> { new uint[] { uint.MinValue, uint.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<uint?[]> { new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<int> { 654321 } } },
+            new Dictionary<string, object>() { { "key1", new List<int[]> { new int[] { int.MinValue, int.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<int?[]> { new int?[] { int.MinValue, int.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<ulong> { 5555455 } } },
+            new Dictionary<string, object>() { { "key1", new List<ulong[]> { new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<ulong?[]> { new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<long> { 3333321 } } },
+            new Dictionary<string, object>() { { "key1", new List<long[]> { new long[] { long.MinValue, long.MaxValue, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<long?[]> { new long?[] { long.MinValue, long.MaxValue, null, 123 } } } },
+            new Dictionary<string, object>() { { "key1", new List<float> { 0.1F } } },
+            new Dictionary<string, object>() { { "key1", new List<float[]> { new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F } } } },
+            new Dictionary<string, object>() { { "key1", new List<float?[]> { new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F } } } },
+            new Dictionary<string, object>() { { "key1", new List<double> { 1.1D } } },
+            new Dictionary<string, object>() { { "key1", new List<double[]> { new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } } },
+            new Dictionary<string, object>() { { "key1", new List<double?[]> { new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } } },
+            new Dictionary<string, object>() { { "key1", new List<DateTime> { DateTime.Now } } },
+            new Dictionary<string, object>() { { "key1", new List<DateTime[]> { new DateTime[] { DateTime.MinValue, DateTime.MinValue } } } },
+            new Dictionary<string, object>() { { "key1", new List<DateTime?[]> { new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } } },
+            new Dictionary<string, object>() { { "key1", new List<string> { "aaaaabbbbbcccc" } } },
+            new Dictionary<string, object>() { { "key1", new List<string[]> { new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } } },
+        };
 
         [Theory]
         [Trait(nameof(ORiN3BinaryConverter), "Dictionary - unsupported value")]
@@ -1605,6 +676,157 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
                 var converted = ORiN3BinaryConverter.FromDictionaryToBinary(data);
             });
             Assert.Contains(data["key1"].GetType().Name, exception.Message);
+        }
+
+        public static TheoryData<object, int> DataSize => new()
+        {
+            { default(bool), 2 },
+            { default(byte), 2 },
+            { default(sbyte), 2 },
+            { default(ushort), 3 },
+            { default(short), 3 },
+            { default(uint), 5 },
+            { default(int), 5 },
+            { default(ulong), 9 },
+            { default(long), 9 },
+            { default(float), 5 },
+            { default(double), 9 },
+            { DateTime.Now, 9 },
+            { "abc", Encoding.UTF8.GetByteCount("abc") + 5 },
+            { "あいう𩸽", Encoding.UTF8.GetByteCount("あいう𩸽") + 5 },
+            // nullable
+            { default(bool?), 1 },
+            { default(byte?), 1 },
+            { default(sbyte?), 1 },
+            { default(ushort?), 1 },
+            { default(short?), 1 },
+            { default(uint?), 1 },
+            { default(int?), 1 },
+            { default(ulong?), 1 },
+            { default(long?), 1 },
+            { default(float?), 1 },
+            { default(double?), 1 },
+            { (DateTime?)null, 1 },
+            // array
+            { new bool[] { true, false }, 7 },
+            { new bool[] { true, false, true }, 8 },
+            { new byte[] { 0, 1 }, 7 },
+            { new byte[] { 0, 1, 2 }, 8 },
+            { new sbyte[] { 0, 1 }, 7 },
+            { new sbyte[] { 0, 1, 2 }, 8 },
+            { new ushort[] { 0, 1 }, 9 },
+            { new ushort[] { 0, 1, 2 }, 11 },
+            { new short[] { 0, 1 }, 9 },
+            { new short[] { 0, 1, 2 }, 11 },
+            { new uint[] { 0, 1 }, 13 },
+            { new uint[] { 0, 1, 2 }, 17 },
+            { new int[] { 0, 1 }, 13 },
+            { new int[] { 0, 1, 2 }, 17 },
+            { new ulong[] { 0, 1 }, 21 },
+            { new ulong[] { 0, 1, 2 }, 29 },
+            { new long[] { 0, 1 }, 21 },
+            { new long[] { 0, 1, 2 }, 29 },
+            { new float[] { 0, 1 }, 13 },
+            { new float[] { 0, 1, 2 }, 17 },
+            { new double[] { 0, 1 }, 21 },
+            { new double[] { 0, 1, 2 }, 29 },
+            { new DateTime[] { DateTime.MinValue, DateTime.MaxValue }, 21 },
+            { new DateTime[] { DateTime.MinValue, DateTime.MaxValue, DateTime.Now }, 29 },
+            { new string[] { "abc", "あいう𩸽" }, Encoding.UTF8.GetByteCount("abc") + Encoding.UTF8.GetByteCount("あいう𩸽") + 15 },
+            // nullable array
+            { new bool?[] { true, false, null }, 8 },
+            { new bool?[] { true, false, true, null }, 9 },
+            { new byte?[] { 0, 1, null }, 11 },
+            { new byte?[] { 0, 1, 2, null }, 13 },
+            { new sbyte?[] { 0, 1, null }, 11 },
+            { new sbyte?[] { 0, 1, 2, null }, 13 },
+            { new ushort?[] { 0, 1, null }, 14 },
+            { new ushort?[] { 0, 1, 2, null }, 17 },
+            { new short?[] { 0, 1, null }, 14 },
+            { new short?[] { 0, 1, 2, null }, 17 },
+            { new uint?[] { 0, 1, null }, 20 },
+            { new uint?[] { 0, 1, 2, null }, 25 },
+            { new int?[] { 0, 1, null }, 20 },
+            { new int?[] { 0, 1, 2, null }, 25 },
+            { new ulong?[] { 0, 1, null }, 32 },
+            { new ulong?[] { 0, 1, 2, null }, 41 },
+            { new long?[] { 0, 1, null }, 32 },
+            { new long?[] { 0, 1, 2, null }, 41 },
+            { new float?[] { 0, 1, null }, 20 },
+            { new float?[] { 0, 1, 2, null }, 25 },
+            { new double?[] { 0, 1, null }, 32 },
+            { new double?[] { 0, 1, 2, null }, 41 },
+            { new DateTime?[] { DateTime.MinValue, DateTime.MaxValue, null }, 32 },
+            { new DateTime?[] { DateTime.MinValue, DateTime.MaxValue, DateTime.Now, null }, 41 },
+            // object array
+            { new object[] { true, 1 }, 12 },
+            { new object[] { true, 1, 1.1D }, 21 },
+            { new object[] { true, 1, 1.1D, "abc" }, Encoding.UTF8.GetByteCount("abc") + 26 },
+            { new object[] { true, 1, 1.1D, "abc", new sbyte?[] { 0, 1, null } }, Encoding.UTF8.GetByteCount("abc") + 37 },
+            { new object[] { true, 1, 1.1D, "abc", new sbyte?[] { 0, 1, null }, new object[] { true, 1 } }, Encoding.UTF8.GetByteCount("abc") + 49 },
+            { new object[] { true, 1, 1.1D, "abc", new sbyte?[] { 0, 1, null }, new object[] { true, 1 }, new object[] { true, 1 } }, Encoding.UTF8.GetByteCount("abc") + 61 },
+            { new object[] { true, 1, 1.1D, "abc", new sbyte?[] { 0, 1, null }, new object[] { true, 1 }, new object[] { true, new object[] { true, 1 } } }, Encoding.UTF8.GetByteCount("abc") + 68 },
+            // dictionary
+            { new Dictionary<string, object>() { { "key", true } }, 9 + Encoding.UTF8.GetByteCount("key") + 5 + 2 },
+            { new Dictionary<string, object>() { { "key", new object[] { true, 1 } } }, 9 + Encoding.UTF8.GetByteCount("key") + 5 + 12 },
+            // others
+            { new object[] { true, (byte)1 }, 5 + 4 },
+            { new object[] { (byte)1, (sbyte)2 }, 5 + 4 },
+            { new object[] { (sbyte)2, (ushort)3 }, 5 + 5 },
+            { new object[] { (ushort)3, (short)4 }, 5 + 6 },
+            { new object[] { (short)4, (uint)5 }, 5 + 8 },
+            { new object[] { (uint)5, 6 }, 5 + 10 },
+            { new object[] { 6, (ulong)7 }, 5 + 14 },
+            { new object[] { (ulong)7, (long)8 }, 5 + 18 },
+            { new object[] { (long)8, (float)9 }, 5 + 14 },
+            { new object[] { (float)10, (double)11 }, 5 + 14 },
+            { new object[] { (double)11, DateTime.Now }, 5 + 18 },
+            { new object[] { DateTime.Now, "abc" }, 5 + Encoding.UTF8.GetByteCount("abc") + 5 + 9 },
+            { new object[] { "abc", null }, 5 + Encoding.UTF8.GetByteCount("abc") + 5 + 1 },
+            { new object[] {  null, new byte[] { 12, 13 } }, 5 + 1 + 7 },
+            { new object[] {  new byte[] { 12, 13 }, new sbyte[] { 14, 15 } }, 5 + 7 + 7 },
+            { new object[] {  new sbyte[] { 14, 15 }, new ushort[] { 16, 17 } }, 5 + 7 + 9 },
+            { new object[] {  new ushort[] { 16, 17 }, new short[] { 18, 19 } }, 5 + 9 + 9 },
+            { new object[] {  new short[] { 18, 19 }, new uint[] { 20, 21 } }, 5 + 9 + 13 },
+            { new object[] {  new uint[] { 20, 21 }, new int[] { 22, 23 } }, 5 + 13 + 13 },
+            { new object[] {  new int[] { 22, 23 }, new ulong[] { 24, 25 } }, 5 + 13 + 21 },
+            { new object[] {  new ulong[] { 24, 25 }, new long[] { 26, 27 } }, 5 + 21 + 21 },
+            { new object[] {  new long[] { 26, 27 }, new float[] { 28, 29 } }, 5 + 21 + 13 },
+            { new object[] {  new float[] { 28, 29 }, new double[] { 30, 31 } }, 5 + 13 + 21 },
+            { new object[] {  new double[] { 30, 31 }, new DateTime[] { DateTime.MinValue, DateTime.MaxValue } }, 5 + 21 + 21 },
+            { new object[] {  new DateTime[] { DateTime.MinValue, DateTime.MaxValue }, new string[] { "abc", "あいう" } }, 5 + 21 + Encoding.UTF8.GetByteCount("abc") + Encoding.UTF8.GetByteCount("あいう") + 15 },
+            { new object[] {  new string[] { "abc", "あいう" }, new bool?[] { true, false, null } }, 5 + Encoding.UTF8.GetByteCount("abc") + Encoding.UTF8.GetByteCount("あいう") + 15 + 8 },
+            { new object[] {  new bool?[] { true, false, null }, new byte?[] { 32, 33, null } }, 5 + 8 + 11 },
+            { new object[] {  new byte?[] { 32, 33, null }, new sbyte?[] { 34, 35, null } }, 5 + 11 + 11 },
+            { new object[] {  new sbyte?[] { 34, 35, null }, new ushort?[] { 36, 37, null } }, 5 + 11 + 14 },
+            { new object[] {  new ushort?[] { 36, 37, null }, new short?[] { 38, 39, null } }, 5 + 14 + 14 },
+            { new object[] {  new short?[] { 38, 39, null }, new uint?[] { 40, 41, null } }, 5 + 14 + 20 },
+            { new object[] {  new uint?[] { 40, 41, null }, new int?[] { 42, 43, null } }, 5 + 20 + 20 },
+            { new object[] {  new int?[] { 42, 43, null }, new ulong?[] { 44, 45, null } }, 5 + 20 + 32 },
+            { new object[] {  new ulong?[] { 44, 45, null }, new float?[] { 46, 47, null } }, 5 + 32 + 20 },
+            { new object[] {  new float?[] { 46, 47, null }, new double?[] { 48, 49, null } }, 5 + 20 + 32 },
+            { new object[] {  new double?[] { 48, 49, null }, new DateTime?[] { DateTime.MinValue, DateTime.MaxValue, null } }, 5 + 32 + 32 },
+            { new object[] {  new DateTime?[] { DateTime.MinValue, DateTime.MaxValue, null }, new string[] { "abc", "あいう", null, string.Empty } }, 5 + 32 + Encoding.UTF8.GetByteCount("abc") + Encoding.UTF8.GetByteCount("あいう") + Encoding.UTF8.GetByteCount(string.Empty) + 25 },
+            { new object[] {  new string[] { "abc", "あいう", null, string.Empty }, new object[] { true, (byte)50 } }, 5 + Encoding.UTF8.GetByteCount("abc") + Encoding.UTF8.GetByteCount("あいう") + Encoding.UTF8.GetByteCount(string.Empty) + 25 + 9 },
+            { new object[] {  new object[] { true, (byte)50 }, new Dictionary<string, object>() { { "key", 51 } } }, 5 + 9 + 9 + Encoding.UTF8.GetByteCount("abc") + 5 + 5  },
+            { new object[] {  new Dictionary<string, object>() { { "key", 51 } }, null }, 5 + 9 + Encoding.UTF8.GetByteCount("abc") + 5 + 5 + 1  },
+        };
+
+        [Theory]
+        [Trait(nameof(ORiN3BinaryConverter), "CalcBinarySize and FillBytes")]
+        [MemberData(nameof(DataSize))]
+        public void Test500(object target, int expected)
+        {
+            Assert.Equal(expected, ORiN3BinaryConverter.CalcBinarySize(target));
+
+            var buffer = new byte[expected + 1];
+            buffer[^1] = 123;
+            var actual = ORiN3BinaryConverter.FillBytes(target, buffer);
+            Assert.Equal(123, actual[0]);
+            Assert.Equal(1, actual.Length);
+
+            var actual2 = ORiN3BinaryConverter.ToObject(buffer);
+            Assert.Equal(target, actual2);
         }
 
         internal class CustomDictionaryEqualityComparer : IEqualityComparer<KeyValuePair<string, object>>
@@ -1619,13 +841,11 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
             {
                 if (Equals(x.Key, y.Key))
                 {
-                    // キーが同じで、両方の値が null の場合に true を返す
                     if (Equals(x.Value, y.Value) && x.Value == null)
                     {
                         return true;
                     }
 
-                    // それ以外の場合はデフォルトの等価判定を行う
                     return _comparer.Equals(x, y);
                 }
 

@@ -975,18 +975,15 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
             Assert.Equal(data, sut.Result);
         }
 
-        public static IEnumerable<object[]> StringTestData
+        public static TheoryData<string[]> StringTestData => new()
         {
-            get
-            {
-                yield return new object[] { new string[] { null } };
-                yield return new object[] { new string[] { null, null, null } };
-                yield return new object[] { new string[] { null, "a", "b" } };
-                yield return new object[] { new string[] { "a", null, "b" } };
-                yield return new object[] { new string[] { "a", "b", null } };
-                yield return new object[] { new string[] { null, string.Empty, null } };
-            }
-        }
+            new string[] { null },
+            new string[] { null, null, null },
+            new string[] { null, "a", "b" },
+            new string[] { "a", null, "b" },
+            new string[] { "a", "b", null },
+            new string[] { null, string.Empty, null },
+        };
 
         [Theory]
         [Trait(nameof(ORiN3ValueToCSharpValueBranch<string[]>), "string[]")]
@@ -1010,85 +1007,82 @@ namespace Message.ORiN3.Common.Test.TestByDeveloper
             });
         }
 
-        public static IEnumerable<object[]> ObjectTestData
+        public static TheoryData<object> ObjectTestData => new()
         {
-            get
-            {
-                yield return new object[] { null };
-                yield return new object[] { true };
-                yield return new object[] { false };
-                yield return new object[] { byte.MinValue };
-                yield return new object[] { byte.MaxValue };
-                yield return new object[] { ushort.MinValue };
-                yield return new object[] { ushort.MaxValue };
-                yield return new object[] { uint.MinValue };
-                yield return new object[] { uint.MaxValue };
-                yield return new object[] { ulong.MinValue };
-                yield return new object[] { ulong.MaxValue };
-                yield return new object[] { sbyte.MinValue };
-                yield return new object[] { sbyte.MaxValue };
-                yield return new object[] { short.MinValue };
-                yield return new object[] { short.MaxValue };
-                yield return new object[] { int.MinValue };
-                yield return new object[] { int.MaxValue };
-                yield return new object[] { long.MinValue };
-                yield return new object[] { long.MaxValue };
-                yield return new object[] { DateTime.MinValue };
-                yield return new object[] { DateTime.MaxValue };
-                yield return new object[] { float.MinValue };
-                yield return new object[] { float.MaxValue };
-                yield return new object[] { float.PositiveInfinity };
-                yield return new object[] { float.NegativeInfinity };
-                yield return new object[] { float.NaN };
-                yield return new object[] { double.MinValue };
-                yield return new object[] { double.MaxValue };
-                yield return new object[] { double.PositiveInfinity };
-                yield return new object[] { double.NegativeInfinity };
-                yield return new object[] { double.NaN };
-                yield return new object[] { string.Empty };
-                yield return new object[] { "aaa" };
-                yield return new object[] { DateTime.MaxValue };
-                yield return new object[] { Array.Empty<object>() };
-                yield return new object[] { new object[] { true, new bool[] { false, true } } };
-                yield return new object[] { new object[] { new bool[] { false, true }, new bool?[] { true, null, false } } };
-                yield return new object[] { new object[] { new bool?[] { true, null, false }, (byte)123 } };
-                yield return new object[] { new object[] { (byte)123, new byte[] { byte.MinValue, byte.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new byte[] { byte.MinValue, byte.MaxValue, 123 }, new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new byte?[] { byte.MinValue, byte.MaxValue, null, 123 }, (sbyte)12 } };
-                yield return new object[] { new object[] { (sbyte)12, new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 }, new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 }, (ushort)12345 } };
-                yield return new object[] { new object[] { (ushort)12345, new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new ushort[] { ushort.MinValue, ushort.MaxValue, 123 }, new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 }, (short)111 } };
-                yield return new object[] { new object[] { (short)111, new short[] { short.MinValue, short.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new short[] { short.MinValue, short.MaxValue, 123 }, new short?[] { short.MinValue, short.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new short?[] { short.MinValue, short.MaxValue, null, 123 }, (uint)123456 } };
-                yield return new object[] { new object[] { (uint)123456, new uint[] { uint.MinValue, uint.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new uint[] { uint.MinValue, uint.MaxValue, 123 }, new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new uint?[] { uint.MinValue, uint.MaxValue, null, 123 }, 654321 } };
-                yield return new object[] { new object[] { 654321, new int[] { int.MinValue, int.MaxValue, 123 }, } };
-                yield return new object[] { new object[] { new int[] { int.MinValue, int.MaxValue, 123 }, new int?[] { int.MinValue, int.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new int?[] { int.MinValue, int.MaxValue, null, 123 }, (ulong)5555455 } };
-                yield return new object[] { new object[] { (ulong)5555455, new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new ulong[] { ulong.MinValue, ulong.MaxValue, 123 }, new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 }, (long)3333321 } };
-                yield return new object[] { new object[] { (long)3333321, new long[] { long.MinValue, long.MaxValue, 123 } } };
-                yield return new object[] { new object[] { new long[] { long.MinValue, long.MaxValue, 123 }, new long?[] { long.MinValue, long.MaxValue, null, 123 } } };
-                yield return new object[] { new object[] { new long?[] { long.MinValue, long.MaxValue, null, 123 }, 0.1F } };
-                yield return new object[] { new object[] { 0.1F, new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, } };
-                yield return new object[] { new object[] { new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, } };
-                yield return new object[] { new object[] { new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, 1.1D } };
-                yield return new object[] { new object[] { 1.1D, new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } } };
-                yield return new object[] { new object[] { new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F }, new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } } };
-                yield return new object[] { new object[] { new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F }, DateTime.Now } };
-                yield return new object[] { new object[] { DateTime.Now, new DateTime[] { DateTime.MinValue, DateTime.MinValue } } };
-                yield return new object[] { new object[] { new DateTime[] { DateTime.MinValue, DateTime.MinValue }, new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } } };
-                yield return new object[] { new object[] { new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue }, "aaaaabbbbbcccc" } };
-                yield return new object[] { new object[] { "aaaaabbbbbcccc", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } } };
-                yield return new object[] { new object[] { new string[] { "12345", string.Empty, null, "AAAABBBBCCC" }, true } };
-            }
-        }
+            null,
+            true,
+            false,
+            byte.MinValue,
+            byte.MaxValue,
+            ushort.MinValue,
+            ushort.MaxValue,
+            uint.MinValue,
+            uint.MaxValue,
+            ulong.MinValue,
+            ulong.MaxValue,
+            sbyte.MinValue,
+            sbyte.MaxValue,
+            short.MinValue,
+            short.MaxValue,
+            int.MinValue,
+            int.MaxValue,
+            long.MinValue,
+            long.MaxValue,
+            DateTime.MinValue,
+            DateTime.MaxValue,
+            float.MinValue,
+            float.MaxValue,
+            float.PositiveInfinity,
+            float.NegativeInfinity,
+            float.NaN,
+            double.MinValue,
+            double.MaxValue,
+            double.PositiveInfinity,
+            double.NegativeInfinity,
+            double.NaN,
+            string.Empty,
+            "aaa",
+            DateTime.MaxValue,
+            Array.Empty<object>(),
+            new object[] { true, new bool[] { false, true } },
+            new object[] { new bool[] { false, true }, new bool?[] { true, null, false } },
+            new object[] { new bool?[] { true, null, false }, (byte)123 },
+            new object[] { (byte)123, new byte[] { byte.MinValue, byte.MaxValue, 123 } },
+            new object[] { new byte[] { byte.MinValue, byte.MaxValue, 123 }, new byte?[] { byte.MinValue, byte.MaxValue, null, 123 } },
+            new object[] { new byte?[] { byte.MinValue, byte.MaxValue, null, 123 }, (sbyte)12 },
+            new object[] { (sbyte)12, new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 } },
+            new object[] { new sbyte[] { sbyte.MinValue, sbyte.MaxValue, 123 }, new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 } },
+            new object[] { new sbyte?[] { sbyte.MinValue, sbyte.MaxValue, null, 123 }, (ushort)12345 },
+            new object[] { (ushort)12345, new ushort[] { ushort.MinValue, ushort.MaxValue, 123 } },
+            new object[] { new ushort[] { ushort.MinValue, ushort.MaxValue, 123 }, new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 } },
+            new object[] { new ushort?[] { ushort.MinValue, ushort.MaxValue, null, 123 }, (short)111 },
+            new object[] { (short)111, new short[] { short.MinValue, short.MaxValue, 123 } },
+            new object[] { new short[] { short.MinValue, short.MaxValue, 123 }, new short?[] { short.MinValue, short.MaxValue, null, 123 } },
+            new object[] { new short?[] { short.MinValue, short.MaxValue, null, 123 }, (uint)123456 },
+            new object[] { (uint)123456, new uint[] { uint.MinValue, uint.MaxValue, 123 } },
+            new object[] { new uint[] { uint.MinValue, uint.MaxValue, 123 }, new uint?[] { uint.MinValue, uint.MaxValue, null, 123 } },
+            new object[] { new uint?[] { uint.MinValue, uint.MaxValue, null, 123 }, 654321 },
+            new object[] { 654321, new int[] { int.MinValue, int.MaxValue, 123 }, },
+            new object[] { new int[] { int.MinValue, int.MaxValue, 123 }, new int?[] { int.MinValue, int.MaxValue, null, 123 } },
+            new object[] { new int?[] { int.MinValue, int.MaxValue, null, 123 }, (ulong)5555455 },
+            new object[] { (ulong)5555455, new ulong[] { ulong.MinValue, ulong.MaxValue, 123 } },
+            new object[] { new ulong[] { ulong.MinValue, ulong.MaxValue, 123 }, new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 } },
+            new object[] { new ulong?[] { ulong.MinValue, ulong.MaxValue, null, 123 }, (long)3333321 },
+            new object[] { (long)3333321, new long[] { long.MinValue, long.MaxValue, 123 } },
+            new object[] { new long[] { long.MinValue, long.MaxValue, 123 }, new long?[] { long.MinValue, long.MaxValue, null, 123 } },
+            new object[] { new long?[] { long.MinValue, long.MaxValue, null, 123 }, 0.1F },
+            new object[] { 0.1F, new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, },
+            new object[] { new float[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, 123F }, new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, },
+            new object[] { new float?[] { float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN, null, 123F }, 1.1D },
+            new object[] { 1.1D, new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F } },
+            new object[] { new double[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, 123F }, new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F } },
+            new object[] { new double?[] { double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN, null, 123F }, DateTime.Now },
+            new object[] { DateTime.Now, new DateTime[] { DateTime.MinValue, DateTime.MinValue } },
+            new object[] { new DateTime[] { DateTime.MinValue, DateTime.MinValue }, new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue } },
+            new object[] { new DateTime?[] { DateTime.MinValue, null, DateTime.MinValue }, "aaaaabbbbbcccc" },
+            new object[] { "aaaaabbbbbcccc", new string[] { "12345", string.Empty, null, "AAAABBBBCCC" } },
+            new object[] { new string[] { "12345", string.Empty, null, "AAAABBBBCCC" }, true },
+        };
 
         [Theory]
         [Trait(nameof(ORiN3ValueToCSharpValueBranch<object>), "object")]

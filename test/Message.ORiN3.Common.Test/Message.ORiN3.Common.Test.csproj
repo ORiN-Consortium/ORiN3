@@ -6,7 +6,7 @@
 		<LangVersion>$(DotNetLangVersion)</LangVersion>
 		<Version>$(ProjectVersion)</Version>
 		<IsPackable>false</IsPackable>
-    <NoWarn>NU1603</NoWarn>
+    <NoWarn>NU1603,CA1861,CA1859,IDE0028</NoWarn>
 	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>

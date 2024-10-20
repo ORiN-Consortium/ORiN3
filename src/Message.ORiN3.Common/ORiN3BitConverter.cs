@@ -5,126 +5,7 @@ namespace Message.ORiN3.Common;
 
 public static class ORiN3BitConverter
 {
-    internal static bool IsLittleEndian = BitConverter.IsLittleEndian;
-
-    public static byte[] GetBytes(bool value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 1);
-
-        var result = new byte[1];
-        result[0] = value ? (byte)1 : (byte)0;
-        return result;
-    }
-
-    public static int FillBytes(Span<byte> target, bool value)
-    {
-        return FillBytes(target, 0, value);
-    }
-
-    public static int FillBytes(Span<byte> target, int startIndex, bool value)
-    {
-        if (startIndex < 0)
-        {
-            throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
-        }
-        if (target.Length <= startIndex)
-        {
-            throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
-        }
-        Contract.EndContractBlock();
-
-        target[startIndex] = value ? (byte)1 : (byte)0;
-        return 1;
-    }
-
-    public static byte[] GetBytes(byte value)
-    {
-        return [value];
-    }
-
-    public static int FillBytes(Span<byte> target, byte value)
-    {
-        return FillBytes(target, 0, value);
-    }
-
-    public static unsafe int FillBytes(Span<byte> target, int startIndex, byte value)
-    {
-        if (startIndex < 0)
-        {
-            throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
-        }
-        if (target.Length - 1 < startIndex)
-        {
-            throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
-        }
-        Contract.EndContractBlock();
-
-        target[startIndex] = value;
-        return 1;
-    }
-
-    public static byte[] GetBytes(sbyte value)
-    {
-        return [(byte)value];
-    }
-
-    public static int FillBytes(Span<byte> target, sbyte value)
-    {
-        return FillBytes(target, 0, value);
-    }
-
-    public static unsafe int FillBytes(Span<byte> target, int startIndex, sbyte value)
-    {
-        if (startIndex < 0)
-        {
-            throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
-        }
-        if (target.Length - 1 < startIndex)
-        {
-            throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
-        }
-        Contract.EndContractBlock();
-
-        target[startIndex] = (byte)value;
-        return 1;
-    }
-
-    public static byte[] GetBytes(char value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 2);
-
-        return GetBytes((short)value);
-    }
-
-    public static int FillBytes(Span<byte> target, char value)
-    {
-        return FillBytes(target, 0, value);
-    }
-
-    public static unsafe int FillBytes(Span<byte> target, int startIndex, char value)
-    {
-        return FillBytes(target, startIndex, (short)value);
-    }
-
-    public static unsafe byte[] GetBytes(short value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 2);
-
-        var bytes = new byte[2];
-        fixed (byte* unsafePointer = bytes)
-        {
-            *(short*)unsafePointer = IsLittleEndian ? value : (short)(value << 8 | (0xFF00 & value) >> 8);
-        }
-        return bytes;
-    }
-
-    public static int FillBytes(Span<byte> target, short value)
-    {
-        return FillBytes(target, 0, value);
-    }
+    internal static readonly bool IsLittleEndian = BitConverter.IsLittleEndian;
 
     public static unsafe int FillBytes(Span<byte> target, int startIndex, short value)
     {
@@ -132,51 +13,21 @@ public static class ORiN3BitConverter
         {
             throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
         }
-        if (target.Length - 2 < startIndex)
+        if (target.Length - sizeof(short) < startIndex)
         {
             throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
         }
-        Contract.EndContractBlock();
 
         fixed (byte* unsafePointer = &target[startIndex])
         {
             *(short*)unsafePointer = IsLittleEndian ? value : (short)(value << 8 | (0xFF00 & value) >> 8);
         }
-        return 2;
-    }
-
-    public static byte[] GetBytes(ushort value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 2);
-
-        return GetBytes((short)value);
-    }
-
-    public static int FillBytes(Span<byte> target, ushort value)
-    {
-        return FillBytes(target, 0, value);
+        return sizeof(short);
     }
 
     public static unsafe int FillBytes(Span<byte> target, int startIndex, ushort value)
     {
         return FillBytes(target, startIndex, (short)value);
-    }
-
-    public static unsafe byte[] GetBytes(int value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 4);
-
-        var bytes = new byte[4];
-        fixed (byte* unsafePointer = bytes)
-        {
-            *(int*)unsafePointer = IsLittleEndian
-                ? value
-                : (int)((uint)(value << 24) | (0x0000FF00 & (uint)value) << 8
-                    | (0x00FF0000 & (uint)value) >> 8 | (0xFF000000 & (uint)value) >> 24);
-        }
-        return bytes;
     }
 
     public static int FillBytes(Span<byte> target, int value)
@@ -190,11 +41,10 @@ public static class ORiN3BitConverter
         {
             throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
         }
-        if (target.Length - 4 < startIndex)
+        if (target.Length - sizeof(int) < startIndex)
         {
             throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
         }
-        Contract.EndContractBlock();
 
         fixed (byte* unsafePointer = &target[startIndex])
         {
@@ -203,48 +53,12 @@ public static class ORiN3BitConverter
                 : (int)((uint)(value << 24) | (0x0000FF00 & (uint)value) << 8
                     | (0x00FF0000 & (uint)value) >> 8 | (0xFF000000 & (uint)value) >> 24);
         }
-        return 4;
-    }
-
-    public static byte[] GetBytes(uint value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 4);
-
-        return GetBytes((int)value);
-    }
-
-    public static int FillBytes(Span<byte> target, uint value)
-    {
-        return FillBytes(target, 0, value);
+        return sizeof(int);
     }
 
     public static unsafe int FillBytes(Span<byte> target, int startIndex, uint value)
     {
         return FillBytes(target, startIndex, (int)value);
-    }
-
-    public static unsafe byte[] GetBytes(long value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 8);
-
-        var bytes = new byte[8];
-        fixed (byte* unsafePointer = bytes)
-        {
-            *(long*)unsafePointer = IsLittleEndian
-                ? value
-                : (long)((ulong)(value << 56) | (0x000000000000FF00 & (ulong)value) << 40
-                    | (0x0000000000FF0000 & (ulong)value) << 24 | (0x00000000FF000000 & (ulong)value) << 8
-                    | (0x000000FF00000000 & (ulong)value) >> 8 | (0x0000FF0000000000 & (ulong)value) >> 24
-                    | (0x00FF000000000000 & (ulong)value) >> 40 | (0xFF00000000000000 & (ulong)value) >> 56);
-        }
-        return bytes;
-    }
-
-    public static int FillBytes(Span<byte> target, long value)
-    {
-        return FillBytes(target, 0, value);
     }
 
     public static unsafe int FillBytes(Span<byte> target, int startIndex, long value)
@@ -253,11 +67,10 @@ public static class ORiN3BitConverter
         {
             throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
         }
-        if (target.Length - 8 < startIndex)
+        if (target.Length - sizeof(long) < startIndex)
         {
             throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
         }
-        Contract.EndContractBlock();
 
         fixed (byte* unsafePointer = &target[startIndex])
         {
@@ -268,20 +81,7 @@ public static class ORiN3BitConverter
                     | (0x000000FF00000000 & (ulong)value) >> 8 | (0x0000FF0000000000 & (ulong)value) >> 24
                     | (0x00FF000000000000 & (ulong)value) >> 40 | (0xFF00000000000000 & (ulong)value) >> 56);
         }
-        return 8;
-    }
-
-    public static byte[] GetBytes(ulong value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 8);
-
-        return GetBytes((long)value);
-    }
-
-    public static int FillBytes(Span<byte> target, ulong value)
-    {
-        return FillBytes(target, 0, value);
+        return sizeof(long);
     }
 
     public static unsafe int FillBytes(Span<byte> target, int startIndex, ulong value)
@@ -289,70 +89,14 @@ public static class ORiN3BitConverter
         return FillBytes(target, startIndex, (long)value);
     }
 
-    public static unsafe byte[] GetBytes(float value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 4);
-
-        return GetBytes(*(int*)&value);
-    }
-
-    public static int FillBytes(Span<byte> target, float value)
-    {
-        return FillBytes(target, 0, value);
-    }
-
     public static unsafe int FillBytes(Span<byte> target, int startIndex, float value)
     {
         return FillBytes(target, startIndex, *(int*)&value);
     }
 
-    public static unsafe byte[] GetBytes(double value)
-    {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-        Contract.Ensures(Contract.Result<byte[]>().Length == 8);
-
-        return GetBytes(*(long*)&value);
-    }
-
-    public static int FillBytes(Span<byte> target, double value)
-    {
-        return FillBytes(target, 0, value);
-    }
-
     public static unsafe int FillBytes(Span<byte> target, int startIndex, double value)
     {
         return FillBytes(target, startIndex, *(long*)&value);
-    }
-
-    public static bool ToBoolean(ReadOnlySpan<byte> target)
-    {
-        return ToBoolean(target, 0);
-    }
-
-    public static bool ToBoolean(ReadOnlySpan<byte> target, int startIndex)
-    {
-        if (startIndex < 0)
-        {
-            throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
-        }
-        if (target.Length - 1 < startIndex)
-        {
-            throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
-        }
-        Contract.EndContractBlock();
-
-        return target[startIndex] != 0;
-    }
-
-    public static char ToChar(ReadOnlySpan<byte> target)
-    {
-        return ToChar(target, 0);
-    }
-
-    public static char ToChar(ReadOnlySpan<byte> target, int startIndex)
-    {
-        return (char)ToInt16(target, startIndex);
     }
 
     public static short ToInt16(ReadOnlySpan<byte> target)
@@ -366,11 +110,10 @@ public static class ORiN3BitConverter
         {
             throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
         }
-        if (target.Length - 2 < startIndex)
+        if (target.Length - sizeof(short) < startIndex)
         {
             throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
         }
-        Contract.EndContractBlock();
 
         fixed (byte* unsafePointer = &target[startIndex])
         {
@@ -401,11 +144,10 @@ public static class ORiN3BitConverter
         {
             throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
         }
-        if (target.Length - 4 < startIndex)
+        if (target.Length - sizeof(int) < startIndex)
         {
             throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
         }
-        Contract.EndContractBlock();
 
         fixed (byte* unsafePointer = &target[startIndex])
         {
@@ -438,11 +180,10 @@ public static class ORiN3BitConverter
         {
             throw new ArgumentException($"The argument cannot be a negative value. [startIndex={startIndex}]", nameof(startIndex));
         }
-        if (target.Length - 8 < startIndex)
+        if (target.Length - sizeof(long) < startIndex)
         {
             throw new ArgumentException($"The value of the start index is too large. [target.Length={target.Length}, startIndex={startIndex}]", nameof(startIndex));
         }
-        Contract.EndContractBlock();
 
         fixed (byte* unsafePointer = &target[startIndex])
         {

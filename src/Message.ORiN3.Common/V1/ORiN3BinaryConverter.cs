@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace Message.ORiN3.Common.V1;
 
 public static class ORiN3BinaryConverter
 {
-    private enum DataType : byte
+    internal enum DataType : byte
     {
         Null,
         ObjectArray,
@@ -64,53 +65,31 @@ public static class ORiN3BinaryConverter
         Dictionary,
     }
 
-    private static byte[] ToBinaryInternal(object[] target)
+    private static Span<byte> FillBytes(bool target, Span<byte> buffer)
     {
-        var objects = new List<byte[]>
-        {
-            new byte[] { (byte)DataType.ObjectArray },
-            ORiN3BitConverter.GetBytes(target.Length)
-        };
-        for (var i = 0; i < target.Length; ++i)
-        {
-            objects.Add(ToBinary(target[i]));
-        }
-        return objects.SelectMany(_ => _).ToArray();
-    }
-
-    private static byte[] ToBinaryInternal(bool target)
-    {
-        var buffer = new byte[2];
+        Debug.Assert(2 <= buffer.Length);
         buffer[0] = (byte)DataType.Bool;
         buffer[1] = target ? (byte)1 : (byte)0;
-        return buffer;
+        return buffer[2..];
     }
 
-    private static byte[] ToBinaryInternal(bool[] target)
+    private static Span<byte> FillBytes(bool[] target, Span<byte> buffer)
     {
-        var buffer = new byte[target.Length + 5];
+        Debug.Assert(target.Length + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.BoolArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             buffer[i + 5] = target[i] ? (byte)1 : (byte)0;
         }
-        return buffer;
+        return buffer[(target.Length + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(bool?[] target)
+    private static Span<byte> FillBytes(bool?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[target.Length + 5];
+        Debug.Assert(target.Length + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableBoolArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
@@ -123,42 +102,34 @@ public static class ORiN3BinaryConverter
                 buffer[i + 5] = 2;
             }
         }
-        return buffer;
+        return buffer[(target.Length + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(byte target)
+    private static Span<byte> FillBytes(byte target, Span<byte> buffer)
     {
-        var buffer = new byte[2];
+        Debug.Assert(2 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt8;
         buffer[1] = target;
-        return buffer;
+        return buffer[2..];
     }
 
-    private static byte[] ToBinaryInternal(byte[] target)
+    private static Span<byte> FillBytes(byte[] target, Span<byte> buffer)
     {
-        var buffer = new byte[target.Length + 5];
+        Debug.Assert(target.Length + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt8Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             buffer[i + 5] = target[i];
         }
-        return buffer;
+        return buffer[(target.Length + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(byte?[] target)
+    private static Span<byte> FillBytes(byte?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 2) + 5];
+        Debug.Assert((target.Length * 2) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableUInt8Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
@@ -168,42 +139,34 @@ public static class ORiN3BinaryConverter
                 buffer[(i * 2) + 6] = temp.Value;
             }
         }
-        return buffer;
+        return buffer[((target.Length * 2) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(sbyte target)
+    private static Span<byte> FillBytes(sbyte target, Span<byte> buffer)
     {
-        var buffer = new byte[2];
+        Debug.Assert(2 <= buffer.Length);
         buffer[0] = (byte)DataType.Int8;
         buffer[1] = (byte)target;
-        return buffer;
+        return buffer[2..];
     }
 
-    private static byte[] ToBinaryInternal(sbyte[] target)
+    private static Span<byte> FillBytes(sbyte[] target, Span<byte> buffer)
     {
-        var buffer = new byte[target.Length + 5];
+        Debug.Assert(target.Length + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.Int8Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             buffer[i + 5] = (byte)target[i];
         }
-        return buffer;
+        return buffer[(target.Length + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(sbyte?[] target)
+    private static Span<byte> FillBytes(sbyte?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 2) + 5];
+        Debug.Assert((target.Length * 2) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableInt8Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
@@ -213,774 +176,498 @@ public static class ORiN3BinaryConverter
                 buffer[(i * 2) + 6] = (byte)temp.Value;
             }
         }
-        return buffer;
+        return buffer[((target.Length * 2) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(short target)
+    private static Span<byte> FillBytes(short target, Span<byte> buffer)
     {
-        var buffer = new byte[3];
+        Debug.Assert(3 <= buffer.Length);
         buffer[0] = (byte)DataType.Int16;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[3..];
     }
 
-    private static byte[] ToBinaryInternal(short[] target)
+    private static Span<byte> FillBytes(short[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 2) + 5];
+        Debug.Assert((target.Length * 2) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.Int16Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 2) + 5] = temp[0];
-            buffer[(i * 2) + 6] = temp[1];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 2), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 2) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(short?[] target)
+    private static Span<byte> FillBytes(short?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 3) + 5];
+        Debug.Assert((target.Length * 3) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableInt16Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 3) + 5] = 1;
-                buffer[(i * 3) + 6] = temp2[0];
-                buffer[(i * 3) + 7] = temp2[1];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 3) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 3) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(ushort target)
+    private static Span<byte> FillBytes(ushort target, Span<byte> buffer)
     {
-        var buffer = new byte[3];
+        Debug.Assert(3 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt16;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[3..];
     }
 
-    private static byte[] ToBinaryInternal(ushort[] target)
+    private static Span<byte> FillBytes(ushort[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 2) + 5];
+        Debug.Assert((target.Length * 2) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt16Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 2) + 5] = temp[0];
-            buffer[(i * 2) + 6] = temp[1];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 2), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 2) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(ushort?[] target)
+    private static Span<byte> FillBytes(ushort?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 3) + 5];
+        Debug.Assert((target.Length * 3) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableUInt16Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 3) + 5] = 1;
-                buffer[(i * 3) + 6] = temp2[0];
-                buffer[(i * 3) + 7] = temp2[1];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 3) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 3) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(int target)
+    private static Span<byte> FillBytes(int target, Span<byte> buffer)
     {
-        var buffer = new byte[5];
+        Debug.Assert(5 <= buffer.Length);
         buffer[0] = (byte)DataType.Int32;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[5..];
     }
 
-    private static byte[] ToBinaryInternal(int[] target)
+    private static Span<byte> FillBytes(int[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 4) + 5];
+        Debug.Assert((target.Length * 4) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.Int32Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 4) + 5] = temp[0];
-            buffer[(i * 4) + 6] = temp[1];
-            buffer[(i * 4) + 7] = temp[2];
-            buffer[(i * 4) + 8] = temp[3];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 4), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 4) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(int?[] target)
+    private static Span<byte> FillBytes(int?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 5) + 5];
+        Debug.Assert((target.Length * 5) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableInt32Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 5) + 5] = 1;
-                buffer[(i * 5) + 6] = temp2[0];
-                buffer[(i * 5) + 7] = temp2[1];
-                buffer[(i * 5) + 8] = temp2[2];
-                buffer[(i * 5) + 9] = temp2[3];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 5) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 5) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(uint target)
+    private static Span<byte> FillBytes(uint target, Span<byte> buffer)
     {
-        var buffer = new byte[5];
+        Debug.Assert(5 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt32;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[5..];
     }
 
-    private static byte[] ToBinaryInternal(uint[] target)
+    private static Span<byte> FillBytes(uint[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 4) + 5];
+        Debug.Assert((target.Length * 4) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt32Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 4) + 5] = temp[0];
-            buffer[(i * 4) + 6] = temp[1];
-            buffer[(i * 4) + 7] = temp[2];
-            buffer[(i * 4) + 8] = temp[3];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 4), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 4) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(uint?[] target)
+    private static Span<byte> FillBytes(uint?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 5) + 5];
+        Debug.Assert((target.Length * 5) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableUInt32Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 5) + 5] = 1;
-                buffer[(i * 5) + 6] = temp2[0];
-                buffer[(i * 5) + 7] = temp2[1];
-                buffer[(i * 5) + 8] = temp2[2];
-                buffer[(i * 5) + 9] = temp2[3];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 5) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 5) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(long target)
+    private static Span<byte> FillBytes(long target, Span<byte> buffer)
     {
-        var buffer = new byte[9];
+        Debug.Assert(9 <= buffer.Length);
         buffer[0] = (byte)DataType.Int64;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        buffer[5] = temp[4];
-        buffer[6] = temp[5];
-        buffer[7] = temp[6];
-        buffer[8] = temp[7];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[9..];
     }
 
-    private static byte[] ToBinaryInternal(long[] target)
+    private static Span<byte> FillBytes(long[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 8) + 5];
+        Debug.Assert((target.Length * 8) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.Int64Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 8) + 5] = temp[0];
-            buffer[(i * 8) + 6] = temp[1];
-            buffer[(i * 8) + 7] = temp[2];
-            buffer[(i * 8) + 8] = temp[3];
-            buffer[(i * 8) + 9] = temp[4];
-            buffer[(i * 8) + 10] = temp[5];
-            buffer[(i * 8) + 11] = temp[6];
-            buffer[(i * 8) + 12] = temp[7];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 8), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 8) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(long?[] target)
+    private static Span<byte> FillBytes(long?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 9) + 5];
+        Debug.Assert((target.Length * 9) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableInt64Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 9) + 5] = 1;
-                buffer[(i * 9) + 6] = temp2[0];
-                buffer[(i * 9) + 7] = temp2[1];
-                buffer[(i * 9) + 8] = temp2[2];
-                buffer[(i * 9) + 9] = temp2[3];
-                buffer[(i * 9) + 10] = temp2[4];
-                buffer[(i * 9) + 11] = temp2[5];
-                buffer[(i * 9) + 12] = temp2[6];
-                buffer[(i * 9) + 13] = temp2[7];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 9) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 9) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(ulong target)
+    private static Span<byte> FillBytes(ulong target, Span<byte> buffer)
     {
-        var buffer = new byte[9];
+        Debug.Assert(9 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt64;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        buffer[5] = temp[4];
-        buffer[6] = temp[5];
-        buffer[7] = temp[6];
-        buffer[8] = temp[7];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[9..];
     }
 
-    private static byte[] ToBinaryInternal(ulong[] target)
+    private static Span<byte> FillBytes(ulong[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 8) + 5];
+        Debug.Assert((target.Length * 8) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.UInt64Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 8) + 5] = temp[0];
-            buffer[(i * 8) + 6] = temp[1];
-            buffer[(i * 8) + 7] = temp[2];
-            buffer[(i * 8) + 8] = temp[3];
-            buffer[(i * 8) + 9] = temp[4];
-            buffer[(i * 8) + 10] = temp[5];
-            buffer[(i * 8) + 11] = temp[6];
-            buffer[(i * 8) + 12] = temp[7];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 8), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 8) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(ulong?[] target)
+    private static Span<byte> FillBytes(ulong?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 9) + 5];
+        Debug.Assert((target.Length * 9) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableUInt64Array;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 9) + 5] = 1;
-                buffer[(i * 9) + 6] = temp2[0];
-                buffer[(i * 9) + 7] = temp2[1];
-                buffer[(i * 9) + 8] = temp2[2];
-                buffer[(i * 9) + 9] = temp2[3];
-                buffer[(i * 9) + 10] = temp2[4];
-                buffer[(i * 9) + 11] = temp2[5];
-                buffer[(i * 9) + 12] = temp2[6];
-                buffer[(i * 9) + 13] = temp2[7];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 9) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 9) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(float target)
+    private static Span<byte> FillBytes(float target, Span<byte> buffer)
     {
-        var buffer = new byte[5];
+        Debug.Assert(5 <= buffer.Length);
         buffer[0] = (byte)DataType.Float;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[5..];
     }
 
-    private static byte[] ToBinaryInternal(float[] target)
+    private static Span<byte> FillBytes(float[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 4) + 5];
+        Debug.Assert((target.Length * 4) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.FloatArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 4) + 5] = temp[0];
-            buffer[(i * 4) + 6] = temp[1];
-            buffer[(i * 4) + 7] = temp[2];
-            buffer[(i * 4) + 8] = temp[3];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 4), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 4) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(float?[] target)
+    private static Span<byte> FillBytes(float?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 5) + 5];
+        Debug.Assert((target.Length * 5) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableFloatArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 5) + 5] = 1;
-                buffer[(i * 5) + 6] = temp2[0];
-                buffer[(i * 5) + 7] = temp2[1];
-                buffer[(i * 5) + 8] = temp2[2];
-                buffer[(i * 5) + 9] = temp2[3];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 5) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 5) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(double target)
+    private static Span<byte> FillBytes(double target, Span<byte> buffer)
     {
-        var buffer = new byte[9];
+        Debug.Assert(9 <= buffer.Length);
         buffer[0] = (byte)DataType.Double;
-        var temp = ORiN3BitConverter.GetBytes(target);
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        buffer[5] = temp[4];
-        buffer[6] = temp[5];
-        buffer[7] = temp[6];
-        buffer[8] = temp[7];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target);
+        return buffer[9..];
     }
 
-    private static byte[] ToBinaryInternal(double[] target)
+    private static Span<byte> FillBytes(double[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 8) + 5];
+        Debug.Assert((target.Length * 8) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.DoubleArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i]);
-            buffer[(i * 8) + 5] = temp[0];
-            buffer[(i * 8) + 6] = temp[1];
-            buffer[(i * 8) + 7] = temp[2];
-            buffer[(i * 8) + 8] = temp[3];
-            buffer[(i * 8) + 9] = temp[4];
-            buffer[(i * 8) + 10] = temp[5];
-            buffer[(i * 8) + 11] = temp[6];
-            buffer[(i * 8) + 12] = temp[7];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 8), target[i]);
         }
-        return buffer;
+        return buffer[((target.Length * 8) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(double?[] target)
+    private static Span<byte> FillBytes(double?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 9) + 5];
+        Debug.Assert((target.Length * 9) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableDoubleArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value);
                 buffer[(i * 9) + 5] = 1;
-                buffer[(i * 9) + 6] = temp2[0];
-                buffer[(i * 9) + 7] = temp2[1];
-                buffer[(i * 9) + 8] = temp2[2];
-                buffer[(i * 9) + 9] = temp2[3];
-                buffer[(i * 9) + 10] = temp2[4];
-                buffer[(i * 9) + 11] = temp2[5];
-                buffer[(i * 9) + 12] = temp2[6];
-                buffer[(i * 9) + 13] = temp2[7];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 9) + 1, temp.Value);
             }
         }
-        return buffer;
+        return buffer[((target.Length * 9) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(DateTime target)
+    private static Span<byte> FillBytes(DateTime target, Span<byte> buffer)
     {
-        var buffer = new byte[9];
+        Debug.Assert(9 <= buffer.Length);
         buffer[0] = (byte)DataType.DateTime;
-        var temp = ORiN3BitConverter.GetBytes(target.ToBinary());
-        buffer[1] = temp[0];
-        buffer[2] = temp[1];
-        buffer[3] = temp[2];
-        buffer[4] = temp[3];
-        buffer[5] = temp[4];
-        buffer[6] = temp[5];
-        buffer[7] = temp[6];
-        buffer[8] = temp[7];
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, target.ToBinary());
+        return buffer[9..];
     }
 
-    private static byte[] ToBinaryInternal(DateTime[] target)
+    private static Span<byte> FillBytes(DateTime[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 8) + 5];
+        Debug.Assert((target.Length * 8) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.DateTimeArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
-            var temp = ORiN3BitConverter.GetBytes(target[i].ToBinary());
-            buffer[(i * 8) + 5] = temp[0];
-            buffer[(i * 8) + 6] = temp[1];
-            buffer[(i * 8) + 7] = temp[2];
-            buffer[(i * 8) + 8] = temp[3];
-            buffer[(i * 8) + 9] = temp[4];
-            buffer[(i * 8) + 10] = temp[5];
-            buffer[(i * 8) + 11] = temp[6];
-            buffer[(i * 8) + 12] = temp[7];
+            ORiN3BitConverter.FillBytes(buffer, 5 + (i * 8), target[i].ToBinary());
         }
-        return buffer;
+        return buffer[((target.Length * 8) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(DateTime?[] target)
+    private static Span<byte> FillBytes(DateTime?[] target, Span<byte> buffer)
     {
-        var buffer = new byte[(target.Length * 9) + 5];
+        Debug.Assert((target.Length * 9) + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.NullableDateTimeArray;
-        var length = ORiN3BitConverter.GetBytes(target.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
+        ORiN3BitConverter.FillBytes(buffer, 1, target.Length);
         for (var i = 0; i < target.Length; ++i)
         {
             var temp = target[i];
             if (temp.HasValue)
             {
-                var temp2 = ORiN3BitConverter.GetBytes(temp.Value.ToBinary());
                 buffer[(i * 9) + 5] = 1;
-                buffer[(i * 9) + 6] = temp2[0];
-                buffer[(i * 9) + 7] = temp2[1];
-                buffer[(i * 9) + 8] = temp2[2];
-                buffer[(i * 9) + 9] = temp2[3];
-                buffer[(i * 9) + 10] = temp2[4];
-                buffer[(i * 9) + 11] = temp2[5];
-                buffer[(i * 9) + 12] = temp2[6];
-                buffer[(i * 9) + 13] = temp2[7];
+                ORiN3BitConverter.FillBytes(buffer, 5 + (i * 9) + 1, temp.Value.ToBinary());
             }
         }
-        return buffer;
+        return buffer[((target.Length * 9) + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(string target)
+    private static Span<byte> FillBytes(string target, Span<byte> buffer)
     {
-        var temp = Encoding.UTF8.GetBytes(target);
-        var buffer = new byte[temp.Length + 5];
+        var length = Encoding.UTF8.GetByteCount(target);
+        Debug.Assert(length + 5 <= buffer.Length);
         buffer[0] = (byte)DataType.String;
-        var length = ORiN3BitConverter.GetBytes(temp.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
-        temp.CopyTo(buffer, 5);
-        return buffer;
+        ORiN3BitConverter.FillBytes(buffer, 1, length);
+        Encoding.UTF8.GetBytes(target, buffer[5..]);
+        return buffer[(length + 5)..];
     }
 
-    private static byte[] ToBinaryInternal(string[] target)
+    private static Span<byte> FillBytes(string[] target, Span<byte> buffer)
     {
-        var temp = target.Select(_ =>
-        {
-            if (_ != null)
-            {
-                return Encoding.UTF8.GetBytes(_);
-            }
-            return [];
-        });
-        var count = temp.Count();
-        var buffer = new byte[temp.Sum(_ => _.Length) + (count * 5) + 5];
-        buffer[0] = (byte)DataType.StringArray;
-        var length = ORiN3BitConverter.GetBytes(count);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
-        var index = 5;
-        for (var i = 0; i < target.Length; ++i)
+        var count = target.Length;
+        var totalLength = target.Sum(_ => _ == null ? 0 : Encoding.UTF8.GetByteCount(_)) + (count * 5) + 5;
+        Debug.Assert(totalLength <= buffer.Length);
+        var index = 0;
+        buffer[index++] = (byte)DataType.StringArray;
+        index += ORiN3BitConverter.FillBytes(buffer, index, count);
+        for (var i = 0; i < count; ++i)
         {
             if (target[i] != null)
             {
-                var temp2 = temp.ElementAt(i);
-                var length2 = ORiN3BitConverter.GetBytes(temp2.Length);
+                var temp = target[i];
                 buffer[index++] = 1;
-                buffer[index++] = length2[0];
-                buffer[index++] = length2[1];
-                buffer[index++] = length2[2];
-                buffer[index++] = length2[3];
-                temp2.CopyTo(buffer, index);
-                index += temp2.Count();
+                index += ORiN3BitConverter.FillBytes(buffer, index, Encoding.UTF8.GetByteCount(temp));
+                index += Encoding.UTF8.GetBytes(temp, buffer[index..]);
             }
             else
             {
                 index += 5;
             }
         }
-        return buffer;
+        return buffer[totalLength..];
     }
 
-    private static byte[] ToBinaryInternal(IDictionary<string, object?> target)
+    private static Span<byte> FillBytes(IDictionary<string, object?> target, Span<byte> buffer)
     {
-        var binary = FromDictionaryToBinary(target);
-        var buffer = new byte[binary.Length + 5];
-        buffer[0] = (byte)DataType.Dictionary;
-        var length = ORiN3BitConverter.GetBytes(binary.Length);
-        buffer[1] = length[0];
-        buffer[2] = length[1];
-        buffer[3] = length[2];
-        buffer[4] = length[3];
-        Array.Copy(binary, 0, buffer, 5, binary.Length);
+        var index = 0;
+        buffer[index++] = (byte)DataType.Dictionary;
+        var lengthBuffer = buffer[index..];
+        index += 4;
+        index += ORiN3BitConverter.FillBytes(buffer[index..], target.Keys.Count);
+        buffer = buffer[index..];
+        foreach (var key in target.Keys)
+        {
+            var value = target[key];
+            buffer = FillBytes(key, buffer);
+            buffer = FillBytes(value, buffer);
+        }
+
+        ORiN3BitConverter.FillBytes(lengthBuffer, GetIndexDifference(lengthBuffer[4..], buffer));
         return buffer;
     }
 
-    public static byte[] ToBinary(object? target)
+    private static unsafe int GetIndexDifference(Span<byte> first, Span<byte> second)
+    {
+        Debug.Assert(!first.IsEmpty);
+
+        // If span2 is empty, it's considered to be pointing at the end of span1.
+        // Therefore, the difference is the entire length of span1.
+        if (second.IsEmpty)
+        {
+            return first.Length;
+        }
+
+        fixed (byte* p1 = &first.GetPinnableReference())
+        fixed (byte* p2 = &second.GetPinnableReference())
+        {
+            return (int)(p2 - p1) + 1;
+        }
+    }
+
+    private static Span<byte> FillBytes(object[] target, Span<byte> buffer)
+    {
+        var index = 0;
+        buffer[index++] = (byte)DataType.ObjectArray;
+        index += ORiN3BitConverter.FillBytes(buffer[index..], target.Length);
+        buffer = buffer[index..];
+        for (var i = 0; i < target.Length; ++i)
+        {
+            buffer = FillBytes(target[i], buffer);
+        }
+        return buffer;
+    }
+
+    internal static int CalcBinarySize(object? target)
     {
         if (target == null)
         {
-            return [(byte)DataType.Null];
+            return 1;
         }
 
         var targetType = target.GetType();
         switch (Type.GetTypeCode(targetType))
         {
             case TypeCode.Boolean:
-                return ToBinaryInternal((bool)target);
             case TypeCode.Byte:
-                return ToBinaryInternal((byte)target);
             case TypeCode.SByte:
-                return ToBinaryInternal((sbyte)target);
+                return 2;
             case TypeCode.Int16:
-                return ToBinaryInternal((short)target);
             case TypeCode.UInt16:
-                return ToBinaryInternal((ushort)target);
+                return 3;
             case TypeCode.Int32:
-                return ToBinaryInternal((int)target);
             case TypeCode.UInt32:
-                return ToBinaryInternal((uint)target);
-            case TypeCode.Int64:
-                return ToBinaryInternal((long)target);
-            case TypeCode.UInt64:
-                return ToBinaryInternal((ulong)target);
             case TypeCode.Single:
-                return ToBinaryInternal((float)target);
+                return 5;
+            case TypeCode.Int64:
+            case TypeCode.UInt64:
             case TypeCode.Double:
-                return ToBinaryInternal((double)target);
-            case TypeCode.String:
-                return ToBinaryInternal((string)target);
             case TypeCode.DateTime:
-                return ToBinaryInternal((DateTime)target);
+                return 9;
+            case TypeCode.String:
+                return Encoding.UTF8.GetByteCount((string)target) + 5;
             case TypeCode.Object:
                 if (targetType.IsArray)
                 {
                     if (targetType == typeof(object[]))
                     {
-                        return ToBinaryInternal((object[])target);
+                        return ((object[])target).Sum(CalcBinarySize) + 5;
                     }
-                    else if (targetType == typeof(bool[]))
+                    else if ((targetType == typeof(bool[])) || (targetType == typeof(bool?[])) || (targetType == typeof(byte[])) || (targetType == typeof(sbyte[])))
                     {
-                        return ToBinaryInternal((bool[])target);
+                        return ((Array)target).Length + 5;
                     }
-                    else if (targetType == typeof(bool?[]))
+                    else if ((targetType == typeof(byte?[])) || (targetType == typeof(sbyte?[])) || (targetType == typeof(ushort[])) || (targetType == typeof(short[])))
                     {
-                        return ToBinaryInternal((bool?[])target);
+                        return (((Array)target).Length * 2) + 5;
                     }
-                    else if (targetType == typeof(byte[]))
+                    else if ((targetType == typeof(ushort?[])) || (targetType == typeof(short?[])))
                     {
-                        return ToBinaryInternal((byte[])target);
+                        return (((Array)target).Length * 3) + 5;
                     }
-                    else if (targetType == typeof(byte?[]))
+                    else if ((targetType == typeof(uint[])) || (targetType == typeof(int[])) || (targetType == typeof(float[])))
                     {
-                        return ToBinaryInternal((byte?[])target);
+                        return (((Array)target).Length * 4) + 5;
                     }
-                    else if (targetType == typeof(sbyte[]))
+                    else if ((targetType == typeof(uint?[])) || (targetType == typeof(int?[])) || (targetType == typeof(float?[])))
                     {
-                        return ToBinaryInternal((sbyte[])target);
+                        return (((Array)target).Length * 5) + 5;
                     }
-                    else if (targetType == typeof(sbyte?[]))
+                    else if ((targetType == typeof(ulong[])) || (targetType == typeof(long[])) || (targetType == typeof(double[])) || (targetType == typeof(DateTime[])))
                     {
-                        return ToBinaryInternal((sbyte?[])target);
+                        return (((Array)target).Length * 8) + 5;
                     }
-                    else if (targetType == typeof(ushort[]))
+                    else if ((targetType == typeof(ulong?[])) || (targetType == typeof(long?[])) || (targetType == typeof(double?[])) || (targetType == typeof(DateTime?[])))
                     {
-                        return ToBinaryInternal((ushort[])target);
-                    }
-                    else if (targetType == typeof(ushort?[]))
-                    {
-                        return ToBinaryInternal((ushort?[])target);
-                    }
-                    else if (targetType == typeof(short[]))
-                    {
-                        return ToBinaryInternal((short[])target);
-                    }
-                    else if (targetType == typeof(short?[]))
-                    {
-                        return ToBinaryInternal((short?[])target);
-                    }
-                    else if (targetType == typeof(uint[]))
-                    {
-                        return ToBinaryInternal((uint[])target);
-                    }
-                    else if (targetType == typeof(uint?[]))
-                    {
-                        return ToBinaryInternal((uint?[])target);
-                    }
-                    else if (targetType == typeof(int[]))
-                    {
-                        return ToBinaryInternal((int[])target);
-                    }
-                    else if (targetType == typeof(int?[]))
-                    {
-                        return ToBinaryInternal((int?[])target);
-                    }
-                    else if (targetType == typeof(ulong[]))
-                    {
-                        return ToBinaryInternal((ulong[])target);
-                    }
-                    else if (targetType == typeof(ulong?[]))
-                    {
-                        return ToBinaryInternal((ulong?[])target);
-                    }
-                    else if (targetType == typeof(long[]))
-                    {
-                        return ToBinaryInternal((long[])target);
-                    }
-                    else if (targetType == typeof(long?[]))
-                    {
-                        return ToBinaryInternal((long?[])target);
-                    }
-                    else if (targetType == typeof(float[]))
-                    {
-                        return ToBinaryInternal((float[])target);
-                    }
-                    else if (targetType == typeof(float?[]))
-                    {
-                        return ToBinaryInternal((float?[])target);
-                    }
-                    else if (targetType == typeof(double[]))
-                    {
-                        return ToBinaryInternal((double[])target);
-                    }
-                    else if (targetType == typeof(double?[]))
-                    {
-                        return ToBinaryInternal((double?[])target);
-                    }
-                    else if (targetType == typeof(DateTime[]))
-                    {
-                        return ToBinaryInternal((DateTime[])target);
-                    }
-                    else if (targetType == typeof(DateTime?[]))
-                    {
-                        return ToBinaryInternal((DateTime?[])target);
+                        return (((Array)target).Length * 9) + 5;
                     }
                     else if (targetType == typeof(string[]))
                     {
-                        return ToBinaryInternal((string[])target);
+                        return ((string[])target).Sum(_ => _ == null ? 0 : Encoding.UTF8.GetByteCount(_)) + (((string[])target).Length * 5) + 5;
                     }
                 }
-                else if (target is IDictionary<string, object>)
+                else if (target is IDictionary<string, object> dictionary)
                 {
-                    return ToBinaryInternal((IDictionary<string, object?>)target);
+                    return dictionary.Sum(_ => CalcBinarySize(_.Key) + CalcBinarySize(_.Value)) + 4 + 5;
                 }
                 throw new NotSupportedException($"The specified data type is not supported. [Data type={targetType.Name}]");
             default:
@@ -988,19 +675,180 @@ public static class ORiN3BinaryConverter
         }
     }
 
+    internal static Span<byte> FillBytes(object? target, Span<byte> buffer)
+    {
+        if (target == null)
+        {
+            buffer[0] = (byte)DataType.Null;
+            return buffer[1..];
+        }
+
+        var targetType = target.GetType();
+        switch (Type.GetTypeCode(targetType))
+        {
+            case TypeCode.Boolean:
+                return FillBytes((bool)target, buffer);
+            case TypeCode.Byte:
+                return FillBytes((byte)target, buffer);
+            case TypeCode.SByte:
+                return FillBytes((sbyte)target, buffer);
+            case TypeCode.Int16:
+                return FillBytes((short)target, buffer);
+            case TypeCode.UInt16:
+                return FillBytes((ushort)target, buffer);
+            case TypeCode.Int32:
+                return FillBytes((int)target, buffer);
+            case TypeCode.UInt32:
+                return FillBytes((uint)target, buffer);
+            case TypeCode.Int64:
+                return FillBytes((long)target, buffer);
+            case TypeCode.UInt64:
+                return FillBytes((ulong)target, buffer);
+            case TypeCode.Single:
+                return FillBytes((float)target, buffer);
+            case TypeCode.Double:
+                return FillBytes((double)target, buffer);
+            case TypeCode.String:
+                return FillBytes((string)target, buffer);
+            case TypeCode.DateTime:
+                return FillBytes((DateTime)target, buffer);
+            case TypeCode.Object:
+                if (targetType.IsArray)
+                {
+                    if (targetType == typeof(object[]))
+                    {
+                        return FillBytes((object[])target, buffer);
+                    }
+                    else if (targetType == typeof(bool[]))
+                    {
+                        return FillBytes((bool[])target, buffer);
+                    }
+                    else if (targetType == typeof(bool?[]))
+                    {
+                        return FillBytes((bool?[])target, buffer);
+                    }
+                    else if (targetType == typeof(byte[]))
+                    {
+                        return FillBytes((byte[])target, buffer);
+                    }
+                    else if (targetType == typeof(byte?[]))
+                    {
+                        return FillBytes((byte?[])target, buffer);
+                    }
+                    else if (targetType == typeof(sbyte[]))
+                    {
+                        return FillBytes((sbyte[])target, buffer);
+                    }
+                    else if (targetType == typeof(sbyte?[]))
+                    {
+                        return FillBytes((sbyte?[])target, buffer);
+                    }
+                    else if (targetType == typeof(ushort[]))
+                    {
+                        return FillBytes((ushort[])target, buffer);
+                    }
+                    else if (targetType == typeof(ushort?[]))
+                    {
+                        return FillBytes((ushort?[])target, buffer);
+                    }
+                    else if (targetType == typeof(short[]))
+                    {
+                        return FillBytes((short[])target, buffer);
+                    }
+                    else if (targetType == typeof(short?[]))
+                    {
+                        return FillBytes((short?[])target, buffer);
+                    }
+                    else if (targetType == typeof(uint[]))
+                    {
+                        return FillBytes((uint[])target, buffer);
+                    }
+                    else if (targetType == typeof(uint?[]))
+                    {
+                        return FillBytes((uint?[])target, buffer);
+                    }
+                    else if (targetType == typeof(int[]))
+                    {
+                        return FillBytes((int[])target, buffer);
+                    }
+                    else if (targetType == typeof(int?[]))
+                    {
+                        return FillBytes((int?[])target, buffer);
+                    }
+                    else if (targetType == typeof(ulong[]))
+                    {
+                        return FillBytes((ulong[])target, buffer);
+                    }
+                    else if (targetType == typeof(ulong?[]))
+                    {
+                        return FillBytes((ulong?[])target, buffer);
+                    }
+                    else if (targetType == typeof(long[]))
+                    {
+                        return FillBytes((long[])target, buffer);
+                    }
+                    else if (targetType == typeof(long?[]))
+                    {
+                        return FillBytes((long?[])target, buffer);
+                    }
+                    else if (targetType == typeof(float[]))
+                    {
+                        return FillBytes((float[])target, buffer);
+                    }
+                    else if (targetType == typeof(float?[]))
+                    {
+                        return FillBytes((float?[])target, buffer);
+                    }
+                    else if (targetType == typeof(double[]))
+                    {
+                        return FillBytes((double[])target, buffer);
+                    }
+                    else if (targetType == typeof(double?[]))
+                    {
+                        return FillBytes((double?[])target, buffer);
+                    }
+                    else if (targetType == typeof(DateTime[]))
+                    {
+                        return FillBytes((DateTime[])target, buffer);
+                    }
+                    else if (targetType == typeof(DateTime?[]))
+                    {
+                        return FillBytes((DateTime?[])target, buffer);
+                    }
+                    else if (targetType == typeof(string[]))
+                    {
+                        return FillBytes((string[])target, buffer);
+                    }
+                }
+                else if (target is IDictionary<string, object>)
+                {
+                    return FillBytes((IDictionary<string, object?>)target, buffer);
+                }
+                throw new NotSupportedException($"The specified data type is not supported. [Data type={targetType.Name}]");
+            default:
+                throw new NotSupportedException($"The specified data type is not supported. [Data type={targetType.Name}]");
+        }
+    }
+
+    public static byte[] ToBinary(object? target)
+    {
+        var buffer = new byte[CalcBinarySize(target)];
+        FillBytes(target, buffer);
+        return buffer;
+    }
+
     public static byte[] FromDictionaryToBinary(IDictionary<string, object?> target)
     {
-        var objects = new List<byte[]>
-        {
-            ORiN3BitConverter.GetBytes(target.Keys.Count)
-        };
+        var buffer = new byte[target.Sum(_ => CalcBinarySize(_.Key) + CalcBinarySize(_.Value)) + 4];
+        ORiN3BitConverter.FillBytes(buffer, target.Keys.Count);
+        var temp = buffer.AsSpan()[4..];
         foreach (var key in target.Keys)
         {
             var value = target[key];
-            objects.Add(ToBinary(key));
-            objects.Add(ToBinary(value));
+            temp = FillBytes(key, temp);
+            temp = FillBytes(value, temp);
         }
-        return objects.SelectMany(_ => _).ToArray();
+        return buffer;
     }
 
     public static Dictionary<string, object?> ToDictionary(ReadOnlySpan<byte> bytes)
@@ -1031,7 +879,7 @@ public static class ORiN3BinaryConverter
         return result;
     }
 
-    public static ReadOnlySpan<byte> ToObjectInternal(ReadOnlySpan<byte> bytes, out object? result)
+    internal static ReadOnlySpan<byte> ToObjectInternal(ReadOnlySpan<byte> bytes, out object? result)
     {
         switch ((DataType)bytes[0])
         {
@@ -1415,7 +1263,7 @@ public static class ORiN3BinaryConverter
                 {
                     var length = ORiN3BitConverter.ToInt32(bytes[1..]);
                     result = ToDictionary(bytes[5..]);
-                    return bytes[(5 + length)..];
+                    return bytes[(5 + length - 1)..];
                 }
             default:
                 throw new NotSupportedException();
