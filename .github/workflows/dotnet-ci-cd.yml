@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '0 16 * * *'  # 毎日 UTC 16:00 (JST 1:00)
+    - cron: '0 16 * * *'  # everyday UTC 16:00 (JST 1:00)
 
 jobs:
   build:
@@ -26,4 +26,10 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: TestResults
+      if: always()
