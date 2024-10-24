@@ -53,6 +53,7 @@ jobs:
           path: ${{ github.workspace }}
 
   test:
+    needs: build
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -75,7 +76,7 @@ jobs:
         if: always()
 
   publish:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
