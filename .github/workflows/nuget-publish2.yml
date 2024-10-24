@@ -88,6 +88,8 @@ jobs:
             TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
           fi
 
+          echo "NEW_PROJECT_VERSION: ${TARGET_PROJECT_VERSION}"
+          echo "NEW_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
           echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
           echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
       - name: Output Versions
