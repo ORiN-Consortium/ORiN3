@@ -133,6 +133,18 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: build-output
+      - name: Check if in git repository
+        run: |
+          if [ ! -d .git ]; then
+            echo "Not in a Git repository."
+          fi
+      - name: Check if VERSION_FILE exists
+        run: |
+          if [ -f ${{ env.VERSION_FILE }} ]; then
+            echo "File exists."
+          else
+            echo "File does not exist."
+          fi
       - name: Commit and push changes
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
