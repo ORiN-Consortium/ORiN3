@@ -23,6 +23,26 @@ jobs:
           dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore
+      - name: Update Version
+        run: |
+          VERSION_FILE="$GITHUB_WORKSPACE/SolutionDefines.ProjectVersion.targets"
+          PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' $VERSION_FILE)
+          NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' $VERSION_FILE)
+
+          IFS='.' read -ra VERSION_PARTS <<< "$PROJECT_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          BUILD=${VERSION_PARTS[2]}
+          REVISION=$((VERSION_PARTS[3] + 1))
+
+          NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.$REVISION"
+          NEW_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+        
+          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>$NEW_PROJECT_VERSION<\/ProjectVersion>/" $VERSION_FILE
+          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>$NEW_NUGET_VERSION<\/NugetPackageVersion>/" $VERSION_FILE
+
+          echo "Updated Project Version: $NEW_PROJECT_VERSION"
+          echo "Updated NuGet Version: $NEW_NUGET_VERSION"
       - name: Build
         run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
       - name: Pack
