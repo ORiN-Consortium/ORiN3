@@ -32,7 +32,7 @@ jobs:
           IFS='.' read -ra VERSION_PARTS <<< "$PROJECT_VERSION"
           MAJOR=${VERSION_PARTS[0]}
           MINOR=${VERSION_PARTS[1]}
-          BUILD=${VERSION_PARTS[2] + 1}
+          BUILD=$((VERSION_PARTS[2] + 1))
           REVISION=$((VERSION_PARTS[3]))
 
           NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.$REVISION"
