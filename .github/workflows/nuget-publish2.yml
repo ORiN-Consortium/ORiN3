@@ -3,6 +3,18 @@ name: Publish NuGet Packages
 on:
   workflow_dispatch:
     inputs:
+      prereleaseenabled:
+        required: true
+        type: choice
+        options:
+          - enabled
+          - disabled
+        default: 'enabled'
+      prerelease:
+        description: 'PreRelease identifier (e.g. rc, alpha, beta)'
+        required: false
+        type: string
+        default: 'rc'
       configuration:
         description: 'configuration'
         required: true
@@ -12,10 +24,18 @@ on:
           - Debug
         default: 'Release'
 
+env:
+  VERSION_FILE: ${{ github.workspace }}/SolutionDefines.ProjectVersion.targets
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Parameters
+        run: |
+          echo "prereleaseenabled: ${{ github.event.inputs.prereleaseenabled }}"
+          echo "prerelease: ${{ github.event.inputs.prerelease }}"
+          echo "configuration: ${{ github.event.inputs.configuration }}"
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -25,19 +45,46 @@ jobs:
         run: dotnet restore
       - name: Update Version
         run: |
-          VERSION_FILE="$GITHUB_WORKSPACE/SolutionDefines.ProjectVersion.targets"
-          PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' $VERSION_FILE)
-          NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' $VERSION_FILE)
+          PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' ${{ env.VERSION_FILE }})
+          NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' ${{ env.VERSION_FILE }})
+          echo "PROJECT_VERSION: $PROJECT_VERSION"
+          echo "NUGET_VERSION: $NUGET_VERSION"
 
-          IFS='.' read -ra VERSION_PARTS <<< "$PROJECT_VERSION"
-          MAJOR=${VERSION_PARTS[0]}
-          MINOR=${VERSION_PARTS[1]}
-          BUILD=$((VERSION_PARTS[2] + 1))
-          REVISION=$((VERSION_PARTS[3]))
+          IFS='.' read -r MAJOR MINOR BUILD <<< "${NUGET_VERSION%-*}"
+          PRERELEASE="${NUGET_VERSION#*-}"
+          if [ "$PRERELEASE" = "$NUGET_VERSION" ]; then
+            PRERELEASE_IDENTIFIER=""
+            PRERELEASE_NUMBER=""
+          else
+            PRERELEASE_IDENTIFIER=${PRERELEASE%%.*}
+            PRERELEASE_NUMBER=$(echo $PRERELEASE | awk -F'.' '{print $NF}')
+          fi
 
-          NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.$REVISION"
-          NEW_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
-        
+          echo "MAJOR: $MAJOR"
+          echo "MINOR: $MINOR"
+          echo "BUILD: $BUILD"
+          echo "PRERELEASE_IDENTIFIER: $PRERELEASE_IDENTIFIER"
+          echo "PRERELEASE_NUMBER: $PRERELEASE_NUMBER"
+
+          if [ ${{ github.event.inputs.prereleaseenabled }} = "enabled" ]; then
+            echo "# Prerelease version"
+            if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
+              echo "# set the prerelease number to 0"
+              PRERELEASE_NUMBER="0"
+            fi
+            PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
+            NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+            NEW_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-${{ github.event.inputs.prerelease }}.$PRERELEASE_NUMBER"
+          else
+            # Regular version increment
+            if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
+              # Remove prerelease and increment build
+              BUILD=$((BUILD + 1))
+            fi
+            NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+            NEW_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+          fi
+
           sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>$NEW_PROJECT_VERSION<\/ProjectVersion>/" $VERSION_FILE
           sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>$NEW_NUGET_VERSION<\/NugetPackageVersion>/" $VERSION_FILE
 
@@ -45,6 +92,14 @@ jobs:
           echo "Updated NuGet Version: $NEW_NUGET_VERSION"
       - name: Build
         run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
+      - name: Test
+        run: dotnet test --no-build --configuration ${{ github.event.inputs.configuration }} --logger trx --results-directory TestResults
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+        if: always()
       - name: Pack
         run: dotnet pack --configuration ${{ github.event.inputs.configuration }} --no-build --output nupkgs
       - uses: actions/upload-artifact@v4
@@ -56,10 +111,12 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-output
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -68,12 +125,6 @@ jobs:
         run: dotnet restore
       - name: Test
         run: dotnet test --no-build --configuration ${{ github.event.inputs.configuration }} --logger trx --results-directory TestResults
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: TestResults
-        if: always()
 
   publish:
     needs: test
@@ -82,4 +133,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: build-output
-    
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add ${{ env.VERSION_FILE }}
+          git commit -m "Update project version"
+          git push
+          
