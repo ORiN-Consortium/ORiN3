@@ -141,10 +141,12 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-output
       - uses: actions/checkout@v4
+      - name: Update Versions
+        run: |
+          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ env.NEW_PROJECT_VERSION }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }}
+          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ env.NEW_NUGET_VERSION }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }}
+          cat ${{ env.VERSION_FILE }}
       - name: Commit and push changes
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
