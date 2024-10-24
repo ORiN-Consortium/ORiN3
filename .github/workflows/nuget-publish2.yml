@@ -24,9 +24,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration ${{ github.event.inputs.configuratoion }} --no-restore
+        run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
       - name: Pack
-        run: dotnet pack --configuration ${{ github.event.inputs.configuratoion }} --no-build --output nupkgs
+        run: dotnet pack --configuration ${{ github.event.inputs.configuration }} --no-build --output nupkgs
       - uses: actions/upload-artifact@v4
         with:
           name: build-output
