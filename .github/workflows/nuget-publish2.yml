@@ -26,6 +26,9 @@ on:
 
 env:
   VERSION_FILE: ${{ github.workspace }}/SolutionDefines.ProjectVersion.targets
+  NEW_PROJECT_VERSION: "*.*.*.*"
+  NEW_NUGET_VERSION: "*.*.*"
+  DOT_NET_VERSION: "8.0.x"
 
 jobs:
   build:
@@ -40,7 +43,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: ${{ env.DOT_NET_VERSION }}
       - name: Restore dependencies
         run: dotnet restore
       - name: Update Version
@@ -73,23 +76,29 @@ jobs:
               PRERELEASE_NUMBER="0"
             fi
             PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
-            NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
-            NEW_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-${{ github.event.inputs.prerelease }}.$PRERELEASE_NUMBER"
+            TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-${{ github.event.inputs.prerelease }}.$PRERELEASE_NUMBER"
           else
             # Regular version increment
             if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
               # Remove prerelease and increment build
               BUILD=$((BUILD + 1))
             fi
-            NEW_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
-            NEW_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+            TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
           fi
 
-          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>$NEW_PROJECT_VERSION<\/ProjectVersion>/" $VERSION_FILE
-          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>$NEW_NUGET_VERSION<\/NugetPackageVersion>/" $VERSION_FILE
-
-          echo "Updated Project Version: $NEW_PROJECT_VERSION"
-          echo "Updated NuGet Version: $NEW_NUGET_VERSION"
+          echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
+          echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
+      - name: Output Versions
+        run: |
+          echo "Updated Project Version: ${{ env.NEW_PROJECT_VERSION }}"
+          echo "Updated NuGet Version: ${{ env.NEW_NUGET_VERSION }}"
+      - name: Display File Content
+        run: |
+          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ env.NEW_PROJECT_VERSION }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }})
+          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ env.NEW_NUGET_VERSION }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }})
+          cat ${{ env.VERSION_FILE }})
       - name: Build
         run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
       - name: Test
