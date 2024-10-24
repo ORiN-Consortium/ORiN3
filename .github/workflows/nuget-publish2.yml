@@ -96,8 +96,8 @@ jobs:
           echo "Updated NuGet Version: ${{ env.NEW_NUGET_VERSION }}"
       - name: Display File Content
         run: |
-          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ env.NEW_PROJECT_VERSION }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }})
-          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ env.NEW_NUGET_VERSION }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }})
+          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ env.NEW_PROJECT_VERSION }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }}
+          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ env.NEW_NUGET_VERSION }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }}
           cat ${{ env.VERSION_FILE }})
       - name: Build
         run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
