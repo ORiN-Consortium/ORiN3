@@ -1,0 +1,42 @@
+name: Publish NuGet Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'configuration'
+        required: true
+        type: choice
+        options:
+          - Release
+          - Debug
+        default: 'Release'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration ${{ github.event.inputs.configuratoion }} --no-restore
+      - name: Pack
+        run: dotnet pack --configuration ${{ github.event.inputs.configuratoion }} --no-build --output nupkgs
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-output
+          path: /
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-output
+    
