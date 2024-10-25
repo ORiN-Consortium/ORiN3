@@ -51,7 +51,7 @@ jobs:
         run: dotnet restore
       - name: Call Update Version Workflow
         uses: ./.github/actions/update-version
-        id: update_version_step
+        id: update_version
         with:
           prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
           prerelease: ${{ github.event.inputs.prerelease }}
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Call Update Version Workflow
         uses: ./.github/actions/update-version
-        id: update_version_step
+        id: update_version
         with:
           prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
           prerelease: ${{ github.event.inputs.prerelease }}
