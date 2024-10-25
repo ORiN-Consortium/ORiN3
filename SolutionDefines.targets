@@ -5,8 +5,12 @@
     <ProductName>ORiN3</ProductName>
     <NugetPackageTags>ORiN3</NugetPackageTags>
     <NugetPackageDescription>C# implementation of ORiN3.</NugetPackageDescription>
-    <PackageIconName>orin_package_256x256.png</PackageIconName>
+    <PackageIconName>orin3_128x128.png</PackageIconName>
     <PackageIconPath>..\..\$(PackageIconName)</PackageIconPath>
+    <ApplicationIconName>orin3.ico</ApplicationIconName>
+    <ApplicationIconPath>..\..\$(ApplicationIconName)</ApplicationIconPath>
+    <LicenseName>LICENSE</LicenseName>
+    <LicensePath>..\..\$(LicenseName)</LicensePath>
     <XmlDocumentPath>bin\$(Configuration)/$(TargetFramework)/$(MSBuildProjectName).xml</XmlDocumentPath>
   </PropertyGroup>
   <PropertyGroup>
