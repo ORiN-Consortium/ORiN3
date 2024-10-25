@@ -103,6 +103,15 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: build-output
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add ${{ env.VERSION_FILE }}
+          git commit -m "Update project version"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push NuGet Packages
         run: |
           for nupkg in ./nupkgs/*.nupkg
@@ -115,18 +124,3 @@ jobs:
           done
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      - name: Call Update Version Workflow
-        uses: ./.github/actions/update-version
-        with:
-          prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
-          prerelease: ${{ github.event.inputs.prerelease }}
-          version_file: ${{ env.VERSION_FILE }}
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add ${{ env.VERSION_FILE }}
-          git commit -m "Update project version"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
