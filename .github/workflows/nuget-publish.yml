@@ -100,6 +100,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-output
+      - name: Push NuGet Packages
+        run: |
+          for nupkg in ./nupkgs/*.nupkg
+          do
+            dotnet nuget push "$nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
+          for snupkg in ./nupkgs/*.snupkg
+          do
+            dotnet nuget push "$snupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       - name: Call Update Version Workflow
         uses: ./.github/actions/update-version
         with:
