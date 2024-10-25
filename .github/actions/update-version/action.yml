@@ -67,5 +67,7 @@ runs:
           TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
         fi
 
+        echo "TARGET_PROJECT_VERSION: ${TARGET_PROJECT_VERSION}"
+        echo "TARGET_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
         echo "project_version=${TARGET_PROJECT_VERSION}" >> $GITHUB_OUTPUT
         echo "nuget_version=${TARGET_NUGET_VERSION}" >> $GITHUB_OUTPUT
