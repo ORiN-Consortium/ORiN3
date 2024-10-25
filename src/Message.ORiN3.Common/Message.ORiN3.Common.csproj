@@ -14,8 +14,8 @@
     <Description>$(NugetPackageDescription)</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>
-    <PackageIcon>$(PackageIconName)</PackageIcon>
-    <ApplicationIcon>$(ApplicationIconName)</ApplicationIcon>
+    <PackageIcon>_Resource\orin3_128x128.png</PackageIcon>
+    <ApplicationIcon>_Resource\orin3.ico</ApplicationIcon>
     <PackageLicenseFile>$(LicenseName)</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>NU1603</NoWarn>
@@ -58,8 +58,10 @@
     <ProjectReference Include="..\Design.ORiN3.Provider\Design.ORiN3.Provider.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(PackageIconPath)" Pack="true" Visible="false" PackagePath="" />
-    <None Include="$(ApplicationIconPath)" Pack="true" Visible="false" PackagePath="" />
+    <None Include="_Resource\orin3_128x128.png" Pack="true" PackagePath="_Resource\orin3_128x128.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="_Resource\orin3.ico" Pack="true" PackagePath="_Resource\orin3.ico" />
     <None Include="$(LicensePath)" Pack="true" PackagePath="\" />
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
