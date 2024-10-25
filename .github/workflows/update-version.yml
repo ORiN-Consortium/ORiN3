@@ -1,0 +1,73 @@
+name: Update Version
+
+on:
+  workflow_call:
+    inputs:
+      prereleaseenabled:
+        required: true
+        type: boolean
+      prerelease:
+        description: 'PreRelease identifier (e.g. rc, alpha, beta)'
+        required: true
+        type: string
+      version_file:
+        description: 'Path to the version file'
+        required: true
+        type: string
+    outputs:
+      updated_project_version:
+        description: "Updated Project Version"
+        value: ${{ jobs.update_version.outputs.project_version }}
+      updated_nuget_version:
+        description: "Updated NuGet Version"
+        value: ${{ jobs.update_version.outputs.nuget_version }}
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Version
+        id: update_version
+        run: |
+          PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' ${{ inputs.version_file }})
+          NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' ${{ inputs.version_file }})
+          echo "PROJECT_VERSION: $PROJECT_VERSION"
+          echo "NUGET_VERSION: $NUGET_VERSION"
+
+          IFS='.' read -r MAJOR MINOR BUILD <<< "${NUGET_VERSION%-*}"
+          PRERELEASE="${NUGET_VERSION#*-}"
+          if [ "$PRERELEASE" = "$NUGET_VERSION" ]; then
+            PRERELEASE_IDENTIFIER=""
+            PRERELEASE_NUMBER=""
+          else
+            PRERELEASE_IDENTIFIER=${PRERELEASE%%.*}
+            PRERELEASE_NUMBER=$(echo $PRERELEASE | awk -F'.' '{print $NF}')
+          fi
+
+          echo "MAJOR: $MAJOR"
+          echo "MINOR: $MINOR"
+          echo "BUILD: $BUILD"
+          echo "PRERELEASE_IDENTIFIER: $PRERELEASE_IDENTIFIER"
+          echo "PRERELEASE_NUMBER: $PRERELEASE_NUMBER"
+
+          if [ ${{ inputs.prereleaseenabled }} ]; then
+            echo "# Prerelease version"
+            if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
+              echo "# set the prerelease number to 0"
+              PRERELEASE_NUMBER="0"
+            fi
+            PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
+            TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-${{ inputs.prerelease }}.$PRERELEASE_NUMBER"
+          else
+            # Regular version increment
+            if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
+              # Remove prerelease and increment build
+              BUILD=$((BUILD + 1))
+            fi
+            TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+          fi
+
+          echo "project_version=${TARGET_PROJECT_VERSION}" >> $GITHUB_OUTPUT
+          echo "nuget_version=${TARGET_NUGET_VERSION}" >> $GITHUB_OUTPUT
