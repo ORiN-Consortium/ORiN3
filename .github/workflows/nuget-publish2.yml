@@ -50,7 +50,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Call Update Version Workflow
-        uses: ./.github/workflows/update-version.yml
+        uses: ./.github/workflows/update-version.yml@main
         with:
           prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
           prerelease: ${{ github.event.inputs.prerelease }}
@@ -106,7 +106,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Call Update Version Workflow
-        uses: ./.github/workflows/update-version.yml
+        uses: ./.github/workflows/update-version.yml@main
         with:
           prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
           prerelease: ${{ github.event.inputs.prerelease }}
