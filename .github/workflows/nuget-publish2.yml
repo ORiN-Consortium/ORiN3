@@ -24,6 +24,9 @@ on:
           - Debug
         default: 'Release'
 
+permissions:
+  contents: write
+
 env:
   VERSION_FILE: ${{ github.workspace }}/SolutionDefines.ProjectVersion.targets
   NEW_PROJECT_VERSION: "*.*.*.*"
