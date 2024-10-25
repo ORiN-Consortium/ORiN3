@@ -69,3 +69,7 @@ runs:
         echo "TARGET_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
         echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
         echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
+
+        sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${TARGET_PROJECT_VERSION}<\/ProjectVersion>/" ${{ inputs.version_file }}
+        sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${TARGET_NUGET_VERSION}<\/NugetPackageVersion>/" ${{ inputs.version_file }}
+        cat ${{ inputs.version_file }}
