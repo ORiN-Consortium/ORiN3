@@ -2,38 +2,116 @@ name: Publish NuGet Packages
 
 on:
   workflow_dispatch:
+    inputs:
+      prereleaseenabled:
+        required: true
+        type: choice
+        options:
+          - enabled
+          - disabled
+        default: 'enabled'
+      prerelease:
+        description: 'PreRelease identifier (e.g. rc, alpha, beta)'
+        required: false
+        type: string
+        default: 'rc'
+      configuration:
+        description: 'configuration'
+        required: true
+        type: choice
+        options:
+          - Release
+          - Debug
+        default: 'Release'
+
+permissions:
+  contents: write
+
+env:
+  VERSION_FILE: ${{ github.workspace }}/SolutionDefines.ProjectVersion.targets
+  NEW_PROJECT_VERSION: "*.*.*.*"
+  NEW_NUGET_VERSION: "*.*.*"
+  DOT_NET_VERSION: "8.0.x"
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-    
+    outputs:
+      TARGET_PROJECT_VERSION: ${{ steps.update_version.outputs.TARGET_PROJECT_VERSION }}
+      TARGET_NUGET_VERSION: ${{ steps.update_version.outputs.TARGET_NUGET_VERSION }}
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-    
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    
-    - name: Pack
-      run: dotnet pack --configuration Release --no-build --output nupkgs
-    
-    - name: Push NuGet Packages
-      run: |
-        for nupkg in ./nupkgs/*.nupkg
-        do
-          dotnet nuget push "$nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        done
-        
-        for snupkg in ./nupkgs/*.snupkg
-        do
-          dotnet nuget push "$snupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        done
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      - name: Parameters
+        run: |
+          echo "prereleaseenabled: ${{ github.event.inputs.prereleaseenabled }}"
+          echo "prerelease: ${{ github.event.inputs.prerelease }}"
+          echo "configuration: ${{ github.event.inputs.configuration }}"
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOT_NET_VERSION }}
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Call Update Version Workflow
+        uses: ./.github/actions/update-version
+        id: update_version
+        with:
+          prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          version_file: ${{ env.VERSION_FILE }}
+      - name: Build
+        run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
+      - name: Test
+        run: dotnet test --no-build --configuration ${{ github.event.inputs.configuration }} --logger trx --results-directory TestResults
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+        if: always()
+      - name: Pack
+        run: dotnet pack --configuration ${{ github.event.inputs.configuration }} --no-build --output nupkgs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: ${{ github.workspace }}
+
+  test:
+    needs: build
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-output
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Test
+        run: dotnet test --no-build --configuration ${{ github.event.inputs.configuration }} --logger trx --results-directory TestResults
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Call Update Version Workflow
+        uses: ./.github/actions/update-version
+        with:
+          prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          version_file: ${{ env.VERSION_FILE }}
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add ${{ env.VERSION_FILE }}
+          git commit -m "Update project version"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
