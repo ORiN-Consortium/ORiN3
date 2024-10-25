@@ -49,61 +49,20 @@ jobs:
           dotnet-version: ${{ env.DOT_NET_VERSION }}
       - name: Restore dependencies
         run: dotnet restore
-      - name: Update Version
-        id: update_version
+      - name: Call Update Version Workflow
+        uses: ./.github/workflows/update-version.yml
+        with:
+          prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          version_file: ${{ env.VERSION_FILE }}
+      - name: Use Updated Versions
         run: |
-          PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' ${{ env.VERSION_FILE }})
-          NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' ${{ env.VERSION_FILE }})
-          echo "PROJECT_VERSION: $PROJECT_VERSION"
-          echo "NUGET_VERSION: $NUGET_VERSION"
-
-          IFS='.' read -r MAJOR MINOR BUILD <<< "${NUGET_VERSION%-*}"
-          PRERELEASE="${NUGET_VERSION#*-}"
-          if [ "$PRERELEASE" = "$NUGET_VERSION" ]; then
-            PRERELEASE_IDENTIFIER=""
-            PRERELEASE_NUMBER=""
-          else
-            PRERELEASE_IDENTIFIER=${PRERELEASE%%.*}
-            PRERELEASE_NUMBER=$(echo $PRERELEASE | awk -F'.' '{print $NF}')
-          fi
-
-          echo "MAJOR: $MAJOR"
-          echo "MINOR: $MINOR"
-          echo "BUILD: $BUILD"
-          echo "PRERELEASE_IDENTIFIER: $PRERELEASE_IDENTIFIER"
-          echo "PRERELEASE_NUMBER: $PRERELEASE_NUMBER"
-
-          if [ ${{ github.event.inputs.prereleaseenabled }} = "enabled" ]; then
-            echo "# Prerelease version"
-            if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
-              echo "# set the prerelease number to 0"
-              PRERELEASE_NUMBER="0"
-            fi
-            PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
-            TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
-            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-${{ github.event.inputs.prerelease }}.$PRERELEASE_NUMBER"
-          else
-            # Regular version increment
-            if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
-              # Remove prerelease and increment build
-              BUILD=$((BUILD + 1))
-            fi
-            TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
-            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
-          fi
-
-          echo "NEW_PROJECT_VERSION: ${TARGET_PROJECT_VERSION}"
-          echo "NEW_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
-          echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
-          echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
-      - name: Output Versions
-        run: |
-          echo "Updated Project Version: ${{ env.NEW_PROJECT_VERSION }}"
-          echo "Updated NuGet Version: ${{ env.NEW_NUGET_VERSION }}"
+          echo "Updated Project Version: ${{ steps.update_version.outputs.updated_project_version }}"
+          echo "Updated NuGet Version: ${{ steps.update_version.outputs.updated_nuget_version }}"
       - name: Display File Content
         run: |
-          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ env.NEW_PROJECT_VERSION }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }}
-          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ env.NEW_NUGET_VERSION }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }}
+          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ steps.update_version.outputs.updated_project_version }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }}
+          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ steps.update_version.outputs.updated_nuget_version }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }}
           cat ${{ env.VERSION_FILE }}
       - name: Build
         run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
@@ -146,10 +105,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update Versions
+      - name: Call Update Version Workflow
+        uses: ./.github/workflows/update-version.yml
+        with:
+          prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          version_file: ${{ env.VERSION_FILE }}
+      - name: Use Updated Versions
         run: |
-          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ needs.build.outputs.TARGET_PROJECT_VERSION }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }}
-          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ needs.build.outputs.TARGET_NUGET_VERSION }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }}
+          echo "Updated Project Version: ${{ steps.update_version.outputs.updated_project_version }}"
+          echo "Updated NuGet Version: ${{ steps.update_version.outputs.updated_nuget_version }}"
+      - name: Display File Content
+        run: |
+          sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${{ steps.update_version.outputs.updated_project_version }}<\/ProjectVersion>/" ${{ env.VERSION_FILE }}
+          sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${{ steps.update_version.outputs.updated_nuget_version }}<\/NugetPackageVersion>/" ${{ env.VERSION_FILE }}
           cat ${{ env.VERSION_FILE }}
       - name: Commit and push changes
         run: |
