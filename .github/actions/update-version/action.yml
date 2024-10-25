@@ -13,11 +13,7 @@ inputs:
     description: 'Path to the version file'
     required: true
     type: string
-outputs:
-  updated_project_version:
-    description: "Updated Project Version"
-  updated_nuget_version:
-    description: "Updated NuGet Version"
+
 runs:
   using: "composite"
   steps:
@@ -71,7 +67,5 @@ runs:
 
         echo "TARGET_PROJECT_VERSION: ${TARGET_PROJECT_VERSION}"
         echo "TARGET_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
-        echo "updated_project_version=${TARGET_PROJECT_VERSION}" >> $GITHUB_OUTPUT
-        echo "updated_nuget_version=${TARGET_NUGET_VERSION}" >> $GITHUB_OUTPUT
         echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
         echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
