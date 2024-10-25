@@ -73,3 +73,5 @@ runs:
         echo "TARGET_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
         echo "updated_project_version=${TARGET_PROJECT_VERSION}" >> $GITHUB_OUTPUT
         echo "updated_nuget_version=${TARGET_NUGET_VERSION}" >> $GITHUB_OUTPUT
+        echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
+        echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
