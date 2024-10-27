@@ -8,9 +8,9 @@ enum ResultCode {
     SUCCEEDED = 0x00000000;
     CANCELED = 0x1FFFFFFE;
     DEFAULT_ERROR = 0x1FFFFFFF;
-    //  ORiN3ObjectWarehouse
+    // ORiN3ObjectWarehouse
     INCONSISTENCIES_IN_OBJECT_DATABASE = 0x10000001;
-    //  ORiN3Object
+    // ORiN3Object
     O_RI_N3_OBJECT_NOT_FOUND = 0x10000100;
     O_RI_N3_OBJECT_DELETED = 0x10000101;
     NOT_A_CONTROLLER = 0x10000102;
@@ -46,10 +46,10 @@ enum ResultCode {
     CAN_NOT_CREATE_FILE = 0x1000040A;
     CAN_NOT_CREATE_JOB = 0x1000040B;
     CAN_NOT_CREATE_MODULE = 0x1000040C;
-    //  Command
+    // Command
     COMMAND_NOT_FOUND = 0x10000500;
     COMMAND_EXECUTION_FAILED = 0x10000501;
-    //  JSON
+    // JSON
     JSON_ELEMENT_NOT_FOUND = 0x10000600;
     JSON_INVALID_VALUE = 0x10000601;
     JSON_INVALID_VALUE_RANGE = 0x10000602;
@@ -57,7 +57,7 @@ enum ResultCode {
     JSON_UNKNOWN_VALUE = 0x10000604;
     JSON_KEY_DUPLICATION = 0x10000605;
     JSON_INVALID_OPTION_FORMAT = 0x10000606;
-    //  Version
+    // Version
     INVALID_VERSION = 0x10000700;
     UNMATCH_VERSION = 0x10000701;
     PROVIDER_VERSION_NOT_DEFINED = 0x10000702;
@@ -104,435 +104,435 @@ enum ResultCode {
     TAGS_DATA_LENGTH_EXCEED_THE_UPPER_LIMIT = 0x10000C05;
     TAGS_REGISTRATION_EXCEED_THE_UPPER_LIMIT = 0x10000C06;
     // Provider specific
-	// 0x10100000 - 0x101FFFFF
+    // 0x10100000 - 0x101FFFFF
     PROVIDER_SPECIFIC_RESULT_CODE = 0x10100000;
 }
 
 // The common request class.
 message CommonRequest {
-	// Reserved value.
-	int32 reserved = 1;
+    // Reserved value.
+    int32 reserved = 1;
 }
 
 // The common response class.
 message CommonResponse {
-	// The result code.
+    // The result code.
     ORiN3.Common.ResultCode resultCode = 1;
-	// The detail message of the result.
+    // The detail message of the result.
     string detail = 2;
 }
 
 // The value class which is used in ORiN3.
 message ORiN3Value {
-	// The type of ORiN3 value.
-	int32 type = 1;
-	oneof value {
-		// A boolean.
-		ORiN3Bool bool = 10;
-		// An array of booleans.
-		ORiN3BoolArray boolArray = 11;
-		// A nullable boolean.
-		ORiN3NullableBool nullableBool = 12;
-		// An array of nullable booleans.
-		ORiN3NullableBoolArray nullableBoolArray = 13;
+    // The type of ORiN3 value.
+    int32 type = 1;
+    oneof value {
+        // A boolean.
+        ORiN3Bool bool = 10;
+        // An array of booleans.
+        ORiN3BoolArray boolArray = 11;
+        // A nullable boolean.
+        ORiN3NullableBool nullableBool = 12;
+        // An array of nullable booleans.
+        ORiN3NullableBoolArray nullableBoolArray = 13;
 
-		// An 8-bit integer.
-		ORiN3Int8 int8 = 20;
-		// An array of 8-bit integers. 
-		ORiN3Int8Array int8Array = 21;
-		// A nullable 8-bit integer.
-		ORiN3NullableInt8 nullableInt8 = 22;
-		// An array of nullable 8-bit integers.
-		ORiN3NullableInt8Array nullableInt8Array = 23;
+        // An 8-bit integer.
+        ORiN3Int8 int8 = 20;
+        // An array of 8-bit integers. 
+        ORiN3Int8Array int8Array = 21;
+        // A nullable 8-bit integer.
+        ORiN3NullableInt8 nullableInt8 = 22;
+        // An array of nullable 8-bit integers.
+        ORiN3NullableInt8Array nullableInt8Array = 23;
 
-		// An 16-bit integer.
-		ORiN3Int16 int16 = 30;
-		// An array of 16-bit integers. 
-		ORiN3Int16Array int16Array = 31;
-		// A nullable 16-bit integer.
-		ORiN3NullableInt16 nullableInt16 = 32;
-		// An array of nullable 16-bit integers.
-		ORiN3NullableInt16Array nullableInt16Array = 33;
+        // An 16-bit integer.
+        ORiN3Int16 int16 = 30;
+        // An array of 16-bit integers. 
+        ORiN3Int16Array int16Array = 31;
+        // A nullable 16-bit integer.
+        ORiN3NullableInt16 nullableInt16 = 32;
+        // An array of nullable 16-bit integers.
+        ORiN3NullableInt16Array nullableInt16Array = 33;
 
-		// An 32-bit integer.
-		ORiN3Int32 int32 = 40;
-		// An array of 32-bit integers. 
-		ORiN3Int32Array int32Array = 41;
-		// A nullable 32-bit integer.
-		ORiN3NullableInt32 nullableInt32 = 42;
-		// An array of nullable 32-bit integers.
-		ORiN3NullableInt32Array nullableInt32Array = 43;
+        // An 32-bit integer.
+        ORiN3Int32 int32 = 40;
+        // An array of 32-bit integers. 
+        ORiN3Int32Array int32Array = 41;
+        // A nullable 32-bit integer.
+        ORiN3NullableInt32 nullableInt32 = 42;
+        // An array of nullable 32-bit integers.
+        ORiN3NullableInt32Array nullableInt32Array = 43;
 
-		// An 64-bit integer.
-		ORiN3Int64 int64 = 50;
-		// An array of 64-bit integers. 
-		ORiN3Int64Array int64Array = 51;
-		// A nullable 64-bit integer.
-		ORiN3NullableInt64 nullableInt64 = 52;
-		// An array of nullable 64-bit integers.
-		ORiN3NullableInt64Array nullableInt64Array = 53;
+        // An 64-bit integer.
+        ORiN3Int64 int64 = 50;
+        // An array of 64-bit integers. 
+        ORiN3Int64Array int64Array = 51;
+        // A nullable 64-bit integer.
+        ORiN3NullableInt64 nullableInt64 = 52;
+        // An array of nullable 64-bit integers.
+        ORiN3NullableInt64Array nullableInt64Array = 53;
 
-		// An unsigned 8-bit integer.
-		ORiN3UInt8 uInt8 = 60;
-		// An array of unsigned 8-bit integers. 
-		ORiN3UInt8Array uInt8Array = 61;
-		// A nullable unsigned 8-bit integer.
-		ORiN3NullableUInt8 nullableUInt8 = 62;
-		// An array of nullable unsigned 8-bit integers.
-		ORiN3NullableUInt8Array nullableUInt8Array = 63;
+        // An unsigned 8-bit integer.
+        ORiN3UInt8 uInt8 = 60;
+        // An array of unsigned 8-bit integers. 
+        ORiN3UInt8Array uInt8Array = 61;
+        // A nullable unsigned 8-bit integer.
+        ORiN3NullableUInt8 nullableUInt8 = 62;
+        // An array of nullable unsigned 8-bit integers.
+        ORiN3NullableUInt8Array nullableUInt8Array = 63;
 
-		// An unsigned 16-bit integer.
-		ORiN3UInt16 uInt16 = 70;
-		// An array of unsigned 16-bit integers. 
-		ORiN3UInt16Array uInt16Array = 71;
-		// A nullable unsigned 16-bit integer.
-		ORiN3NullableUInt16 nullableUInt16 = 72;
-		// An array of nullable unsigned 16-bit integers.
-		ORiN3NullableUInt16Array nullableUInt16Array = 73;
+        // An unsigned 16-bit integer.
+        ORiN3UInt16 uInt16 = 70;
+        // An array of unsigned 16-bit integers. 
+        ORiN3UInt16Array uInt16Array = 71;
+        // A nullable unsigned 16-bit integer.
+        ORiN3NullableUInt16 nullableUInt16 = 72;
+        // An array of nullable unsigned 16-bit integers.
+        ORiN3NullableUInt16Array nullableUInt16Array = 73;
 
-		// An unsigned 32-bit integer.
-		ORiN3UInt32 uInt32 = 80;
-		// An array of unsigned 32-bit integers. 
-		ORiN3UInt32Array uInt32Array = 81;
-		// A nullable unsigned 32-bit integer.
-		ORiN3NullableUInt32 nullableUInt32 = 82;
-		// An array of nullable unsigned 32-bit integers.
-		ORiN3NullableUInt32Array nullableUInt32Array = 83;
+        // An unsigned 32-bit integer.
+        ORiN3UInt32 uInt32 = 80;
+        // An array of unsigned 32-bit integers. 
+        ORiN3UInt32Array uInt32Array = 81;
+        // A nullable unsigned 32-bit integer.
+        ORiN3NullableUInt32 nullableUInt32 = 82;
+        // An array of nullable unsigned 32-bit integers.
+        ORiN3NullableUInt32Array nullableUInt32Array = 83;
 
-		// An unsigned 64-bit integer.
-		ORiN3UInt64 uInt64 = 90;
-		// An array of unsigned 64-bit integers. 
-		ORiN3UInt64Array uInt64Array = 91;
-		// A nullable unsigned 64-bit integer.
-		ORiN3NullableUInt64 nullableUInt64 = 92;
-		// An array of nullable unsigned 64-bit integers.
-		ORiN3NullableUInt64Array nullableUInt64Array = 93;
+        // An unsigned 64-bit integer.
+        ORiN3UInt64 uInt64 = 90;
+        // An array of unsigned 64-bit integers. 
+        ORiN3UInt64Array uInt64Array = 91;
+        // A nullable unsigned 64-bit integer.
+        ORiN3NullableUInt64 nullableUInt64 = 92;
+        // An array of nullable unsigned 64-bit integers.
+        ORiN3NullableUInt64Array nullableUInt64Array = 93;
 
-		// A single precision floating point number.
-		ORiN3Float float = 100;
-		// An array of single precision floating point numbers. 
-		ORiN3FloatArray floatArray = 101;
-		// A nullable single precision floating point number.
-		ORiN3NullableFloat nullableFloat = 102;
-		// An array of nullable single precision floating point numbers. 
-		ORiN3NullableFloatArray nullableFloatArray = 103;
+        // A single precision floating point number.
+        ORiN3Float float = 100;
+        // An array of single precision floating point numbers. 
+        ORiN3FloatArray floatArray = 101;
+        // A nullable single precision floating point number.
+        ORiN3NullableFloat nullableFloat = 102;
+        // An array of nullable single precision floating point numbers. 
+        ORiN3NullableFloatArray nullableFloatArray = 103;
 
-		// A double precision floating point number.
-		ORiN3Double double = 110;
-		// An array of double precision floating point numbers. 
-		ORiN3DoubleArray doubleArray = 111;
-		// A nullable double precision floating point number.
-		ORiN3NullableDouble nullableDouble = 112;
-		// An array of nullable double precision floating point numbers. 
-		ORiN3NullableDoubleArray nullableDoubleArray = 113;
+        // A double precision floating point number.
+        ORiN3Double double = 110;
+        // An array of double precision floating point numbers. 
+        ORiN3DoubleArray doubleArray = 111;
+        // A nullable double precision floating point number.
+        ORiN3NullableDouble nullableDouble = 112;
+        // An array of nullable double precision floating point numbers. 
+        ORiN3NullableDoubleArray nullableDoubleArray = 113;
 
-		// A string. 
-		ORiN3String string = 120;
-		// An array of strings. 
-		ORiN3StringArray stringArray = 121;
+        // A string. 
+        ORiN3String string = 120;
+        // An array of strings. 
+        ORiN3StringArray stringArray = 121;
 
-		// A value expressed as a date and time of day.
-		ORiN3DateTime dateTime = 130;
-		// An array of values expressed as a date and time of day.
-		ORiN3DateTimeArray dateTimeArray = 131;
-		// A nullable value expressed as a date and time of day.
-		ORiN3NullableDateTime nullableDateTime = 132;
-		// An array of nullable values expressed as a date and time of day.
-		ORiN3NullableDateTimeArray nullableDateTimeArray = 133;
+        // A value expressed as a date and time of day.
+        ORiN3DateTime dateTime = 130;
+        // An array of values expressed as a date and time of day.
+        ORiN3DateTimeArray dateTimeArray = 131;
+        // A nullable value expressed as a date and time of day.
+        ORiN3NullableDateTime nullableDateTime = 132;
+        // An array of nullable values expressed as a date and time of day.
+        ORiN3NullableDateTimeArray nullableDateTimeArray = 133;
 
-		// An array of object
-		ORiN3ValueObject object = 140;
-	}
+        // An array of object
+        ORiN3ValueObject object = 140;
+    }
 }
 
 // The class of a boolean.
 message ORiN3Bool {
-	// The value in the object.
-	bool rawValue = 1;
+    // The value in the object.
+    bool rawValue = 1;
 }
 
 // The class of an array of booleans.
 message ORiN3BoolArray {
-	// The value in the object.
-	repeated bool rawValue = 1;
+    // The value in the object.
+    repeated bool rawValue = 1;
 }
 
 // The class of a nullable boolean.
 message ORiN3NullableBool {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	bool rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    bool rawValue = 2;
 }
 
 // The class of an array of nullable booleans.
 message ORiN3NullableBoolArray {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableBool rawValue = 1;
 }
 
 // The class of an 8-bit integer.
 message ORiN3Int8 {
-	// The value in the object.
-	int32 rawValue = 1;
+    // The value in the object.
+    int32 rawValue = 1;
 }
 
 // The class of an array of 8-bit integers.
 message ORiN3Int8Array {
-	// The value in the object.
-	repeated int32 rawValue = 1;
+    // The value in the object.
+    repeated int32 rawValue = 1;
 }
 
 // The class of a nullable 8-bit integer.
 message ORiN3NullableInt8 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	int32 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    int32 rawValue = 2;
 }
 
 // The class of an array of nullable 8-bit integers.
 message ORiN3NullableInt8Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableInt8 rawValue = 1;
 }
 
 // The class of a 16-bit integer.
 message ORiN3Int16 {
-	// The value in the object.
-	int32 rawValue = 1;
+    // The value in the object.
+    int32 rawValue = 1;
 }
 
 // The class of an array of 16-bit integers.
 message ORiN3Int16Array {
-	// The value in the object.
-	repeated int32 rawValue = 1;
+    // The value in the object.
+    repeated int32 rawValue = 1;
 }
 
 // The class of a nullable 16-bit integer.
 message ORiN3NullableInt16 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	int32 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    int32 rawValue = 2;
 }
 
 // The class of an array of 16-bit integers.
 message ORiN3NullableInt16Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableInt16 rawValue = 1;
 }
 
 message ORiN3Int32 {
-	// The value in the object.
-	int32 rawValue = 1;
+    // The value in the object.
+    int32 rawValue = 1;
 }
 
 message ORiN3Int32Array {
-	// The value in the object.
-	repeated int32 rawValue = 1;
+    // The value in the object.
+    repeated int32 rawValue = 1;
 }
 
 message ORiN3NullableInt32 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	int32 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    int32 rawValue = 2;
 }
 
 message ORiN3NullableInt32Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableInt32 rawValue = 1;
 }
 
 message ORiN3Int64 {
-	// The value in the object.
-	int64 rawValue = 1;
+    // The value in the object.
+    int64 rawValue = 1;
 }
 
 message ORiN3Int64Array {
-	// The value in the object.
-	repeated int64 rawValue = 1;
+    // The value in the object.
+    repeated int64 rawValue = 1;
 }
 
 message ORiN3NullableInt64 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	int64 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    int64 rawValue = 2;
 }
 
 message ORiN3NullableInt64Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableInt64 rawValue = 1;
 }
 
 message ORiN3UInt8 {
-	// The value in the object.
-	uint32 rawValue = 1;
+    // The value in the object.
+    uint32 rawValue = 1;
 }
 
 message ORiN3UInt8Array {
-	// The value in the object.
-	repeated uint32 rawValue = 1;
+    // The value in the object.
+    repeated uint32 rawValue = 1;
 }
 
 message ORiN3NullableUInt8 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	uint32 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    uint32 rawValue = 2;
 }
 
 message ORiN3NullableUInt8Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableUInt8 rawValue = 1;
 }
 
 message ORiN3UInt16 {
-	// The value in the object.
-	uint32 rawValue = 1;
+    // The value in the object.
+    uint32 rawValue = 1;
 }
 
 message ORiN3UInt16Array {
-	// The value in the object.
-	repeated uint32 rawValue = 1;
+    // The value in the object.
+    repeated uint32 rawValue = 1;
 }
 
 message ORiN3NullableUInt16 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	uint32 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    uint32 rawValue = 2;
 }
 
 message ORiN3NullableUInt16Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableUInt16 rawValue = 1;
 }
 
 message ORiN3UInt32 {
-	// The value in the object.
-	uint32 rawValue = 1;
+    // The value in the object.
+    uint32 rawValue = 1;
 }
 
 message ORiN3UInt32Array {
-	// The value in the object.
-	repeated uint32 rawValue = 1;
+    // The value in the object.
+    repeated uint32 rawValue = 1;
 }
 
 message ORiN3NullableUInt32 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	uint32 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    uint32 rawValue = 2;
 }
 
 message ORiN3NullableUInt32Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableUInt32 rawValue = 1;
 }
 
 message ORiN3UInt64 {
-	// The value in the object.
-	uint64 rawValue = 1;
+    // The value in the object.
+    uint64 rawValue = 1;
 }
 
 message ORiN3UInt64Array {
-	// The value in the object.
-	repeated uint64 rawValue = 1;
+    // The value in the object.
+    repeated uint64 rawValue = 1;
 }
 
 message ORiN3NullableUInt64 {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	uint64 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    uint64 rawValue = 2;
 }
 
 message ORiN3NullableUInt64Array {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableUInt64 rawValue = 1;
 }
 
 message ORiN3Float {
-	// The value in the object.
-	float rawValue = 1;
+    // The value in the object.
+    float rawValue = 1;
 }
 
 message ORiN3FloatArray {
-	// The value in the object.
-	repeated float rawValue = 1;
+    // The value in the object.
+    repeated float rawValue = 1;
 }
 
 message ORiN3NullableFloat {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	float rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    float rawValue = 2;
 }
 
 message ORiN3NullableFloatArray {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableFloat rawValue = 1;
 }
 
 message ORiN3Double {
-	// The value in the object.
-	double rawValue = 1;
+    // The value in the object.
+    double rawValue = 1;
 }
 
 message ORiN3DoubleArray {
-	// The value in the object.
-	repeated double rawValue = 1;
+    // The value in the object.
+    repeated double rawValue = 1;
 }
 
 message ORiN3NullableDouble {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	double rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    double rawValue = 2;
 }
 
 message ORiN3NullableDoubleArray {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableDouble rawValue = 1;
 }
 
 message ORiN3String {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	string rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    string rawValue = 2;
 }
 
 message ORiN3StringArray {
-	// The value in the object.
-	repeated ORiN3String rawValue = 1;
+    // The value in the object.
+    repeated ORiN3String rawValue = 1;
 }
 
 message ORiN3DateTime {
-	// The value in the object.
-	int64 rawValue = 1;
+    // The value in the object.
+    int64 rawValue = 1;
 }
 
 message ORiN3DateTimeArray {
-	// The value in the object.
-	repeated int64 rawValue = 1;
+    // The value in the object.
+    repeated int64 rawValue = 1;
 }
 
 message ORiN3NullableDateTime {
-	// The flag which shows that the value is null or not.
-	bool isNull = 1;
-	// The value in the object.
-	int64 rawValue = 2;
+    // The flag which shows that the value is null or not.
+    bool isNull = 1;
+    // The value in the object.
+    int64 rawValue = 2;
 }
 
 message ORiN3NullableDateTimeArray {
-	// The value in the object.
+    // The value in the object.
     repeated ORiN3NullableDateTime rawValue = 1;
 }
 
 message ORiN3ValueObject {
-	bytes rawValue = 1;
+    bytes rawValue = 1;
 }
