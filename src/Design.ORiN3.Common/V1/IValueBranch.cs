@@ -1,4 +1,4 @@
-﻿namespace Design.ORiN3.Common.V1;
+namespace Design.ORiN3.Common.V1;
 
 /// <summary>
 /// Value branch
