@@ -19,7 +19,7 @@ message CreateVariableRequest {
     string name = 3;
     string typeName = 4;
     string option = 5;
-    int32 valueType = 6;
+    ORiN3.Common.ORiN3ValueType valueType = 6;
 }
 
 message CreateVariableResponse {
@@ -66,7 +66,7 @@ message CreateStreamRequest {
     string name = 3;
     string typeName = 4;
     string option = 5;
-    int32 valueType = 6;
+    ORiN3.Common.ORiN3ValueType valueType = 6;
 }
 
 message CreateStreamResponse {

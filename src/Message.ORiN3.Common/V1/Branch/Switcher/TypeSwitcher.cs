@@ -659,4 +659,167 @@ public static class TypeSwitcher
             throw new TypeSwitcherException(type, e);
         }
     }
+
+    /// <summary>
+    /// Execute an action determination by object type.
+    /// The action is provided by the branch.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="branch"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="TypeSwitcherException"></exception>
+    public static void Execute(object? value, IValueTypeBranch branch)
+    {
+        branch = branch ?? throw new ArgumentNullException(nameof(branch));
+
+        if (value == null)
+        {
+            branch.CaseOfError();
+            return;
+        }
+
+        var type = value.GetType();
+        try
+        {
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Boolean:
+                    branch.CaseOfBool();
+                    return;
+                case TypeCode.Byte:
+                    branch.CaseOfUInt8();
+                    return;
+                case TypeCode.UInt16:
+                    branch.CaseOfUInt16();
+                    return;
+                case TypeCode.UInt32:
+                    branch.CaseOfUInt32();
+                    return;
+                case TypeCode.UInt64:
+                    branch.CaseOfUInt64();
+                    return;
+                case TypeCode.SByte:
+                    branch.CaseOfInt8();
+                    return;
+                case TypeCode.Int16:
+                    branch.CaseOfInt16();
+                    return;
+                case TypeCode.Int32:
+                    branch.CaseOfInt32();
+                    return;
+                case TypeCode.Int64:
+                    branch.CaseOfInt64();
+                    return;
+                case TypeCode.Single:
+                    branch.CaseOfFloat();
+                    return;
+                case TypeCode.Double:
+                    branch.CaseOfDouble();
+                    return;
+                case TypeCode.String:
+                    branch.CaseOfString();
+                    return;
+                case TypeCode.DateTime:
+                    branch.CaseOfDateTime();
+                    return;
+                default:
+                    if (type.IsArray)
+                    {
+                        switch (Type.GetTypeCode(type.GetElementType()))
+                        {
+                            case TypeCode.Boolean:
+                                branch.CaseOfBoolArray();
+                                return;
+                            case TypeCode.Byte:
+                                branch.CaseOfUInt8Array();
+                                return;
+                            case TypeCode.UInt16:
+                                branch.CaseOfUInt16Array();
+                                return;
+                            case TypeCode.UInt32:
+                                branch.CaseOfUInt32Array();
+                                return;
+                            case TypeCode.UInt64:
+                                branch.CaseOfUInt64Array();
+                                return;
+                            case TypeCode.SByte:
+                                branch.CaseOfInt8Array();
+                                return;
+                            case TypeCode.Int16:
+                                branch.CaseOfInt16Array();
+                                return;
+                            case TypeCode.Int32:
+                                branch.CaseOfInt32Array();
+                                return;
+                            case TypeCode.Int64:
+                                branch.CaseOfInt64Array();
+                                return;
+                            case TypeCode.Single:
+                                branch.CaseOfFloatArray();
+                                return;
+                            case TypeCode.Double:
+                                branch.CaseOfDoubleArray();
+                                return;
+                            case TypeCode.String:
+                                branch.CaseOfStringArray();
+                                return;
+                            case TypeCode.DateTime:
+                                branch.CaseOfDateTimeArray();
+                                return;
+                            case TypeCode.Object:
+                                if (type.GetElementType().GenericTypeArguments.Length != 0)
+                                {
+                                    switch (Type.GetTypeCode(type.GetElementType().GenericTypeArguments[0]))
+                                    {
+                                        case TypeCode.Boolean:
+                                            branch.CaseOfNullableBoolArray();
+                                            return;
+                                        case TypeCode.Byte:
+                                            branch.CaseOfNullableUInt8Array();
+                                            return;
+                                        case TypeCode.UInt16:
+                                            branch.CaseOfNullableUInt16Array();
+                                            return;
+                                        case TypeCode.UInt32:
+                                            branch.CaseOfNullableUInt32Array();
+                                            return;
+                                        case TypeCode.UInt64:
+                                            branch.CaseOfNullableUInt64Array();
+                                            return;
+                                        case TypeCode.SByte:
+                                            branch.CaseOfNullableInt8Array();
+                                            return;
+                                        case TypeCode.Int16:
+                                            branch.CaseOfNullableInt16Array();
+                                            return;
+                                        case TypeCode.Int32:
+                                            branch.CaseOfNullableInt32Array();
+                                            return;
+                                        case TypeCode.Int64:
+                                            branch.CaseOfNullableInt64Array();
+                                            return;
+                                        case TypeCode.Single:
+                                            branch.CaseOfNullableFloatArray();
+                                            return;
+                                        case TypeCode.Double:
+                                            branch.CaseOfNullableDoubleArray();
+                                            return;
+                                        case TypeCode.DateTime:
+                                            branch.CaseOfNullableDateTimeArray();
+                                            return;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            branch.CaseOfObject();
+        }
+        catch (Exception e)
+        {
+            throw new TypeSwitcherException(type, e);
+        }
+    }
 }
