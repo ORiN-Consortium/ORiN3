@@ -9,7 +9,7 @@ namespace Design.ORiN3.Provider.V1;
 /// <summary>
 /// Interface of the Root object, which is an ORiN3 object.
 /// </summary>
-public interface IRootObject : IORiN3Object, IParent, IChildCreator, IControllerCreator
+public interface IRootObject : IORiN3Object, IParent, IChildCreator, IControllerCreator, IDisposable
 {
     /// <summary>
     /// Get the contents of .orin3providerconfig of the ORiN3 provider
