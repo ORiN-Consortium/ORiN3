@@ -410,7 +410,7 @@ public static class TypeSwitcher
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="TypeSwitcherException"></exception>
     [DebuggerStepThrough]
-    public static void Execute(ORiN3ValueType type, IValueTypeBranch branch)
+    public static void Execute(Design.ORiN3.Provider.V1.Type.ORiN3ValueType type, IValueTypeBranch branch)
     {
         branch = branch ?? throw new ArgumentNullException(nameof(branch));
 
@@ -418,157 +418,157 @@ public static class TypeSwitcher
         {
             switch (type)
             {
-                case ORiN3ValueType.ORiN3Bool:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Bool:
                     branch.CaseOfBool();
                     return;
-                case ORiN3ValueType.ORiN3BoolArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3BoolArray:
                     branch.CaseOfBoolArray();
                     return;
-                case ORiN3ValueType.ORiN3NullableBool:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableBool:
                     branch.CaseOfNullableBool();
                     return;
-                case ORiN3ValueType.ORiN3NullableBoolArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableBoolArray:
                     branch.CaseOfNullableBoolArray();
                     return;
-                case ORiN3ValueType.ORiN3UInt8:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt8:
                     branch.CaseOfUInt8();
                     return;
-                case ORiN3ValueType.ORiN3UInt8Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt8Array:
                     branch.CaseOfUInt8Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt8:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt8:
                     branch.CaseOfNullableUInt8();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt8Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt8Array:
                     branch.CaseOfNullableUInt8Array();
                     return;
-                case ORiN3ValueType.ORiN3UInt16:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt16:
                     branch.CaseOfUInt16();
                     return;
-                case ORiN3ValueType.ORiN3UInt16Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt16Array:
                     branch.CaseOfUInt16Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt16:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt16:
                     branch.CaseOfNullableUInt16();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt16Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt16Array:
                     branch.CaseOfNullableUInt16Array();
                     return;
-                case ORiN3ValueType.ORiN3UInt32:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt32:
                     branch.CaseOfUInt32();
                     return;
-                case ORiN3ValueType.ORiN3UInt32Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt32Array:
                     branch.CaseOfUInt32Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt32:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt32:
                     branch.CaseOfNullableUInt32();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt32Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt32Array:
                     branch.CaseOfNullableUInt32Array();
                     return;
-                case ORiN3ValueType.ORiN3UInt64:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt64:
                     branch.CaseOfUInt64();
                     return;
-                case ORiN3ValueType.ORiN3UInt64Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt64Array:
                     branch.CaseOfUInt64Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt64:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt64:
                     branch.CaseOfNullableUInt64();
                     return;
-                case ORiN3ValueType.ORiN3NullableUInt64Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt64Array:
                     branch.CaseOfNullableUInt64Array();
                     return;
-                case ORiN3ValueType.ORiN3Int8:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int8:
                     branch.CaseOfInt8();
                     return;
-                case ORiN3ValueType.ORiN3Int8Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int8Array:
                     branch.CaseOfInt8Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt8:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt8:
                     branch.CaseOfNullableInt8();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt8Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt8Array:
                     branch.CaseOfNullableInt8Array();
                     return;
-                case ORiN3ValueType.ORiN3Int16:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int16:
                     branch.CaseOfInt16();
                     return;
-                case ORiN3ValueType.ORiN3Int16Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int16Array:
                     branch.CaseOfInt16Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt16:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt16:
                     branch.CaseOfNullableInt16();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt16Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt16Array:
                     branch.CaseOfNullableInt16Array();
                     return;
-                case ORiN3ValueType.ORiN3Int32:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int32:
                     branch.CaseOfInt32();
                     return;
-                case ORiN3ValueType.ORiN3Int32Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int32Array:
                     branch.CaseOfInt32Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt32:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt32:
                     branch.CaseOfNullableInt32();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt32Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt32Array:
                     branch.CaseOfNullableInt32Array();
                     return;
-                case ORiN3ValueType.ORiN3Int64:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int64:
                     branch.CaseOfInt64();
                     return;
-                case ORiN3ValueType.ORiN3Int64Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int64Array:
                     branch.CaseOfInt64Array();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt64:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt64:
                     branch.CaseOfNullableInt64();
                     return;
-                case ORiN3ValueType.ORiN3NullableInt64Array:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt64Array:
                     branch.CaseOfNullableInt64Array();
                     return;
-                case ORiN3ValueType.ORiN3Float:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Float:
                     branch.CaseOfFloat();
                     return;
-                case ORiN3ValueType.ORiN3FloatArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3FloatArray:
                     branch.CaseOfFloatArray();
                     return;
-                case ORiN3ValueType.ORiN3NullableFloat:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableFloat:
                     branch.CaseOfNullableFloat();
                     return;
-                case ORiN3ValueType.ORiN3NullableFloatArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableFloatArray:
                     branch.CaseOfNullableFloatArray();
                     return;
-                case ORiN3ValueType.ORiN3Double:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Double:
                     branch.CaseOfDouble();
                     return;
-                case ORiN3ValueType.ORiN3DoubleArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3DoubleArray:
                     branch.CaseOfDoubleArray();
                     return;
-                case ORiN3ValueType.ORiN3NullableDouble:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDouble:
                     branch.CaseOfNullableDouble();
                     return;
-                case ORiN3ValueType.ORiN3NullableDoubleArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDoubleArray:
                     branch.CaseOfNullableDoubleArray();
                     return;
-                case ORiN3ValueType.ORiN3String:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3String:
                     branch.CaseOfString();
                     return;
-                case ORiN3ValueType.ORiN3StringArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3StringArray:
                     branch.CaseOfStringArray();
                     return;
-                case ORiN3ValueType.ORiN3DateTime:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3DateTime:
                     branch.CaseOfDateTime();
                     return;
-                case ORiN3ValueType.ORiN3DateTimeArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3DateTimeArray:
                     branch.CaseOfDateTimeArray();
                     return;
-                case ORiN3ValueType.ORiN3NullableDateTime:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDateTime:
                     branch.CaseOfNullableDateTime();
                     return;
-                case ORiN3ValueType.ORiN3NullableDateTimeArray:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDateTimeArray:
                     branch.CaseOfNullableDateTimeArray();
                     return;
-                case ORiN3ValueType.ORiN3Object:
+                case Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Object:
                     branch.CaseOfObject();
                     return;
                 default:
@@ -592,7 +592,7 @@ public static class TypeSwitcher
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="TypeSwitcherException"></exception>
     [DebuggerStepThrough]
-    public static Task ExecuteAsync(ORiN3ValueType type, IValueTypeBranchAsync branch, CancellationToken token)
+    public static Task ExecuteAsync(Design.ORiN3.Provider.V1.Type.ORiN3ValueType type, IValueTypeBranchAsync branch, CancellationToken token)
     {
         branch = branch ?? throw new ArgumentNullException(nameof(branch));
 
@@ -600,57 +600,57 @@ public static class TypeSwitcher
         {
             return type switch
             {
-                ORiN3ValueType.ORiN3Bool => branch.CaseOfBoolAsync(token),
-                ORiN3ValueType.ORiN3BoolArray => branch.CaseOfBoolArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableBool => branch.CaseOfNullableBoolAsync(token),
-                ORiN3ValueType.ORiN3NullableBoolArray => branch.CaseOfNullableBoolArrayAsync(token),
-                ORiN3ValueType.ORiN3UInt8 => branch.CaseOfUInt8Async(token),
-                ORiN3ValueType.ORiN3UInt8Array => branch.CaseOfUInt8ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableUInt8 => branch.CaseOfNullableUInt8Async(token),
-                ORiN3ValueType.ORiN3NullableUInt8Array => branch.CaseOfNullableUInt8ArrayAsync(token),
-                ORiN3ValueType.ORiN3UInt16 => branch.CaseOfUInt16Async(token),
-                ORiN3ValueType.ORiN3UInt16Array => branch.CaseOfUInt16ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableUInt16 => branch.CaseOfNullableUInt16Async(token),
-                ORiN3ValueType.ORiN3NullableUInt16Array => branch.CaseOfNullableUInt16ArrayAsync(token),
-                ORiN3ValueType.ORiN3UInt32 => branch.CaseOfUInt32Async(token),
-                ORiN3ValueType.ORiN3UInt32Array => branch.CaseOfUInt32ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableUInt32 => branch.CaseOfNullableUInt32Async(token),
-                ORiN3ValueType.ORiN3NullableUInt32Array => branch.CaseOfNullableUInt32ArrayAsync(token),
-                ORiN3ValueType.ORiN3UInt64 => branch.CaseOfUInt64Async(token),
-                ORiN3ValueType.ORiN3UInt64Array => branch.CaseOfUInt64ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableUInt64 => branch.CaseOfNullableUInt64Async(token),
-                ORiN3ValueType.ORiN3NullableUInt64Array => branch.CaseOfNullableUInt64ArrayAsync(token),
-                ORiN3ValueType.ORiN3Int8 => branch.CaseOfInt8Async(token),
-                ORiN3ValueType.ORiN3Int8Array => branch.CaseOfInt8ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableInt8 => branch.CaseOfNullableInt8Async(token),
-                ORiN3ValueType.ORiN3NullableInt8Array => branch.CaseOfNullableInt8ArrayAsync(token),
-                ORiN3ValueType.ORiN3Int16 => branch.CaseOfInt16Async(token),
-                ORiN3ValueType.ORiN3Int16Array => branch.CaseOfInt16ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableInt16 => branch.CaseOfNullableInt16Async(token),
-                ORiN3ValueType.ORiN3NullableInt16Array => branch.CaseOfNullableInt16ArrayAsync(token),
-                ORiN3ValueType.ORiN3Int32 => branch.CaseOfInt32Async(token),
-                ORiN3ValueType.ORiN3Int32Array => branch.CaseOfInt32ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableInt32 => branch.CaseOfNullableInt32Async(token),
-                ORiN3ValueType.ORiN3NullableInt32Array => branch.CaseOfNullableInt32ArrayAsync(token),
-                ORiN3ValueType.ORiN3Int64 => branch.CaseOfInt64Async(token),
-                ORiN3ValueType.ORiN3Int64Array => branch.CaseOfInt64ArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableInt64 => branch.CaseOfNullableInt64Async(token),
-                ORiN3ValueType.ORiN3NullableInt64Array => branch.CaseOfNullableInt64ArrayAsync(token),
-                ORiN3ValueType.ORiN3Float => branch.CaseOfFloatAsync(token),
-                ORiN3ValueType.ORiN3FloatArray => branch.CaseOfFloatArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableFloat => branch.CaseOfNullableFloatAsync(token),
-                ORiN3ValueType.ORiN3NullableFloatArray => branch.CaseOfNullableFloatArrayAsync(token),
-                ORiN3ValueType.ORiN3Double => branch.CaseOfDoubleAsync(token),
-                ORiN3ValueType.ORiN3DoubleArray => branch.CaseOfDoubleArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableDouble => branch.CaseOfNullableDoubleAsync(token),
-                ORiN3ValueType.ORiN3NullableDoubleArray => branch.CaseOfNullableDoubleArrayAsync(token),
-                ORiN3ValueType.ORiN3String => branch.CaseOfStringAsync(token),
-                ORiN3ValueType.ORiN3StringArray => branch.CaseOfStringArrayAsync(token),
-                ORiN3ValueType.ORiN3DateTime => branch.CaseOfDateTimeAsync(token),
-                ORiN3ValueType.ORiN3DateTimeArray => branch.CaseOfDateTimeArrayAsync(token),
-                ORiN3ValueType.ORiN3NullableDateTime => branch.CaseOfNullableDateTimeAsync(token),
-                ORiN3ValueType.ORiN3NullableDateTimeArray => branch.CaseOfNullableDateTimeArrayAsync(token),
-                ORiN3ValueType.ORiN3Object => branch.CaseOfObjectAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Bool => branch.CaseOfBoolAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3BoolArray => branch.CaseOfBoolArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableBool => branch.CaseOfNullableBoolAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableBoolArray => branch.CaseOfNullableBoolArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt8 => branch.CaseOfUInt8Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt8Array => branch.CaseOfUInt8ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt8 => branch.CaseOfNullableUInt8Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt8Array => branch.CaseOfNullableUInt8ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt16 => branch.CaseOfUInt16Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt16Array => branch.CaseOfUInt16ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt16 => branch.CaseOfNullableUInt16Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt16Array => branch.CaseOfNullableUInt16ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt32 => branch.CaseOfUInt32Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt32Array => branch.CaseOfUInt32ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt32 => branch.CaseOfNullableUInt32Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt32Array => branch.CaseOfNullableUInt32ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt64 => branch.CaseOfUInt64Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3UInt64Array => branch.CaseOfUInt64ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt64 => branch.CaseOfNullableUInt64Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableUInt64Array => branch.CaseOfNullableUInt64ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int8 => branch.CaseOfInt8Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int8Array => branch.CaseOfInt8ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt8 => branch.CaseOfNullableInt8Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt8Array => branch.CaseOfNullableInt8ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int16 => branch.CaseOfInt16Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int16Array => branch.CaseOfInt16ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt16 => branch.CaseOfNullableInt16Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt16Array => branch.CaseOfNullableInt16ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int32 => branch.CaseOfInt32Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int32Array => branch.CaseOfInt32ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt32 => branch.CaseOfNullableInt32Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt32Array => branch.CaseOfNullableInt32ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int64 => branch.CaseOfInt64Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Int64Array => branch.CaseOfInt64ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt64 => branch.CaseOfNullableInt64Async(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableInt64Array => branch.CaseOfNullableInt64ArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Float => branch.CaseOfFloatAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3FloatArray => branch.CaseOfFloatArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableFloat => branch.CaseOfNullableFloatAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableFloatArray => branch.CaseOfNullableFloatArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Double => branch.CaseOfDoubleAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3DoubleArray => branch.CaseOfDoubleArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDouble => branch.CaseOfNullableDoubleAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDoubleArray => branch.CaseOfNullableDoubleArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3String => branch.CaseOfStringAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3StringArray => branch.CaseOfStringArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3DateTime => branch.CaseOfDateTimeAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3DateTimeArray => branch.CaseOfDateTimeArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDateTime => branch.CaseOfNullableDateTimeAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3NullableDateTimeArray => branch.CaseOfNullableDateTimeArrayAsync(token),
+                Design.ORiN3.Provider.V1.Type.ORiN3ValueType.ORiN3Object => branch.CaseOfObjectAsync(token),
                 _ => branch.CaseOfErrorAsync(token),
             };
         }
