@@ -5,7 +5,7 @@ using System;
 
 namespace Message.ORiN3.Common.V1.Branch;
 
-internal class CSharpValueToORiN3ValueBranch : IValueTypeBranch
+public class CSharpValueToORiN3ValueBranch : IValueTypeBranch
 {
     public object? Target { get; set; }
     public ORiN3Value? Result { get; set; }
