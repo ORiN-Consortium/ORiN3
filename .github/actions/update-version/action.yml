@@ -56,11 +56,7 @@ runs:
           TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
           TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-${{ inputs.prerelease }}.$PRERELEASE_NUMBER"
         else
-          # Regular version increment
-          if [ "$PRERELEASE_IDENTIFIER" = "" ]; then
-            # Remove prerelease and increment build
-            BUILD=$((BUILD + 1))
-          fi
+          BUILD=$((BUILD + 1))
           TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
           TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
         fi
