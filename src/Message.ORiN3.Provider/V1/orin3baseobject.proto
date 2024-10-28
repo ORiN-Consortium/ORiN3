@@ -18,13 +18,24 @@ message GetObjectInfoRequest {
     bytes id = 2;
 }
 
+enum ORiN3ObjectType {
+    PROVIDER_ROOT = 0;
+    CONTROLLER = 1;
+    MODULE = 2;
+    VARIABLE = 3;
+    FILE = 4;
+    STREAM = 5;
+    EVENT = 6;
+    JOB = 7;
+}
+
 message GetObjectInfoResponse {
     ORiN3.Common.CommonResponse common = 1;
     string name = 2;
     string typeName = 3;
     string option = 4;
     int64 createdDateTime = 5;
-    int32 objectType = 6;
+    ORiN3ObjectType objectType = 6;
     int32 extra = 7;
 }
 
