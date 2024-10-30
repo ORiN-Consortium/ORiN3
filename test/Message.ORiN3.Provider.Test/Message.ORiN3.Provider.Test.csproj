@@ -1,19 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="./../../SolutionDefines.targets" />
   <Import Project="./../../SolutionDefines.ProjectVersion.targets" />
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFramework>$(DotNetTestVersion)</TargetFramework>
+    <LangVersion>$(DotNetLangVersion)</LangVersion>
+    <Version>$(ProjectVersion)</Version>
     <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
+    <NoWarn>NU1603,CA1861,CA1859,IDE0028</NoWarn>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
@@ -27,6 +27,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Design.ORiN3.Provider\Design.ORiN3.Provider.csproj" />
     <ProjectReference Include="..\..\src\Message.ORiN3.Provider\Message.ORiN3.Provider.csproj" />
   </ItemGroup>
 </Project>
