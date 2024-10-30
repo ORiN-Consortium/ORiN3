@@ -40,7 +40,7 @@
     <Protobuf Include="**/*.proto" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="orin3common.proto" />
+    <None Remove="orin3_common.proto" />
     <None Remove="_License\Google.Protobuf\LICENSE" />
     <None Remove="_License\Grpc\LICENSE" />
   </ItemGroup>
