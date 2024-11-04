@@ -15,9 +15,9 @@
     <DotNetLangVersion>12.0</DotNetLangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ProtobufVersion>[3.25.*,3.26.0)</ProtobufVersion>
-    <GrpcVersion>[2.46.*,2.47.0)</GrpcVersion>
-    <GrpcToolsVersion>[2.59.*,2.60.0)</GrpcToolsVersion>
+    <ProtobufVersion>[3.28.*,3.29.0)</ProtobufVersion>
+    <GrpcVersion>[2.66.*,2.67.0)</GrpcVersion>
+    <GrpcToolsVersion>[2.66.*,2.67.0)</GrpcToolsVersion>
     <MicrosoftNETTestSdkVersion>[17.8.*,17.9.0)</MicrosoftNETTestSdkVersion>
     <XUnitVersion>[2.6.*,2.7.0)</XUnitVersion>
     <XUnitRunnerVersion>[2.5.*,2.6.0)</XUnitRunnerVersion>
