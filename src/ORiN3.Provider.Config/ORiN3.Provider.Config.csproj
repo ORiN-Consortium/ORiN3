@@ -19,6 +19,8 @@
     <PackageLicenseFile>$(LicenseName)</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>NU1603</NoWarn>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>

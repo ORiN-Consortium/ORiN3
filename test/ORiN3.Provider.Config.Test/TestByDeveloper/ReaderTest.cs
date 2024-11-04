@@ -10,6 +10,7 @@ public class ReaderTest
     public async void ReadTest01()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal("ORiN3.Provider.ORiNConsortium.Mock.dll", orin3ProviderConfig.ProviderPath);
         Assert.Equal("1.0.0", orin3ProviderConfig.Version);
@@ -132,6 +133,7 @@ public class ReaderTest
     public async void ReadTest02()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal("Hoge.dll", orin3ProviderConfig.ProviderPath);
         Assert.Equal("1.0.0", orin3ProviderConfig.Version);

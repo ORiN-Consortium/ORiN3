@@ -12,6 +12,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest01()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.True(Path.IsPathRooted(orin3ProviderConfig.ProvidersFullPath));
     }
@@ -21,6 +22,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest05()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal(orin3ProviderConfig.ProviderId, orin3ProviderConfig.UniqueId);
     }
@@ -30,6 +32,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest06()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal("Hoge.dll", orin3ProviderConfig.UniqueId);
     }
@@ -39,6 +42,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest07()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         foreach (var classInfo in orin3ProviderConfig.ClassInfos)
         {
@@ -112,6 +116,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest10()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal(orin3ProviderConfig.ProviderName, orin3ProviderConfig.ActualProviderName);
     }
@@ -121,6 +126,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest11()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal("Hoge.dll", orin3ProviderConfig.ActualProviderName);
     }

@@ -766,6 +766,7 @@ public class MergeTest
     public async Task MergeTest02Async()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
+        file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         _ = Assert.Throws<ArgumentNullException>(() =>
         {
@@ -782,6 +783,7 @@ public class MergeTest
     public async Task MergeTest03Async()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var first = await ORiN3ProviderConfigReader.ReadAsync(file);
         var second = new ORiN3ProviderConfig(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
@@ -797,6 +799,7 @@ public class MergeTest
     public async Task MergeTest04Async()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var second = await ORiN3ProviderConfigReader.ReadAsync(file);
         var first = second with { ClassInfos = null };
 
@@ -809,6 +812,7 @@ public class MergeTest
     public async Task MergeTest05Async()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var first = await ORiN3ProviderConfigReader.ReadAsync(file);
         var second = first with { ClassInfos = null };
 
@@ -821,6 +825,7 @@ public class MergeTest
     public async Task MergeTest06Async()
     {
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
+        file.Attributes &= ~FileAttributes.Hidden;
         var one = await ORiN3ProviderConfigReader.ReadAsync(file);
         var classinfo = new ClassInfo[] { new(null, null, null, null, null, null, null, null) };
         var another = one with { ClassInfos = classinfo };
