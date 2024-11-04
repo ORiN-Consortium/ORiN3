@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -761,10 +762,12 @@ public class MergeTest
         }
     }
 
-    [Fact(DisplayName = "Check Exception occurred if config is null")]
+    [SkippableFact(DisplayName = "Check Exception occurred if config is null")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task MergeTest02Async()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
@@ -778,10 +781,12 @@ public class MergeTest
         });
     }
 
-    [Fact(DisplayName = "Check that if each data of 2nd config is null, substitute the data of 1st config")]
+    [SkippableFact(DisplayName = "Check that if each data of 2nd config is null, substitute the data of 1st config")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task MergeTest03Async()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var first = await ORiN3ProviderConfigReader.ReadAsync(file);
@@ -794,10 +799,12 @@ public class MergeTest
         Assert.Equal(merger.Author, first.Author);
     }
 
-    [Fact(DisplayName = "Check that if one classinfos is null, substitute another classinfos")]
+    [SkippableFact(DisplayName = "Check that if one classinfos is null, substitute another classinfos")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task MergeTest04Async()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var second = await ORiN3ProviderConfigReader.ReadAsync(file);
@@ -807,10 +814,12 @@ public class MergeTest
         Assert.Equal(merger.ClassInfos, second.ClassInfos);
     }
 
-    [Fact(DisplayName = "Check that if 2nd classinfos is null, substitute 1st classinfos")]
+    [SkippableFact(DisplayName = "Check that if 2nd classinfos is null, substitute 1st classinfos")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task MergeTest05Async()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var first = await ORiN3ProviderConfigReader.ReadAsync(file);
@@ -820,10 +829,12 @@ public class MergeTest
         Assert.Equal(merger.ClassInfos, first.ClassInfos);
     }
 
-    [Fact(DisplayName = "Check that if the type name of classinfos is null, Exception occurred")]
+    [SkippableFact(DisplayName = "Check that if the type name of classinfos is null, Exception occurred")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task MergeTest06Async()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var one = await ORiN3ProviderConfigReader.ReadAsync(file);

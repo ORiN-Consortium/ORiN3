@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -7,40 +7,48 @@ namespace ORiN3.Provider.Config.Test.TestByDeveloper;
 
 public class ProviderConfigTest
 {
-    [Fact(DisplayName = "Check that ProvidersFullPath is full path")]
+    [SkippableFact(DisplayName = "Check that ProvidersFullPath is full path")]
     [Trait("Category", nameof(ProviderConfigTest))]
     public async Task ProviderConfigTest01()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.True(Path.IsPathRooted(orin3ProviderConfig.ProvidersFullPath));
     }
 
-    [Fact(DisplayName = "Check that UniqueId is ProviderId, if ProviderId exists")]
+    [SkippableFact(DisplayName = "Check that UniqueId is ProviderId, if ProviderId exists")]
     [Trait("Category", nameof(ProviderConfigTest))]
     public async Task ProviderConfigTest05()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal(orin3ProviderConfig.ProviderId, orin3ProviderConfig.UniqueId);
     }
 
-    [Fact(DisplayName = "Check that UniqueId is AssemblyName, if ProviderId does not exists")]
+    [SkippableFact(DisplayName = "Check that UniqueId is AssemblyName, if ProviderId does not exists")]
     [Trait("Category", nameof(ProviderConfigTest))]
     public async Task ProviderConfigTest06()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal("Hoge.dll", orin3ProviderConfig.UniqueId);
     }
 
-    [Fact(DisplayName = "Check that the returned value of GetDefaultOptions is not null or empty")]
+    [SkippableFact(DisplayName = "Check that the returned value of GetDefaultOptions is not null or empty")]
     [Trait("Category", nameof(ProviderConfigTest))]
     public async Task ProviderConfigTest07()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
@@ -111,20 +119,24 @@ public class ProviderConfigTest
         Assert.NotEmpty(options);
     }
 
-    [Fact(DisplayName = "Check that ActualProviderName is ProviderId, if ProviderName exists")]
+    [SkippableFact(DisplayName = "Check that ActualProviderName is ProviderId, if ProviderName exists")]
     [Trait("Category", nameof(ProviderConfigTest))]
     public async Task ProviderConfigTest10()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal(orin3ProviderConfig.ProviderName, orin3ProviderConfig.ActualProviderName);
     }
 
-    [Fact(DisplayName = "Check that UniqueId is AssemblyName, if ProviderName does not exists")]
+    [SkippableFact(DisplayName = "Check that UniqueId is AssemblyName, if ProviderName does not exists")]
     [Trait("Category", nameof(ProviderConfigTest))]
     public async Task ProviderConfigTest11()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);

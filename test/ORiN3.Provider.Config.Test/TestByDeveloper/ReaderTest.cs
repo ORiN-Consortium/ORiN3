@@ -1,14 +1,17 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace ORiN3.Provider.Config.Test.TestByDeveloper;
 
 public class ReaderTest
 {
-    [Fact(DisplayName = "read a .orin3providerconfig test")]
+    [SkippableFact(DisplayName = "read a .orin3providerconfig test")]
     [Trait("Category", nameof(ORiN3ProviderConfigReader))]
     public async void ReadTest01()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
@@ -128,10 +131,12 @@ public class ReaderTest
         }
     }
 
-    [Fact(DisplayName = "read a minimum .orin3providerconfig test")]
+    [SkippableFact(DisplayName = "read a minimum .orin3providerconfig test")]
     [Trait("Category", nameof(ORiN3ProviderConfigReader))]
     public async void ReadTest02()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);

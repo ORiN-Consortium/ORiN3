@@ -1084,9 +1084,9 @@ namespace Message.ORiN3.Provider.Test.TestByDeveloper
         };
 
         [Theory]
-        [Trait(nameof(ORiN3ValueToCSharpValueBranch<object>), "object")]
+        [Trait(nameof(ORiN3ValueToCSharpValueBranch<object>), "objects")]
         [MemberData(nameof(ObjectTestData))]
-        public void ObjectTest(object data)
+        public void ObjectsTest(object data)
         {
             var orin3Value = ORiN3ValueFactory.Create(data);
             var sut = new ORiN3ValueToCSharpValueBranch<object>(orin3Value);
