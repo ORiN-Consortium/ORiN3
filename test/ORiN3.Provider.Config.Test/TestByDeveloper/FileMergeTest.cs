@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -6,10 +7,12 @@ namespace ORiN3.Provider.Config.Test.TestByDeveloper;
 
 public class FileMergeTest
 {
-    [Fact(DisplayName = "Configファイルのマージ")]
+    [SkippableFact(DisplayName = "Configファイルのマージ")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task Test001()
     {
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+
         var sut = new ORiN3ProviderConfigMerger();
 
         // act

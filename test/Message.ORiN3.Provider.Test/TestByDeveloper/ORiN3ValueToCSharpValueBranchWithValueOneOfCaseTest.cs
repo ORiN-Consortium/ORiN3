@@ -1006,13 +1006,13 @@ namespace Message.ORiN3.Provider.Test.TestByDeveloper
             });
         }
 
-        public static TheoryData<object> ObjectTestData => new()
+        public static TheoryData<object> ObjectsTestData => new()
         {
             null,
             true,
             false,
-            byte.MinValue,
             byte.MaxValue,
+            byte.MinValue,
             ushort.MinValue,
             ushort.MaxValue,
             uint.MinValue,
@@ -1085,7 +1085,7 @@ namespace Message.ORiN3.Provider.Test.TestByDeveloper
 
         [Theory]
         [Trait(nameof(ORiN3ValueToCSharpValueBranch<object>), "objects")]
-        [MemberData(nameof(ObjectTestData))]
+        [MemberData(nameof(ObjectsTestData))]
         public void ObjectsTest(object data)
         {
             var orin3Value = ORiN3ValueFactory.Create(data);
