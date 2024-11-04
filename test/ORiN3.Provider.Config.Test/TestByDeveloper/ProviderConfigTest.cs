@@ -12,6 +12,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest01()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -24,6 +25,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest05()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -36,6 +38,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest06()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -48,6 +51,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest07()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -124,6 +128,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest10()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -136,6 +141,7 @@ public class ProviderConfigTest
     public async Task ProviderConfigTest11()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;

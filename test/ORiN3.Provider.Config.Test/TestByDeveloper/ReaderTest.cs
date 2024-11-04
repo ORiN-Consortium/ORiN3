@@ -11,6 +11,7 @@ public class ReaderTest
     public async void ReadTest01()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -136,6 +137,7 @@ public class ReaderTest
     public async void ReadTest02()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;

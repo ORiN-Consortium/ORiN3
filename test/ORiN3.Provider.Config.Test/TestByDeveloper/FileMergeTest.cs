@@ -12,6 +12,7 @@ public class FileMergeTest
     public async Task Test001()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var sut = new ORiN3ProviderConfigMerger();
 

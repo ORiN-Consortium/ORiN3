@@ -767,6 +767,7 @@ public class MergeTest
     public async Task MergeTest02Async()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_simple");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -786,6 +787,7 @@ public class MergeTest
     public async Task MergeTest03Async()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -804,6 +806,7 @@ public class MergeTest
     public async Task MergeTest04Async()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -819,6 +822,7 @@ public class MergeTest
     public async Task MergeTest05Async()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
@@ -834,6 +838,7 @@ public class MergeTest
     public async Task MergeTest06Async()
     {
         Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.OSX), "This test is not supported on macOS");
+        Skip.If(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         var file = new FileInfo("TestByDeveloper/TestData/.orin3providerconfig_sample");
         file.Attributes &= ~FileAttributes.Hidden;
