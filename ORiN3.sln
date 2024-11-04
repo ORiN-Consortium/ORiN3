@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.ORiN3.RemoteEngine"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.ORiN3.Provider.Test", "test\Message.ORiN3.Provider.Test\Message.ORiN3.Provider.Test.csproj", "{6ACDC358-CAE2-4625-B291-1C9A294F6568}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ORiN3.Provider.Config", "src\ORiN3.Provider.Config\ORiN3.Provider.Config.csproj", "{878B0324-90FA-41EF-B9D2-86F1383C2587}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ORiN3.Provider.Config.Test", "test\ORiN3.Provider.Config.Test\ORiN3.Provider.Config.Test.csproj", "{A018E69B-5A05-4F3E-A25F-FD5CB667A99F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,14 @@ Global
 		{6ACDC358-CAE2-4625-B291-1C9A294F6568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ACDC358-CAE2-4625-B291-1C9A294F6568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ACDC358-CAE2-4625-B291-1C9A294F6568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878B0324-90FA-41EF-B9D2-86F1383C2587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878B0324-90FA-41EF-B9D2-86F1383C2587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878B0324-90FA-41EF-B9D2-86F1383C2587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878B0324-90FA-41EF-B9D2-86F1383C2587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A018E69B-5A05-4F3E-A25F-FD5CB667A99F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A018E69B-5A05-4F3E-A25F-FD5CB667A99F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A018E69B-5A05-4F3E-A25F-FD5CB667A99F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A018E69B-5A05-4F3E-A25F-FD5CB667A99F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

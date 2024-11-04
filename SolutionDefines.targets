@@ -23,5 +23,7 @@
     <XUnitRunnerVersion>[2.5.*,2.6.0)</XUnitRunnerVersion>
     <XunitSkippableFactVersion>1.4.13</XunitSkippableFactVersion>
     <CoverletCollectorVersion>[6.0.*,6.1.0)</CoverletCollectorVersion>
+    <SystemTextJsonVersion>[8.0.*,8.1.0)</SystemTextJsonVersion>
+    <SystemIOAbstractionsTestingHelpersVersion>[21.0.*,21.1.0)</SystemIOAbstractionsTestingHelpersVersion>
   </PropertyGroup>
 </Project>

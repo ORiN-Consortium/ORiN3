@@ -1,0 +1,11 @@
+﻿{
+    "providerPath": "Hoge.dll",
+    "version": "1.0.0",
+    "classInfos": [
+      {
+        "orin3ObjectType": "ORiN3Controller",
+        "typeName": "Hoge.HogeController, Hoge",
+        "parents": [ "Root" ]
+      }
+    ]
+}

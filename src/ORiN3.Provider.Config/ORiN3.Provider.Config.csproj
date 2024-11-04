@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="./../../SolutionDefines.targets" />
+  <Import Project="./../../SolutionDefines.ProjectVersion.targets" />
+  <PropertyGroup>
+    <TargetFramework>$(DotNetStandardVersion)</TargetFramework>
+    <LangVersion>$(DotNetLangVersion)</LangVersion>
+    <Company>$(CompanyName)</Company>
+    <Authors>$(AuthorsName)</Authors>
+    <Product>$(ProductName)</Product>
+    <Copyright>$(CopyrightValue)</Copyright>
+    <Version>$(ProjectVersion)</Version>
+    <PackageVersion>$(NugetPackageVersion)</PackageVersion>
+    <PackageTags>$(NugetPackageTags)</PackageTags>
+    <Description>$(NugetPackageDescription)</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
+    <PackageIcon>_Resource\orin3_128x128.png</PackageIcon>
+    <ApplicationIcon>_Resource\orin3.ico</ApplicationIcon>
+    <PackageLicenseFile>$(LicenseName)</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>NU1603</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>1030</WarningsNotAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>1030</WarningsNotAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(PackageIconPath)" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_Resource\orin3_128x128.png" Pack="true" PackagePath="_Resource\orin3_128x128.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="_Resource\orin3.ico" Pack="true" PackagePath="_Resource\orin3.ico" />
+    <None Include="$(LicensePath)" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>
