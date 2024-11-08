@@ -16,7 +16,7 @@ public interface IRootObject : IORiN3Object, IParent, IChildCreator, IController
     /// </summary>
     /// <param name="token">A cancellation token that can be used to signal the asynchronous operation should be canceled</param>
     /// <returns>Contents of the .orin3providerconfig file</returns>
-    Task<string> GetInformationAsync(CancellationToken token = default);
+    Task<IRootObjectInformation> GetInformationAsync(CancellationToken token = default);
 
     /// <summary>
     /// Id given to the provider by RemoteEngine
