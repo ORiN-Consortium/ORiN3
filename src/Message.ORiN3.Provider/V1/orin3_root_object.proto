@@ -53,7 +53,7 @@ message GetInformationRequest {
 
 message GetInformationResponse {
   CommonResponse common = 1;
-  string version = 2;
+  string orin3_provider_config = 2;
   int32 connection_count = 3;
 }
 
