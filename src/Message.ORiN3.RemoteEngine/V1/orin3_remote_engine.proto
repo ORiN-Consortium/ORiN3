@@ -101,11 +101,13 @@ message GetRemoteEngineStatusRequest {
 message GetRemoteEngineStatusResponse {
   CommonResponse common = 1;
   int32 status = 2;
-  string host = 3;
-  repeated string addresses = 4;
-  string version = 5;
-  OsPlatform os_platform = 6;
-  string os_description = 7;
+  string instance_id = 3;
+  string host = 4;
+  repeated string addresses = 5;
+  string version = 6;
+  OsPlatform os_platform = 7;
+  string os_description = 8;
+  int32 running_provider_count = 9;
 }
 
 enum OsPlatform {
