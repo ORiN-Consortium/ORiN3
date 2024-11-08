@@ -54,6 +54,7 @@ message GetInformationRequest {
 message GetInformationResponse {
   CommonResponse common = 1;
   string version = 2;
+  int32 connection_count = 3;
 }
 
 message RegisterVariablesRequest {
