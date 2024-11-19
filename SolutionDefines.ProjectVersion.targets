@@ -1,7 +1,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.Microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectVersion>1.0.424.0</ProjectVersion>
-    <NugetPackageVersion>1.0.424</NugetPackageVersion>
+    <ProjectVersion>1.0.425.0</ProjectVersion>
+    <NugetPackageVersion>1.0.425</NugetPackageVersion>
     <CopyrightValue>Copyright (c) ORiN Consortium 2024</CopyrightValue>
   </PropertyGroup>
 </Project>
