@@ -2,7 +2,7 @@
 
 ORiN3 is the next generation of the Open Robot/Resource interface for the Network (ORiN) standard. This repository contains the specification details for ORiN3.
 
-[![.NET CI/CD Pipeline](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml/badge.svg)](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml)
+[![.NET CI/CD Pipeline](https://github.com/ORiN-Consortium/ORiN3/actions/workflows/dotnet-ci-cd.yml/badge.svg?branch=main)](https://github.com/ORiN-Consortium/ORiN3/actions/workflows/dotnet-ci-cd.yml)
 
 ## Contents
 
@@ -39,7 +39,7 @@ For more information about ORiN, please visit [official ORiN website](https://ww
 
 ORiN3は、Open Robot/Resource interface for the Network（ORiN）標準の次世代版です。このリポジトリには、ORiN3の仕様の詳細が含まれています。
 
-[![.NET CI/CD Pipeline](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml/badge.svg)](https://github.com/ORiNConsortium/ORiN3/actions/workflows/dotnet-ci-cd.yml)
+[![.NET CI/CD Pipeline](https://github.com/ORiN-Consortium/ORiN3/actions/workflows/dotnet-ci-cd.yml/badge.svg?branch=main)](https://github.com/ORiN-Consortium/ORiN3/actions/workflows/dotnet-ci-cd.yml)
 
 ## 内容
 
