@@ -1115,7 +1115,7 @@ namespace Message.ORiN3.Provider.Test.TestByDeveloper
             Assert.Equal(data.HasValue, !actual.NullableDatetime.IsNull);
             if (data.HasValue)
             {
-                Assert.Equal(data.Value.Ticks, actual.NullableDatetime.RawValue);
+                Assert.Equal(data.Value.ToBinary(), actual.NullableDatetime.RawValue);
             }
             else
             {
