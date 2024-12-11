@@ -49,6 +49,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="_License\Grpc\LICENSE">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="V1/*.proto" PackagePath="proto/Message.ORiN3.Provider/V1" />

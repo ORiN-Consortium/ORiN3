@@ -46,11 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="_License\Google.Protobuf\LICENSE">
-      <PackageCopyToOutput>true</PackageCopyToOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="_License\Grpc\LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="V1/*.proto" PackagePath="proto/Message.ORiN3.RemoteEngine/V1" />
   </ItemGroup>
