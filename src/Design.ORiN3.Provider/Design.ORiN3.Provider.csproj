@@ -49,10 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="_License\Google.Protobuf\LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="_License\Grpc\LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="V1/*.proto" PackagePath="proto/Design.ORiN3.Provider/V1" />
   </ItemGroup>

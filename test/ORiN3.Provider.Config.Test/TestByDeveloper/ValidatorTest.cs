@@ -97,6 +97,7 @@ public class ValidatorTest
     }
 
     [Theory(DisplayName = "boolean型")]
+    [Trait("Category", nameof(ORiN3ProviderConfigValidator))]
     [InlineData("true", ORiN3ProviderConfigValidationResult.Ok)]
     [InlineData("false", ORiN3ProviderConfigValidationResult.Ok)]
     public void Test07(string input, ORiN3ProviderConfigValidationResult expected)

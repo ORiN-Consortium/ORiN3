@@ -596,7 +596,7 @@ public static class ORiN3ValueFactory
         return new ORiN3Value()
         {
             Type = ORiN3ValueType.Orin3Datetime,
-            Datetime = new() { RawValue = data.Ticks },
+            Datetime = new() { RawValue = data.ToBinary() },
         };
     }
 
@@ -605,7 +605,7 @@ public static class ORiN3ValueFactory
         data = data ?? throw new ArgumentNullException(nameof(data));
 
         var array = new ORiN3DateTimeArray();
-        array.RawValue.Add(data.Select(_ => _.Ticks));
+        array.RawValue.Add(data.Select(_ => _.ToBinary()));
         return new ORiN3Value()
         {
             Type = ORiN3ValueType.Orin3DatetimeArray,
@@ -618,7 +618,7 @@ public static class ORiN3ValueFactory
         return new ORiN3NullableDateTime()
         {
             IsNull = data == null,
-            RawValue = data.HasValue ? data.Value.Ticks : DateTime.MinValue.Ticks
+            RawValue = data.HasValue ? data.Value.ToBinary() : DateTime.MinValue.ToBinary()
         };
     }
 
