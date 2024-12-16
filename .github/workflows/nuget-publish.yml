@@ -115,6 +115,7 @@ jobs:
             echo "push_success=true" >> $GITHUB_ENV
           else
             echo "push_success=false" >> $GITHUB_ENV
+            exit 1
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
