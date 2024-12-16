@@ -118,7 +118,7 @@ jobs:
             exit 1
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_PUSH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push NuGet Packages
         if: env.push_success == 'true'
         run: |
