@@ -104,15 +104,22 @@ jobs:
         with:
           name: build-output
       - name: Commit and push changes
+        id: git_push
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -e
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add ${{ env.VERSION_FILE }}
           git commit -m "Update project version"
-          git push
+          if git push; then
+            echo "push_success=true" >> $GITHUB_ENV
+          else
+            echo "push_success=false" >> $GITHUB_ENV
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push NuGet Packages
+        if: env.push_success == 'true'
         run: |
           for nupkg in ./nupkgs/*.nupkg
           do
