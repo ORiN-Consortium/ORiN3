@@ -99,7 +99,17 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Create GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.ORIN_RELEASE_TOKEN_HELPER_ID }}
+          private-key: ${{ secrets.ORIN_RELEASE_TOKEN_HELPER_SECRET }}
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
           name: build-output
@@ -109,6 +119,7 @@ jobs:
           set -e
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
           git add ${{ env.VERSION_FILE }}
           git commit -m "Update project version"
           if git push; then
@@ -118,7 +129,7 @@ jobs:
             exit 1
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
       - name: Push NuGet Packages
         if: env.push_success == 'true'
         run: |
