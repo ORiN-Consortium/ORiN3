@@ -1,0 +1,332 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://json-schema.org/draft/2019-09/schema",
+  "$vocabulary": {
+    "https://json-schema.org/draft-07/vocab/core": true,
+    "https://json-schema.org/draft-07/vocab/applicator": true,
+    "https://json-schema.org/draft-07/vocab/validation": true,
+    "https://json-schema.org/draft-07/vocab/meta-data": true,
+    "https://json-schema.org/draft-07/vocab/format": false,
+    "https://json-schema.org/draft-07/vocab/content": true
+  },
+  "$recursiveAnchor": true,
+  "title": "Core and Validation specifications meta-schema",
+  "allOf": [
+    {
+      "$ref": "meta/core"
+    },
+    {
+      "$ref": "meta/applicator"
+    },
+    {
+      "$ref": "meta/validation"
+    },
+    {
+      "$ref": "meta/meta-data"
+    },
+    {
+      "$ref": "meta/format"
+    },
+    {
+      "$ref": "meta/content"
+    }
+  ],
+  "type": [
+    "object",
+    "boolean"
+  ],
+  "properties": {
+    "definitions": {
+      "$comment": "While no longer an official keyword as it is replaced by $defs, this keyword is retained in the meta-schema to prevent incompatible extensions as it remains in common use.",
+      "type": "object",
+      "additionalProperties": {
+        "$recursiveRef": "#"
+      },
+      "default": {}
+    },
+    "dependencies": {
+      "$comment": "\"dependencies\" is no longer a keyword, but schema authors should avoid redefining it to facilitate a smooth transition to \"dependentSchemas\" and \"dependentRequired\"",
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$recursiveRef": "#"
+          },
+          {
+            "$ref": "meta/validation#/$defs/stringArray"
+          }
+        ]
+      }
+    },
+    "providerPath": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "providerId": {
+      "type": "string"
+    },
+    "providerName": {
+      "type": "string"
+    },
+    "secret": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "object",
+      "patternProperties": {
+        "": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "default"
+      ]
+    },
+    "scripts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "patternProperties": {
+          "command": {
+            "type": "string"
+          },
+          "os": {
+            "enum": [
+              "linux",
+              "windows"
+            ]
+          }
+        },
+        "required": [
+          "command"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "manual": {
+      "type": "object",
+      "patternProperties": {
+        "": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "default"
+      ]
+    },
+    "license": {
+      "type": "object",
+      "patternProperties": {
+        "": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "default"
+      ]
+    },
+    "classInfos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "patternProperties": {
+          "id": {
+            "type": "string"
+          },
+          "orin3ObjectType": {
+            "enum": [
+              "ORiN3Controller",
+              "ORiN3Module",
+              "ORiN3Event",
+              "ORiN3File",
+              "ORiN3Stream",
+              "ORiN3Job",
+              "ORiN3BoolVariable",
+              "ORiN3NullableBoolVariable",
+              "ORiN3BoolArrayVariable",
+              "ORiN3NullableBoolArrayVariable",
+              "ORiN3Int8Variable",
+              "ORiN3NullableInt8Variable",
+              "ORiN3Int8ArrayVariable",
+              "ORiN3NullableInt8ArrayVariable",
+              "ORiN3UInt8Variable",
+              "ORiN3NullableUInt8Variable",
+              "ORiN3UInt8ArrayVariable",
+              "ORiN3NullableUInt8ArrayVariable",
+              "ORiN3Int16Variable",
+              "ORiN3NullableInt16Variable",
+              "ORiN3Int16ArrayVariable",
+              "ORiN3NullableInt16ArrayVariable",
+              "ORiN3UInt16Variable",
+              "ORiN3NullableUInt16Variable",
+              "ORiN3UInt16ArrayVariable",
+              "ORiN3NullableUInt16ArrayVariable",
+              "ORiN3Int32Variable",
+              "ORiN3NullableInt32Variable",
+              "ORiN3Int32ArrayVariable",
+              "ORiN3NullableInt32ArrayVariable",
+              "ORiN3UInt32Variable",
+              "ORiN3NullableUInt32Variable",
+              "ORiN3UInt32ArrayVariable",
+              "ORiN3NullableUInt32ArrayVariable",
+              "ORiN3Int64Variable",
+              "ORiN3NullableInt64Variable",
+              "ORiN3Int64ArrayVariable",
+              "ORiN3NullableInt64ArrayVariable",
+              "ORiN3UInt64Variable",
+              "ORiN3NullableUInt64Variable",
+              "ORiN3UInt64ArrayVariable",
+              "ORiN3NullableUInt64ArrayVariable",
+              "ORiN3FloatVariable",
+              "ORiN3NullableFloatVariable",
+              "ORiN3FloatArrayVariable",
+              "ORiN3NullableFloatArrayVariable",
+              "ORiN3DoubleVariable",
+              "ORiN3NullableDoubleVariable",
+              "ORiN3DoubleArrayVariable",
+              "ORiN3NullableDoubleArrayVariable",
+              "ORiN3DateTimeVariable",
+              "ORiN3NullableDateTimeVariable",
+              "ORiN3DateTimeArrayVariable",
+              "ORiN3NullableDateTimeArrayVariable",
+              "ORiN3StringVariable",
+              "ORiN3StringArrayVariable",
+              "ORiN3ObjectVariable"
+            ]
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "typeName": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "object",
+            "patternProperties": {
+              "": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "default"
+            ]
+          },
+          "configurationId": {
+            "type": "string"
+          },
+          "parents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "patternProperties": {
+                "name": {
+                  "type": "string"
+                },
+                "optional": {
+                  "type": "boolean"
+                },
+                "default": {
+                  "type": [
+                    "string",
+                    "integer",
+                    "boolean"
+                  ]
+                },
+                "rule": {
+                  "type": "object",
+                  "patternProperties": {
+                    "type": {
+                      "enum": [
+                        "string",
+                        "integer",
+                        "boolean"
+                      ]
+                    },
+                    "pattern": {
+                      "type": "string"
+                    },
+                    "secret": {
+                      "type": "boolean"
+                    },
+                    "minimum": {
+                      "type": "integer"
+                    },
+                    "maximum": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                "comment": {
+                  "type": "object",
+                  "patternProperties": {
+                    "": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "default"
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "rule"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "orin3ObjectType",
+          "typeName",
+          "parents"
+        ],
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "readingFileBufferSize": {
+      "type": "integer"
+    },
+    "log": {
+      "enum": [
+        "enabled",
+        "disabled"
+      ]
+    },
+    "outputLogDir": {
+      "type": "string"
+    },
+    "logByteSizePerFile": {
+      "type": "integer"
+    },
+    "logFileCountLimit": {
+      "type": "integer"
+    },
+    "category": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "providerPath",
+    "version",
+    "classInfos"
+  ],
+  "additionalProperties": false
+}
