@@ -183,7 +183,7 @@ jobs:
                   target_commitish: 'main',
                   previous_tag_name: previousTag
                 })
-              : { body: "Initial release." };
+              : { data: { body: "Initial release." } };
          
             console.log('Generated release notes response:', releaseNotes);
             console.log('Release notes body:', releaseNotes.body);
