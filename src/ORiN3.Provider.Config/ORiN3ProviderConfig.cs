@@ -28,9 +28,6 @@ public partial record ORiN3ProviderConfig
     string? Category
 )
 {
-    private const string DefaultOptionSchemaVersion = "1.0.0";
-    private const string OptionSchemaVersionKey = "@Version";
-
     [JsonIgnore]
     internal DirectoryInfo? BaseDirectory { get; set; }
 
@@ -69,7 +66,7 @@ public partial record ORiN3ProviderConfig
     public string ActualProviderName => ProviderName ?? AssemblyName;
 
     [JsonIgnore]
-    public string ActualOptionSchemaVersion => OptionSchemaVersion ?? DefaultOptionSchemaVersion;
+    public string ActualOptionSchemaVersion => OptionSchemaVersion ?? "1.0.0";
 
     [JsonIgnore]
     public string SecretKey => Secret ?? UniqueId;
@@ -167,11 +164,11 @@ public partial record ORiN3ProviderConfig
     {
         var dict = new Dictionary<string, object?>
             {
-                { OptionSchemaVersionKey, ActualOptionSchemaVersion }
+                { "@Version", ActualOptionSchemaVersion }
             };
         foreach (var option in options)
         {
-            if (option.Optional || option.Name is null || option.Name == OptionSchemaVersionKey)
+            if (option.Optional || option.Name is null)
             {
                 continue;
             }

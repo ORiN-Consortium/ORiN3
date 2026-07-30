@@ -118,7 +118,7 @@ public class ORiN3ProviderConfigMerger
         var parents = first.Parents is null && second.Parents is null ? null
             : first.Parents is null ? second.Parents
             : second.Parents is null ? first.Parents
-            : [.. first.Parents.Concat(second.Parents).Distinct()];
+            : first.Parents.Concat(second.Parents).Distinct().ToArray();
         var comments = Merge(first.Comment, second.Comment);
         var options = Merge(first.Options, second.Options);
         return new ClassInfo(

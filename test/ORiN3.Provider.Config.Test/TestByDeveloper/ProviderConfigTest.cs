@@ -165,15 +165,15 @@ public class ProviderConfigTest
     {
         var configData = """
             {
-                "version": "2.0.0",
-                "optionSchemaVersion": "1.1.0"
+                "version": "1.0.0",
+                "optionSchemaVersion": "2.0.0"
             }
             """;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(configData);
-        var options = orin3ProviderConfig.GetDefaultOptions([new("@Version", null, "9.9.9", false, null)]);
+        var options = orin3ProviderConfig.GetDefaultOptions([]);
         using var optionsDocument = JsonDocument.Parse(options);
 
-        Assert.Equal("1.1.0", optionsDocument.RootElement.GetProperty("@Version").GetString());
+        Assert.Equal("2.0.0", optionsDocument.RootElement.GetProperty("@Version").GetString());
     }
 
     [Fact(DisplayName = "Check that EqualsSpecifically compares OptionSchemaVersion")]
