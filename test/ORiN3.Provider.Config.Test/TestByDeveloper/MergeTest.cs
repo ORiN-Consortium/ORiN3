@@ -801,6 +801,18 @@ public class MergeTest
         Assert.Equal(merger.Author, first.Author);
     }
 
+    [Fact(DisplayName = "Check that OptionSchemaVersion is merged")]
+    [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
+    public async Task MergeTest11Async()
+    {
+        var first = await ORiN3ProviderConfigReader.ReadAsync("""{ "optionSchemaVersion": "1.0.0" }""");
+        var second = await ORiN3ProviderConfigReader.ReadAsync("""{ "optionSchemaVersion": "2.0.0" }""");
+        var withoutOptionSchemaVersion = await ORiN3ProviderConfigReader.ReadAsync("{}");
+
+        Assert.Equal("2.0.0", ORiN3ProviderConfigMerger.Merge(first, second).OptionSchemaVersion);
+        Assert.Equal("1.0.0", ORiN3ProviderConfigMerger.Merge(first, withoutOptionSchemaVersion).OptionSchemaVersion);
+    }
+
     [SkippableFact(DisplayName = "Check that if one classinfos is null, substitute another classinfos")]
     [Trait("Category", nameof(ORiN3ProviderConfigMerger))]
     public async Task MergeTest04Async()
