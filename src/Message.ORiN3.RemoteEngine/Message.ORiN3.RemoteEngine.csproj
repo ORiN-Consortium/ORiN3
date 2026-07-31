@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="./../../SolutionDefines.targets" />
-  <Import Project="./../../SolutionDefines.ProjectVersion.targets" />
+  <Import Project="./Message.ORiN3.RemoteEngine.Version.targets" />
   <PropertyGroup>
     <TargetFramework>$(DotNetStandardVersion)</TargetFramework>
     <LangVersion>$(DotNetLangVersion)</LangVersion>

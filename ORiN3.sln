@@ -13,8 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solutionItems", "_solution
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		README.md = README.md
-		SolutionDefines.ProjectVersion.targets = SolutionDefines.ProjectVersion.targets
 		SolutionDefines.targets = SolutionDefines.targets
+		src\Design.ORiN3.Common\Design.ORiN3.Common.Version.targets = src\Design.ORiN3.Common\Design.ORiN3.Common.Version.targets
+		src\Design.ORiN3.Provider\Design.ORiN3.Provider.Version.targets = src\Design.ORiN3.Provider\Design.ORiN3.Provider.Version.targets
+		src\Message.ORiN3.Provider\Message.ORiN3.Provider.Version.targets = src\Message.ORiN3.Provider\Message.ORiN3.Provider.Version.targets
+		src\Message.ORiN3.RemoteEngine\Message.ORiN3.RemoteEngine.Version.targets = src\Message.ORiN3.RemoteEngine\Message.ORiN3.RemoteEngine.Version.targets
+		src\ORiN3.Provider.Config\ORiN3.Provider.Config.Version.targets = src\ORiN3.Provider.Config\ORiN3.Provider.Config.Version.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.ORiN3.RemoteEngine", "src\Message.ORiN3.RemoteEngine\Message.ORiN3.RemoteEngine.csproj", "{1FA10B26-2B58-45CB-A39E-2001EE3E8B7A}"

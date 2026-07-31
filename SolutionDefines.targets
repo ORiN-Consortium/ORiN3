@@ -5,6 +5,7 @@
     <ProductName>ORiN3</ProductName>
     <NugetPackageTags>ORiN3</NugetPackageTags>
     <NugetPackageDescription>C# implementation of ORiN3.</NugetPackageDescription>
+    <CopyrightValue>Copyright (c) ORiN Consortium 2024</CopyrightValue>
     <LicenseName>LICENSE</LicenseName>
     <LicensePath>..\..\$(LicenseName)</LicensePath>
     <XmlDocumentPath>bin\$(Configuration)/$(TargetFramework)/$(MSBuildProjectName).xml</XmlDocumentPath>
