@@ -1,0 +1,8 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.Microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectVersion>1.1.1.0</ProjectVersion>
+    <NugetPackageVersion>1.1.1</NugetPackageVersion>
+    <CopyrightValue>Copyright (c) ORiN Consortium 2024</CopyrightValue>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)src/$(MSBuildProjectName)/$(MSBuildProjectName).Version.targets" Condition="Exists('$(MSBuildThisFileDirectory)src/$(MSBuildProjectName)/$(MSBuildProjectName).Version.targets')" />
+</Project>

@@ -26,142 +26,45 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: nuget-publish
-  cancel-in-progress: false
-
 env:
-  DOT_NET_VERSION: '8.0.x'
+  VERSION_FILE: ${{ github.workspace }}/src/${{ inputs.package }}/${{ inputs.package }}.Version.targets
+  PROJECT_PATH: ${{ github.workspace }}/src/${{ inputs.package }}/${{ inputs.package }}.csproj
+  DOT_NET_VERSION: "8.0.x"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate branch
-        shell: bash
+      - name: Parameters
         run: |
-          if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
-            echo "This workflow can only publish from main."
-            exit 1
-          fi
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Resolve package
-        shell: bash
-        env:
-          SELECTED_PACKAGE: ${{ inputs.package }}
-        run: |
-          case "${SELECTED_PACKAGE}" in
-            Design.ORiN3.Common)
-              project_path="src/Design.ORiN3.Common/Design.ORiN3.Common.csproj"
-              version_file="src/Design.ORiN3.Common/Design.ORiN3.Common.Version.targets"
-              ;;
-            Design.ORiN3.Provider)
-              project_path="src/Design.ORiN3.Provider/Design.ORiN3.Provider.csproj"
-              version_file="src/Design.ORiN3.Provider/Design.ORiN3.Provider.Version.targets"
-              ;;
-            Message.ORiN3.Provider)
-              project_path="src/Message.ORiN3.Provider/Message.ORiN3.Provider.csproj"
-              version_file="src/Message.ORiN3.Provider/Message.ORiN3.Provider.Version.targets"
-              ;;
-            Message.ORiN3.RemoteEngine)
-              project_path="src/Message.ORiN3.RemoteEngine/Message.ORiN3.RemoteEngine.csproj"
-              version_file="src/Message.ORiN3.RemoteEngine/Message.ORiN3.RemoteEngine.Version.targets"
-              ;;
-            ORiN3.Provider.Config)
-              project_path="src/ORiN3.Provider.Config/ORiN3.Provider.Config.csproj"
-              version_file="src/ORiN3.Provider.Config/ORiN3.Provider.Config.Version.targets"
-              ;;
-            *)
-              echo "Unsupported package: ${SELECTED_PACKAGE}"
-              exit 1
-              ;;
-          esac
-
-          echo "PACKAGE_ID=${SELECTED_PACKAGE}" >> "${GITHUB_ENV}"
-          echo "PROJECT_PATH=${project_path}" >> "${GITHUB_ENV}"
-          echo "VERSION_FILE=${version_file}" >> "${GITHUB_ENV}"
-
-      - name: Update package version
-        id: update_version
-        shell: bash
-        env:
-          INCREMENT: ${{ inputs.increment }}
-        run: bash .github/scripts/update-package-version.sh "${VERSION_FILE}" "${INCREMENT}"
-
-      - name: Export target version
-        shell: bash
-        env:
-          TARGET_PROJECT_VERSION: ${{ steps.update_version.outputs.target_project_version }}
-          TARGET_NUGET_VERSION: ${{ steps.update_version.outputs.target_nuget_version }}
-        run: |
-          echo "TARGET_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> "${GITHUB_ENV}"
-          echo "TARGET_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> "${GITHUB_ENV}"
-
-      - name: Check package version availability
-        shell: bash
-        run: |
-          package_id_lower=$(echo "${PACKAGE_ID}" | tr '[:upper:]' '[:lower:]')
-          package_version_lower=$(echo "${TARGET_NUGET_VERSION}" | tr '[:upper:]' '[:lower:]')
-          package_url="https://api.nuget.org/v3-flatcontainer/${package_id_lower}/${package_version_lower}/${package_id_lower}.${package_version_lower}.nupkg"
-          status_code=$(curl --silent --output /dev/null --write-out '%{http_code}' "${package_url}")
-
-          if [[ "${status_code}" == "200" ]]; then
-            echo "${PACKAGE_ID} ${TARGET_NUGET_VERSION} has already been published."
-            exit 1
-          fi
-
-          if [[ "${status_code}" != "404" ]]; then
-            echo "Could not confirm package availability. HTTP status: ${status_code}"
-            exit 1
-          fi
-
+          echo "package: ${{ inputs.package }}"
+          echo "increment: ${{ inputs.increment }}"
+      - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOT_NET_VERSION }}
-
       - name: Restore dependencies
         run: dotnet restore
-
+      - name: Call Update Version Workflow
+        uses: ./.github/actions/update-version
+        id: update_version
+        with:
+          increment: ${{ inputs.increment }}
+          version_file: ${{ env.VERSION_FILE }}
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
       - name: Test
-        run: dotnet test --configuration Release --no-build --logger trx --results-directory TestResults
-
+        run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-linux
+          name: test-results
           path: TestResults
         if: always()
-
-      - name: Pack selected package
-        run: dotnet pack "${PROJECT_PATH}" --configuration Release --no-build --output nupkgs
-
-      - name: Validate package
-        shell: bash
-        run: |
-          package_file="nupkgs/${PACKAGE_ID}.${TARGET_NUGET_VERSION}.nupkg"
-          if [[ ! -f "${package_file}" ]]; then
-            echo "Expected package was not generated: ${package_file}"
-            find nupkgs -maxdepth 1 -type f -print
-            exit 1
-          fi
-
-          {
-            echo "PACKAGE_ID=${PACKAGE_ID}"
-            echo "VERSION_FILE=${VERSION_FILE}"
-            echo "TARGET_PROJECT_VERSION=${TARGET_PROJECT_VERSION}"
-            echo "TARGET_NUGET_VERSION=${TARGET_NUGET_VERSION}"
-            echo "PACKAGE_FILE=${package_file}"
-          } > release-metadata.env
-
-      - name: Upload build output
-        uses: actions/upload-artifact@v4
+      - name: Pack
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output nupkgs
+      - uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: ${{ github.workspace }}
@@ -173,25 +76,23 @@ jobs:
         os: [windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Download build output
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: build-output
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOT_NET_VERSION }}
-
+          dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore
-
       - name: Test
-        run: dotnet test --configuration Release --no-build --logger trx --results-directory TestResults
+        run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
 
   publish:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Create GitHub App Token
         id: app-token
@@ -199,52 +100,37 @@ jobs:
         with:
           app-id: ${{ secrets.ORIN_RELEASE_TOKEN_HELPER_ID }}
           private-key: ${{ secrets.ORIN_RELEASE_TOKEN_HELPER_SECRET }}
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Download build output
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: build-output
-
-      - name: Read release metadata
-        shell: bash
-        run: cat release-metadata.env >> "${GITHUB_ENV}"
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOT_NET_VERSION }}
-
-      - name: Commit package version
-        shell: bash
+      - name: Commit and push changes
+        id: git_push
         run: |
+          set -e
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git remote set-url origin "https://x-access-token:${APP_TOKEN}@github.com/${GITHUB_REPOSITORY}"
-          git add "${VERSION_FILE}"
-          git commit -m "${PACKAGE_ID} のバージョンを ${TARGET_NUGET_VERSION} に更新"
-          git push origin HEAD:main
+          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
+          git add "${{ env.VERSION_FILE }}"
+          git commit -m "${{ inputs.package }}のバージョンを更新"
+          if git push; then
+            echo "push_success=true" >> "$GITHUB_ENV"
+          else
+            echo "push_success=false" >> "$GITHUB_ENV"
+            exit 1
+          fi
         env:
-          APP_TOKEN: ${{ steps.app-token.outputs.token }}
-
-      - name: Publish package
-        run: dotnet nuget push "${PACKAGE_FILE}" --api-key "${NUGET_API_KEY}" --source https://api.nuget.org/v3/index.json
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+      - name: Push NuGet Packages
+        if: env.push_success == 'true'
+        run: |
+          for nupkg in ./nupkgs/*.nupkg
+          do
+            dotnet nuget push "$nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
-      - name: Write summary
-        shell: bash
-        run: |
-          {
-            echo "## Published NuGet package"
-            echo ""
-            echo "- Package: ${PACKAGE_ID}"
-            echo "- Version: ${TARGET_NUGET_VERSION}"
-            echo "- Source commit: ${GITHUB_SHA}"
-            echo "- NuGet: https://www.nuget.org/packages/${PACKAGE_ID}/${TARGET_NUGET_VERSION}"
-          } >> "${GITHUB_STEP_SUMMARY}"

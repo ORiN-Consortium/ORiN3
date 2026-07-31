@@ -1,0 +1,83 @@
+name: 'Update Version'
+description: 'Updates project and NuGet versions'
+inputs:
+  increment:
+    description: 'Version increment (patch, minor, major, or pre(beta))'
+    required: true
+  version_file:
+    description: 'Path to the version file'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update Version
+      id: update_version
+      shell: bash
+      run: |
+        PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' "${{ inputs.version_file }}")
+        NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' "${{ inputs.version_file }}")
+        echo "PROJECT_VERSION: $PROJECT_VERSION"
+        echo "NUGET_VERSION: $NUGET_VERSION"
+
+        IFS='.' read -r MAJOR MINOR BUILD <<< "${NUGET_VERSION%-*}"
+        PRERELEASE="${NUGET_VERSION#*-}"
+        if [ "$PRERELEASE" = "$NUGET_VERSION" ]; then
+          PRERELEASE_IDENTIFIER=""
+          PRERELEASE_NUMBER=""
+        else
+          PRERELEASE_IDENTIFIER=${PRERELEASE%%.*}
+          PRERELEASE_NUMBER=$(echo $PRERELEASE | awk -F'.' '{print $NF}')
+        fi
+
+        echo "MAJOR: $MAJOR"
+        echo "MINOR: $MINOR"
+        echo "BUILD: $BUILD"
+        echo "PRERELEASE_IDENTIFIER: $PRERELEASE_IDENTIFIER"
+        echo "PRERELEASE_NUMBER: $PRERELEASE_NUMBER"
+
+        case "${{ inputs.increment }}" in
+          patch)
+            if [ -n "$PRERELEASE_IDENTIFIER" ]; then
+              [ "$PRERELEASE_IDENTIFIER" = "beta" ] || { echo "Only beta prereleases are supported."; exit 1; }
+            else
+              BUILD=$((BUILD + 1))
+            fi
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+            ;;
+          minor)
+            MINOR=$((MINOR + 1))
+            BUILD=0
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+            ;;
+          major)
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            BUILD=0
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD"
+            ;;
+          "pre(beta)")
+            if [ -z "$PRERELEASE_IDENTIFIER" ]; then
+              BUILD=$((BUILD + 1))
+              PRERELEASE_NUMBER=1
+            else
+              [ "$PRERELEASE_IDENTIFIER" = "beta" ] || { echo "Only beta prereleases are supported."; exit 1; }
+              PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
+            fi
+            TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-beta.$PRERELEASE_NUMBER"
+            ;;
+          *)
+            echo "Unsupported increment: ${{ inputs.increment }}"
+            exit 1
+            ;;
+        esac
+        TARGET_PROJECT_VERSION="$MAJOR.$MINOR.$BUILD.0"
+
+        echo "TARGET_PROJECT_VERSION: ${TARGET_PROJECT_VERSION}"
+        echo "TARGET_NUGET_VERSION: ${TARGET_NUGET_VERSION}"
+        echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
+        echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
+
+        sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${TARGET_PROJECT_VERSION}<\/ProjectVersion>/" "${{ inputs.version_file }}"
+        sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${TARGET_NUGET_VERSION}<\/NugetPackageVersion>/" "${{ inputs.version_file }}"
+        cat "${{ inputs.version_file }}"
