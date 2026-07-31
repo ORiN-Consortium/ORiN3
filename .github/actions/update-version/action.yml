@@ -15,8 +15,8 @@ runs:
       id: update_version
       shell: bash
       run: |
-        PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' "${{ inputs.version_file }}")
-        NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' "${{ inputs.version_file }}")
+        PROJECT_VERSION=$(grep -oP '(?<=<ProjectVersion>).*(?=</ProjectVersion>)' ${{ inputs.version_file }})
+        NUGET_VERSION=$(grep -oP '(?<=<NugetPackageVersion>).*(?=</NugetPackageVersion>)' ${{ inputs.version_file }})
         echo "PROJECT_VERSION: $PROJECT_VERSION"
         echo "NUGET_VERSION: $NUGET_VERSION"
 
@@ -78,6 +78,6 @@ runs:
         echo "NEW_PROJECT_VERSION=${TARGET_PROJECT_VERSION}" >> $GITHUB_ENV
         echo "NEW_NUGET_VERSION=${TARGET_NUGET_VERSION}" >> $GITHUB_ENV
 
-        sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${TARGET_PROJECT_VERSION}<\/ProjectVersion>/" "${{ inputs.version_file }}"
-        sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${TARGET_NUGET_VERSION}<\/NugetPackageVersion>/" "${{ inputs.version_file }}"
-        cat "${{ inputs.version_file }}"
+        sed -i "s/<ProjectVersion>.*<\/ProjectVersion>/<ProjectVersion>${TARGET_PROJECT_VERSION}<\/ProjectVersion>/" ${{ inputs.version_file }}
+        sed -i "s/<NugetPackageVersion>.*<\/NugetPackageVersion>/<NugetPackageVersion>${TARGET_NUGET_VERSION}<\/NugetPackageVersion>/" ${{ inputs.version_file }}
+        cat ${{ inputs.version_file }}
