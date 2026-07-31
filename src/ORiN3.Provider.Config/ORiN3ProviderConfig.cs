@@ -5,10 +5,12 @@ using System.Text.Json.Serialization;
 
 namespace ORiN3.Provider.Config;
 
-public record ORiN3ProviderConfig
+[method: JsonConstructor]
+public partial record ORiN3ProviderConfig
 (
     string? ProviderPath,
     string? Version,
+    string? OptionSchemaVersion,
     ClassInfo[]? ClassInfos,
     string? ProviderId,
     string? ProviderName,
@@ -62,6 +64,9 @@ public record ORiN3ProviderConfig
     /// </summary>
     [JsonIgnore]
     public string ActualProviderName => ProviderName ?? AssemblyName;
+
+    [JsonIgnore]
+    public string ActualOptionSchemaVersion => OptionSchemaVersion ?? "1.0.0";
 
     [JsonIgnore]
     public string SecretKey => Secret ?? UniqueId;
@@ -126,6 +131,7 @@ public record ORiN3ProviderConfig
 
         return ProviderPath == compared.ProviderPath
             && Version == compared.Version
+            && OptionSchemaVersion == compared.OptionSchemaVersion
             && ProviderId == compared.ProviderId
             && ProviderName == compared.ProviderName
             && Author == compared.Author
@@ -158,7 +164,7 @@ public record ORiN3ProviderConfig
     {
         var dict = new Dictionary<string, object?>
             {
-                { "@Version", Version ?? string.Empty }
+                { "@Version", ActualOptionSchemaVersion }
             };
         foreach (var option in options)
         {

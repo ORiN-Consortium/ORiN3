@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -147,5 +148,41 @@ public class ProviderConfigTest
         file.Attributes &= ~FileAttributes.Hidden;
         var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(file);
         Assert.Equal("Hoge.dll", orin3ProviderConfig.ActualProviderName);
+    }
+
+    [Fact(DisplayName = "Check that ActualOptionSchemaVersion returns the default version if OptionSchemaVersion does not exist")]
+    [Trait("Category", nameof(ProviderConfigTest))]
+    public async Task ProviderConfigTest12()
+    {
+        var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync("{}");
+
+        Assert.Equal("1.0.0", orin3ProviderConfig.ActualOptionSchemaVersion);
+    }
+
+    [Fact(DisplayName = "Check that GetDefaultOptions uses OptionSchemaVersion")]
+    [Trait("Category", nameof(ProviderConfigTest))]
+    public async Task ProviderConfigTest13()
+    {
+        var configData = """
+            {
+                "version": "1.0.0",
+                "optionSchemaVersion": "2.0.0"
+            }
+            """;
+        var orin3ProviderConfig = await ORiN3ProviderConfigReader.ReadAsync(configData);
+        var options = orin3ProviderConfig.GetDefaultOptions([]);
+        using var optionsDocument = JsonDocument.Parse(options);
+
+        Assert.Equal("2.0.0", optionsDocument.RootElement.GetProperty("@Version").GetString());
+    }
+
+    [Fact(DisplayName = "Check that EqualsSpecifically compares OptionSchemaVersion")]
+    [Trait("Category", nameof(ProviderConfigTest))]
+    public async Task ProviderConfigTest14()
+    {
+        var first = await ORiN3ProviderConfigReader.ReadAsync("{}");
+        var second = first with { OptionSchemaVersion = "1.0.0" };
+
+        Assert.False(first.EqualsSpecifically(second));
     }
 }

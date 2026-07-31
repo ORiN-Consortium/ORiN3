@@ -44,6 +44,7 @@ public class ORiN3ProviderConfigMerger
 
         var providerPath = second.ProviderPath is null ? first.ProviderPath : second.ProviderPath;
         var version = second.Version is null ? first.Version : second.Version;
+        var optionSchemaVersion = second.OptionSchemaVersion is null ? first.OptionSchemaVersion : second.OptionSchemaVersion;
         var providerId = second.ProviderId is null ? first.ProviderId : second.ProviderId;
         var providerName = second.ProviderName is null ? first.ProviderName : second.ProviderName;
         var secret = second.Secret is null ? first.Secret : second.Secret;
@@ -61,6 +62,7 @@ public class ORiN3ProviderConfigMerger
         return new ORiN3ProviderConfig(
             providerPath,
             version,
+            optionSchemaVersion,
             classInfos,
             providerId,
             providerName,
