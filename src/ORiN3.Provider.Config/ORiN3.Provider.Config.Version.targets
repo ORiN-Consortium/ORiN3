@@ -2,5 +2,6 @@
   <PropertyGroup>
     <ProjectVersion>1.1.1.0</ProjectVersion>
     <NugetPackageVersion>1.1.1</NugetPackageVersion>
+    <PackageReleaseNotes Condition="'$(NugetPackageVersion)' == '2.0.0'">- Added OptionSchemaVersion to separate the option schema version from the Provider application version.&#xA;- GetDefaultOptions() now uses OptionSchemaVersion for @Version.&#xA;- OptionSchemaVersion defaults to 1.0.0 when omitted.&#xA;- The existing 17-parameter constructor remains available for compatibility.</PackageReleaseNotes>
   </PropertyGroup>
 </Project>
