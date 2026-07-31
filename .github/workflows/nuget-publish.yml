@@ -108,25 +108,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: build-output
-      - name: Commit and push changes
-        id: git_push
-        run: |
-          set -e
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
-          git add "${{ env.VERSION_FILE }}"
-          git commit -m "${{ inputs.package }}のバージョンを更新"
-          if git push; then
-            echo "push_success=true" >> "$GITHUB_ENV"
-          else
-            echo "push_success=false" >> "$GITHUB_ENV"
-            exit 1
-          fi
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-      - name: Push NuGet Packages
-        if: env.push_success == 'true'
+      - name: Push NuGet Package
         run: |
           for nupkg in ./nupkgs/*.nupkg
           do
@@ -134,3 +116,14 @@ jobs:
           done
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      - name: Commit and push changes
+        run: |
+          set -e
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
+          git add "${{ env.VERSION_FILE }}"
+          git commit -m "${{ inputs.package }}のバージョンを更新"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
