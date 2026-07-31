@@ -58,12 +58,11 @@ runs:
             ;;
           "pre(beta)")
             if [ -z "$PRERELEASE_IDENTIFIER" ]; then
-              BUILD=$((BUILD + 1))
-              PRERELEASE_NUMBER=1
+              PRERELEASE_NUMBER=0
             else
               [ "$PRERELEASE_IDENTIFIER" = "beta" ] || { echo "Only beta prereleases are supported."; exit 1; }
-              PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
             fi
+            PRERELEASE_NUMBER=$((PRERELEASE_NUMBER + 1))
             TARGET_NUGET_VERSION="$MAJOR.$MINOR.$BUILD-beta.$PRERELEASE_NUMBER"
             ;;
           *)
