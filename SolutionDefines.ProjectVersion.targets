@@ -4,4 +4,5 @@
     <NugetPackageVersion>1.1.1</NugetPackageVersion>
     <CopyrightValue>Copyright (c) ORiN Consortium 2024</CopyrightValue>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)src/$(MSBuildProjectName)/$(MSBuildProjectName).Version.targets" Condition="Exists('$(MSBuildThisFileDirectory)src/$(MSBuildProjectName)/$(MSBuildProjectName).Version.targets')" />
 </Project>

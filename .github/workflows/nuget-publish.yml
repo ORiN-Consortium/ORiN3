@@ -1,54 +1,44 @@
-name: Publish NuGet Packages
+name: Publish NuGet Package
 
 on:
   workflow_dispatch:
     inputs:
-      prereleaseenabled:
+      package:
+        description: 'Package to publish'
         required: true
         type: choice
         options:
-          - enabled
-          - disabled
-        default: 'enabled'
-      prerelease:
-        description: 'PreRelease identifier (e.g. rc, alpha, beta)'
-        required: false
-        type: choice
-        options:
-          - 'rc'
-          - 'alpha'
-          - 'beta'
-        default: 'rc'
-      configuration:
-        description: 'configuration'
+          - 'Design.ORiN3.Common'
+          - 'Design.ORiN3.Provider'
+          - 'Message.ORiN3.Provider'
+          - 'Message.ORiN3.RemoteEngine'
+          - 'ORiN3.Provider.Config'
+      increment:
+        description: 'Version increment'
         required: true
         type: choice
         options:
-          - Release
-          - Debug
-        default: 'Release'
+          - 'patch'
+          - 'minor'
+          - 'major'
+          - 'pre(beta)'
 
 permissions:
   contents: write
 
 env:
-  VERSION_FILE: ${{ github.workspace }}/SolutionDefines.ProjectVersion.targets
-  NEW_PROJECT_VERSION: "*.*.*.*"
-  NEW_NUGET_VERSION: "*.*.*"
+  VERSION_FILE: ${{ github.workspace }}/src/${{ inputs.package }}/${{ inputs.package }}.Version.targets
+  PROJECT_PATH: ${{ github.workspace }}/src/${{ inputs.package }}/${{ inputs.package }}.csproj
   DOT_NET_VERSION: "8.0.x"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      TARGET_PROJECT_VERSION: ${{ steps.update_version.outputs.TARGET_PROJECT_VERSION }}
-      TARGET_NUGET_VERSION: ${{ steps.update_version.outputs.TARGET_NUGET_VERSION }}
     steps:
       - name: Parameters
         run: |
-          echo "prereleaseenabled: ${{ github.event.inputs.prereleaseenabled }}"
-          echo "prerelease: ${{ github.event.inputs.prerelease }}"
-          echo "configuration: ${{ github.event.inputs.configuration }}"
+          echo "package: ${{ inputs.package }}"
+          echo "increment: ${{ inputs.increment }}"
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -60,13 +50,12 @@ jobs:
         uses: ./.github/actions/update-version
         id: update_version
         with:
-          prereleaseenabled: ${{ github.event.inputs.prereleaseenabled == 'enabled' }}
-          prerelease: ${{ github.event.inputs.prerelease }}
+          increment: ${{ inputs.increment }}
           version_file: ${{ env.VERSION_FILE }}
       - name: Build
-        run: dotnet build --configuration ${{ github.event.inputs.configuration }} --no-restore
+        run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test --no-build --configuration ${{ github.event.inputs.configuration }} --logger trx --results-directory TestResults
+        run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
@@ -74,7 +63,7 @@ jobs:
           path: TestResults
         if: always()
       - name: Pack
-        run: dotnet pack --configuration ${{ github.event.inputs.configuration }} --no-build --output nupkgs
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output nupkgs
       - uses: actions/upload-artifact@v4
         with:
           name: build-output
@@ -97,7 +86,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Test
-        run: dotnet test --no-build --configuration ${{ github.event.inputs.configuration }} --logger trx --results-directory TestResults
+        run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
 
   publish:
     needs: test
@@ -119,107 +108,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: build-output
-      - name: Get Previous Tag
-        id: get_previous_tag
-        run: |
-          git fetch --tags
-          
-          PREVIOUS_TAG=$(git tag --list 'v*' | grep -Ev 'beta|alpha|rc' | sort -V | tail -n 1)
-          
-          if [ -z "$PREVIOUS_TAG" ]; then
-            echo "No previous tag found. This will be the first release."
-            echo "PREVIOUS_TAG=" >> $GITHUB_ENV
-          else
-            echo "Previous tag found: $PREVIOUS_TAG"
-            echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> $GITHUB_ENV
-          fi
-      - name: Create and Push Tag
-        run: |
-          VERSION=$(sed -n 's|.*<NugetPackageVersion>\(.*\)</NugetPackageVersion>.*|\1|p' ${{ env.VERSION_FILE }})
-          
-          if [ -z "$VERSION" ]; then
-            echo "Error: NugetPackageVersion is empty. Exiting."
-            exit 1
-          fi
-          
-          TAG="v$VERSION"
-          echo "Creating tag: $TAG"
-          
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
-
-          git tag "$TAG"
-          git push origin "$TAG"
-
-          echo "TAG_NAME=$TAG" >> $GITHUB_ENV
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-      - name: Check if Tag is Stable
-        id: check_stable
-        run: |
-          echo "${{ env.TAG_NAME }}"
-          if [[ "${{ env.TAG_NAME }}" =~ ^v[0-9]+(\.[0-9]+){0,2}$ ]]; then
-            echo "is_stable=true" >> $GITHUB_ENV
-          else
-            echo "is_stable=false" >> $GITHUB_ENV
-          fi
-      - name: Generate Release Notes and Create Release
-        if: env.is_stable == 'true'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const latestTag = process.env.TAG_NAME;
-            const previousTag = process.env.PREVIOUS_TAG || null;
-            
-            console.log(`Latest Tag: ${latestTag}`);
-            console.log(`Previous Tag: ${previousTag}`);
-            
-            const releaseNotes = previousTag
-              ? await github.rest.repos.generateReleaseNotes({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  tag_name: latestTag,
-                  target_commitish: 'main',
-                  previous_tag_name: previousTag
-                })
-              : { data: { body: "Initial release." } };
-         
-            console.log('Generated release notes response:', releaseNotes);
-            console.log('Release notes body:', releaseNotes.body);
-
-            const release = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: latestTag,
-              name: `Release ${latestTag}`,
-              body: releaseNotes.data.body,
-              draft: false,
-              prerelease: false
-            });
-
-            console.log(`Release created: ${release.data.html_url}`);
-        env:
-         GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-      - name: Commit and push changes
-        id: git_push
-        run: |
-          set -e
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
-          git add ${{ env.VERSION_FILE }}
-          git commit -m "Update project version"
-          if git push; then
-            echo "push_success=true" >> $GITHUB_ENV
-          else
-            echo "push_success=false" >> $GITHUB_ENV
-            exit 1
-          fi
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-      - name: Push NuGet Packages
-        if: env.push_success == 'true'
+      - name: Push NuGet Package
         run: |
           for nupkg in ./nupkgs/*.nupkg
           do
@@ -227,3 +116,14 @@ jobs:
           done
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      - name: Commit and push changes
+        run: |
+          set -e
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
+          git add ${{ env.VERSION_FILE }}
+          git commit -m "${{ inputs.package }}のバージョンを更新"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
